@@ -31,7 +31,9 @@ from . import models
 
 from fetusapp.core.views import core
 from fetusapp.error_pages.handlers import error_pages
+from fetusapp.users.views import users
 
 
 app.register_blueprint(core)
 app.register_blueprint(error_pages)
+app.register_blueprint(users)

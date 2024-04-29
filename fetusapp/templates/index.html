@@ -3,6 +3,13 @@
 {% block page_title %} Αρχική Σελίδα {% endblock %}
 
 {% block content %}
-    <h1>Home</h1>
-    <p>Welcome to the Fetus App</p>
+    <div class="jumbotron">
+        <h1>Home</h1>
+        {% if current_user.is_authenticated %}
+        <p>Καλώς ήρθες, {{current_user.username}}</p>
+        {% else %}
+        <p>Καλώς ήρθατε στο Fetus.app, παρακαλώ συνδεθείτε ή εγγραφείτε</p>
+        {% endif %}
+    </div>
+    
 {% endblock %}
