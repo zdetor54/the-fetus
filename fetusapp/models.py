@@ -16,22 +16,25 @@ class User(db.Model, UserMixin):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
-    usename = db.Column(db.String(64), unique=True, index=True)
+    username = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128))
-    first_name = db.Column(db.String(64))
-    last_name = db.Column(db.String(64))
+    first_name = db.Column(db.String(64), nullable=True)
+    last_name = db.Column(db.String(64), nullable=True)
     is_active = db.Column(db.Boolean, default=True)
     is_admin = db.Column(db.Boolean, default=False)
     created_on = db.Column(db.DateTime, server_default=db.func.now())
     last_updated_on = db.Column(db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
 
-    patients = db.relationship('Patient', backref='user', lazy=True)
+    # patients = db.relationship('Patient', backref='user', lazy=True)
 
-    def __init__(self, username, password, first_name, last_name):
+    def __init__(self, username, password, first_name, last_name, is_admin=False):
         self.username = username
         self.password_hash = generate_password_hash(password)
-        self.first_name = first_name
-        self.last_name = last_name
+        if first_name is not None: 
+            self.first_name = first_name
+        if last_name is not None:
+            self.last_name = last_name
+        self.is_admin = is_admin
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
@@ -43,11 +46,11 @@ class Patient(db.Model, UserMixin):
 
     __tablename__ = 'patients'
     
-    users = db.relationship(User)
+    # users = db.relationship(User)
 
     id = db.Column(db.Integer, primary_key=True)
-    created_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    last_updated_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    # created_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    # last_updated_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     created_on = db.Column(db.DateTime, server_default=db.func.now())
     last_updated_on = db.Column(db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
     first_name = db.Column(db.String(64))

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block page_title %} Εγγραφή χρήστη {% endblock %}
+
+{% block content %}
+
+    <form method="post" class="mt-4">
+        {{form.hidden_tag()}}
+        <div class="form-group">
+            {{ form.username.label(class="form-label") }}
+            {{ form.username(class="form-control", id="username", aria_describedby="usernameHelp", placeholder="Enter your username") }}
+            {% if form.username.errors %}
+                <div class="errors">
+                {% for error in form.username.errors %}
+                    <small id="usernameHelp" class="form-text text-muted">{{error}}</small>
+                {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <div class="row mb-3">
+            <div class="col">
+                {{ form.password(class="form-control", id="password", aria_describedby="passwordHelp", type="password", placeholder="Password") }}
+                {% if form.password.errors %}
+                <div class="errors">
+                {% for error in form.password.errors %}
+                    <small id="passwordHelp" class="form-text text-muted">{{error}}</small>
+                {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            <div class="col">
+                {{ form.pass_confirm(class="form-control", id="pass_confirm", type="password", placeholder="Re-enter password") }}
+            </div>
+        </div>      
+        <div class="row mb-3">
+          <div class="col">
+            {{ form.first_name(class="form-control", id="first_name", type="text", placeholder="First Name") }}
+          </div>
+          <div class="col">
+            {{ form.last_name(class="form-control", id="last_name", type="text", placeholder="Last Name") }}
+          </div>
+        </div>
+        <div class="row mb-3">
+            <div class="form-check col">
+                {{ form.is_admin(class="form-check-input", id="is_admin", type="checkbox") }}
+                {{ form.is_admin.label(class="form-label") }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </div>
+    </form>
+
+{% endblock %}
