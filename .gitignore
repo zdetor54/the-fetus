@@ -2,3 +2,5 @@ fetusappenv/
 _assets/
 migrations/
 fetusapp/data.sqlite
+transcript.py
+openai_test.py
