@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block page_title %} Εγγραφή χρήστη {% endblock %}
+
+{% block content %}
+    
+
+    <div class="container" style="width: 50%;">
+        <p class="mt-4">Please enter your details to login.</p>
+        <form method="post" class="mt-4">
+            {{form.hidden_tag()}}
+            <div class="row">
+                <div class="col-lg-6 col-12 mb-3">
+                    {{ form.username(class="form-control", id="username", aria_describedby="usernameHelp", placeholder="Usersername") }}
+                    {% if error_message %}
+                        <small class="form-text text-muted mt-2">{{ error_message }}</small>
+                    {% endif %}
+                </div>
+                <div class="col-lg-6 col-12 mb-3">
+                    {{ form.password(class="form-control", id="password", aria_describedby="passwordHelp", type="password", placeholder="Password") }}
+                </div>
+                
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}
