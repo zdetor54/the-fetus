@@ -6,30 +6,6 @@ from .forms import RegistrationForm, LoginForm
 
 users = Blueprint('users', __name__)
 
-@users.route('/login', methods=['GET', 'POST'])
-def login():
-
-    form = LoginForm()
-    error_message = None
-    if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
-        
-        
-
-        if user is not None and user.check_password(form.password.data):
-            login_user(user)
-            flash('Logged in successfully.')
-
-            next = request.args.get('next')
-
-            if next == None or not next[0] == '/':
-                next = url_for('core.index')
-
-            return redirect(next)
-        else:
-            error_message = 'Incorrect username and/or password.'
-
-    return render_template('login.html', form=form, active_page='login', error_message=error_message)
 
 @users.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -45,7 +21,7 @@ def signup():
         db.session.add(user)
         db.session.commit()
         flash('Thanks for registering! Now you can login!')
-        return redirect(url_for('users.login'))
+        return redirect(url_for('core.index'))
     else:
         flash('something went wrong!')
         return render_template('signup.html', form=form, active_page='signup')
