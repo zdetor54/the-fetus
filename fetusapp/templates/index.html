@@ -3,36 +3,34 @@
 {% block page_title %} Αρχική Σελίδα {% endblock %}
 
 {% block content %}
-    <div class="jumbotron">
-        
-
+    <div class="p-5 mb-4 bg-light rounded-3">
         <div class="container" style="max-width: 80%;">
             {% if current_user.is_authenticated %}
-                <p>Welcome to the Fetus.app, {{current_user.first_name}}!</p>
-                {% else %}
-                <p>Welcome to the Fetus.app!</p>
-                <p class="zd mt-4 pt-4">Please enter your details to login.</p>
-                <form method="post" class="mt-4">
-                    {{form.hidden_tag()}}
-                    <div class="row">
-                        <div class="col-lg-6 col-12 mb-3">
-                            {{ form.username(class="form-control", id="username", aria_describedby="usernameHelp", placeholder="Usersername") }}
-                            {% if error_message %}
-                                <small class="form-text text-muted mt-2">{{ error_message }}</small>
-                            {% endif %}
-                        </div>
-                        <div class="col-lg-6 col-12 mb-3">
-                            {{ form.password(class="form-control", id="password", aria_describedby="passwordHelp", type="password", placeholder="Password") }}
-                        </div>
-                        
+            <p>Welcome to the Fetus.app, {{current_user.first_name}}!</p>
+            {% else %}
+            <p>Welcome to the Fetus.app!</p>
+            <p class="zd mt-4 pt-4">Please enter your details to login.</p>
+            <form method="post" class="mt-4">
+                {{form.hidden_tag()}}
+                <div class="row">
+                    <div class="col-lg-6 col-12 mb-3">
+                        {{ form.username(class="form-control", id="username", aria_describedby="usernameHelp", placeholder="Usersername") }}
+                        {% if error_message %}
+                            <small class="form-text text-muted mt-2">{{ error_message }}</small>
+                        {% endif %}
                     </div>
-        
-                    <div class="row">
-                        <div class="col">
-                            {{ form.submit(class="btn btn-primary") }}
-                        </div>
+                    <div class="col-lg-6 col-12 mb-3">
+                        {{ form.password(class="form-control", id="password", aria_describedby="passwordHelp", type="password", placeholder="Password") }}
                     </div>
-                </form>
+                    
+                </div>
+    
+                <div class="row">
+                    <div class="col">
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </div>
+            </form>
             {% endif %}
         </div>
         

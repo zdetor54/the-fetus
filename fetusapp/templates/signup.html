@@ -1,59 +1,121 @@
 {% extends "base.html" %}
 
-{% block page_title %} Εγγραφή χρήστη {% endblock %}
+{% block page_title %} Διαχείριση χρήστη {% endblock %}
 
 {% block content %}
     
+    <div class="p-5 mb-4 bg-light rounded-3">
+        <div class="container mt-5" style="width: 80%;">
+            
 
-    <div class="container" style="width: 80%;">
-        <p class="mt-4">Please fill in the details of the user you want to register.</p>
-        <form method="post" class="mt-4">
-            {{form.hidden_tag()}}
-            <div class="form-group">
-                {{ form.username(class="form-control", id="username", aria_describedby="usernameHelp", placeholder="Enter your username") }}
-                {% if form.username.errors %}
-                    <div class="errors">
-                    {% for error in form.username.errors %}
-                        <small id="usernameHelp" class="form-text text-muted">{{error}}</small>
-                    {% endfor %}
-                    </div>
-                {% endif %}
+
+            <div class="d-flex align-items-start">
+            <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <button class="nav-link {% if active_pill == 'register' %}active{% endif %}" id="v-pills-register-tab" data-bs-toggle="pill" data-bs-target="#v-pills-register" type="button" role="tab" aria-controls="v-pills-register" aria-selected="true">Register User</button>
+                <button class="nav-link {% if active_pill == 'update' %}active{% endif %}" id="v-pills-password-tab" data-bs-toggle="pill" data-bs-target="#v-pills-password" type="button" role="tab" aria-controls="v-pills-password" aria-selected="false">Update Password</button>
+                <button class="nav-link {% if active_pill == 'delete' %}active{% endif %}" id="v-pills-delete-tab" data-bs-toggle="pill" data-bs-target="#v-pills-delete" type="button" role="tab" aria-controls="v-pills-delete" aria-selected="false">Delete User</button>
             </div>
-            <div class="row">
-                <div class="col-lg-6 col-12 mb-3">
-                    {{ form.password(class="form-control", id="password", aria_describedby="passwordHelp", type="password", placeholder="Password") }}
-                    {% if form.password.errors %}
-                    <div class="errors">
-                    {% for error in form.password.errors %}
-                        <small id="passwordHelp" class="form-text text-muted">{{error}}</small>
-                    {% endfor %}
-                    </div>
-                    {% endif %}
+            <div class="tab-content" id="v-pills-tabContent">
+                <div class="tab-pane fade {% if active_pill == 'register' %}show active{% endif %}" id="v-pills-register" role="tabpanel" aria-labelledby="v-pills-register-tab">    
+                    <p class="">Please fill in the details of the user you want to register.</p>
+                    <form method="post" class="mt-4" id="registrationForm">
+                        {{form.hidden_tag()}}
+                        <div class="form-group mb-3">
+                            {{ form.username(class="form-control ", id="username", aria_describedby="usernameHelp", placeholder="Enter your username") }}
+                            {% if form.username.errors %}
+                                <div class="errors">
+                                {% for error in form.username.errors %}
+                                    <small id="usernameHelp" class="form-text text-muted">{{error}}</small>
+                                {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 col-12 mb-3">
+                                {{ form.password(class="form-control", id="password", aria_describedby="passwordHelp", type="password", placeholder="Password") }}
+                                {% if form.password.errors %}
+                                <div class="errors">
+                                {% for error in form.password.errors %}
+                                    <small id="passwordHelp" class="form-text text-muted">{{error}}</small>
+                                {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-lg-6 col-12 mb-3">
+                                {{ form.pass_confirm(class="form-control", id="pass_confirm", type="password", placeholder="Re-enter password") }}
+                            </div>
+                        </div>      
+                        <div class="row">
+                        <div class="col-lg-6 col-12 mb-3">
+                            {{ form.first_name(class="form-control", id="first_name", type="text", placeholder="First Name") }}
+                        </div>
+                        <div class="col-lg-6 col-12 mb-3">
+                            {{ form.last_name(class="form-control", id="last_name", type="text", placeholder="Last Name") }}
+                        </div>
+                        </div>
+                        <div class="row mb-3 ml-0">
+                            <div class="form-check col">
+                                {{ form.is_admin(class="form-check-input", id="is_admin", type="checkbox") }}
+                                {{ form.is_admin.label(class="form-label") }}
+                            </div>
+                            {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                <div class="errors">
+                                    {% for message in messages %}
+                                        <small class="form-text text-muted">{{message}}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            {% endwith %}
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <button type="submit" name="action" value="register" class="btn btn-primary">Register</button>                        
+                            </div>
+                        </div>
+                        
+                    </form>
+
                 </div>
-                <div class="col-lg-6 col-12 mb-3">
-                    {{ form.pass_confirm(class="form-control", id="pass_confirm", type="password", placeholder="Re-enter password") }}
+                <div class="tab-pane fade {% if active_pill == 'update' %}show active{% endif %}" id="v-pills-password" role="tabpanel" aria-labelledby="v-pills-password-tab">Update Password</div>
+                <div class="tab-pane fade {% if active_pill == 'delete' %}show active{% endif %}" id="v-pills-delete" role="tabpanel" aria-labelledby="v-pills-delete-tab">
+                    
+                    <form method="post" id="deleteForm">
+                        {{deleteform.hidden_tag()}}
+                        <div class="form-group mb-3">
+                            <label for="datalistOptions" class="form-label">Select the user you want to delete</label>
+                            {{ deleteform.username(class="form-control", list="datalistOptions", id="userlist", autocomplete="off", placeholder="Type to search...") }}
+                            <datalist id="datalistOptions">
+                                <option value="dummy"></option>
+                                {%for user in users%}    
+                                    <option value="{{user.username}}">
+                                {% endfor %}
+                            </datalist>
+                            {% with messages = get_flashed_messages() %}
+                                {% if messages %}
+                                    <div class="errors">
+                                        {% for message in messages %}
+                                            <small class="form-text text-muted">{{message}}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            {% endwith %}
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <button type="submit" name="action" value="delete" class="btn btn-primary">Delete User</button> 
+                            </div>
+                        </div>
+                    </form>
+
                 </div>
-            </div>      
-            <div class="row">
-            <div class="col-lg-6 col-12 mb-3">
-                {{ form.first_name(class="form-control", id="first_name", type="text", placeholder="First Name") }}
-            </div>
-            <div class="col-lg-6 col-12 mb-3">
-                {{ form.last_name(class="form-control", id="last_name", type="text", placeholder="Last Name") }}
             </div>
             </div>
-            <div class="row mb-3 ml-0">
-                <div class="form-check col">
-                    {{ form.is_admin(class="form-check-input", id="is_admin", type="checkbox") }}
-                    {{ form.is_admin.label(class="form-label") }}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    {{ form.submit(class="btn btn-primary") }}
-                </div>
-            </div>
-        </form>
+
+            
+
+
+            
+        </div>
     </div>
-
 {% endblock %}
