@@ -1,39 +1,71 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block page_title %} Αρχική Σελίδα {% endblock %} {%
+block content %}
+<div class="p-5 mb-4 bg-light rounded-3">
+    {% if current_user.is_authenticated %}
 
-{% block page_title %} Αρχική Σελίδα {% endblock %}
-
-{% block content %}
-    <div class="p-5 mb-4 bg-light rounded-3">
-        <div class="container" style="max-width: 80%;">
-            {% if current_user.is_authenticated %}
-            <p>Welcome to the Fetus.app, {{current_user.first_name}}!</p>
-            {% else %}
-            <p>Welcome to the Fetus.app!</p>
-            <p class="zd mt-4 pt-4">Please enter your details to login.</p>
-            <form method="post" class="mt-4">
-                {{form.hidden_tag()}}
-                <div class="row">
-                    <div class="col-lg-6 col-12 mb-3">
-                        {{ form.username(class="form-control", id="username", aria_describedby="usernameHelp", placeholder="Usersername") }}
-                        {% if error_message %}
-                            <small class="form-text text-muted mt-2">{{ error_message }}</small>
-                        {% endif %}
-                    </div>
-                    <div class="col-lg-6 col-12 mb-3">
-                        {{ form.password(class="form-control", id="password", aria_describedby="passwordHelp", type="password", placeholder="Password") }}
-                    </div>
-                    
-                </div>
-    
-                <div class="row">
-                    <div class="col">
-                        {{ form.submit(class="btn btn-primary") }}
-                    </div>
-                </div>
-            </form>
-            {% endif %}
+    <div class="row mb-3">
+      <div class="col-12">
+        <div class="welcome-message">
+          <h5>Welcome to the Fetus.app, {{current_user.first_name}}!</h5>
         </div>
-        
+      </div>
     </div>
+
+    <div class="quick_activity">
+      <div class="row">
+        <div class="col-12">
+          <div class="quick_activity_wrap">
+            <div class="single_quick_activity">
+              <p>{{ quote[0]['content']}}</p>
+              <p style="text-align: right; font-style: italic">
+                {{ quote[0]['author']}}
+              </p>
+            </div>
+            {% if weather %}
+            <div class="single_quick_activity">
+              <h2 style="text-align: right">
+                {{ weather['current']['temperature'] }}°C
+                <img
+                  src="../static/_online_assets/weather_icons/{{ weather['current']['icon_num']}}.png"
+                  alt=""
+                />
+              </h2>
+              <p>{{ weather['daily']['data'][0]['summary'] }}</p>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+
     
+
+    {% else %}
+    <p>Welcome to the Fetus.app!</p>
+    <p class="zd mt-4 pt-4">Please enter your details to login.</p>
+    <form method="post" class="mt-4">
+      {{form.hidden_tag()}}
+      <div class="row">
+        <div class="col-lg-6 col-12 mb-3">
+          {{ form.username(class="form-control", id="username",
+          aria_describedby="usernameHelp", placeholder="Usersername") }} {% if
+          error_message %}
+          <small class="form-text text-muted mt-2">{{ error_message }}</small>
+          {% endif %}
+        </div>
+        <div class="col-lg-6 col-12 mb-3">
+          {{ form.password(class="form-control", id="password",
+          aria_describedby="passwordHelp", type="password",
+          placeholder="Password") }}
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">{{ form.submit(class="btn btn-primary") }}</div>
+      </div>
+    </form>
+    {% endif %}
+</div>
+
 {% endblock %}

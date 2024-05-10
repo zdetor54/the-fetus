@@ -31,3 +31,10 @@ class LoginForm(FlaskForm):
 class DeleteUserForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     submit = SubmitField('Delete User')
+
+class UpdateUserForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    old_password = PasswordField('Old Password', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired(), EqualTo('pass_confirm', message='Passwords must match!')])
+    pass_confirm = PasswordField('Confirm password', validators=[DataRequired()])
+    submit = SubmitField('Update User')

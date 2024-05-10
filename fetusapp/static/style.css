@@ -4,7 +4,13 @@
     --rich-navy: #0B3C5D;   /* Primary button hover color */
     --gradient-color: 239, 83, 158;   /* RGB values for gradient without alpha */
     --vibrant-pink: #EF539E;          /* Active state color for nav link */
+    --muted-coral: #F9A5A5;           /* Secondary color */
+    --warm-beige: #F3E1D7;            /* Background color */
 }
+
+html, body {
+    height: 100%;
+  }
 
 .zd {
     background-image: linear-gradient(
@@ -17,6 +23,7 @@
     background-repeat: no-repeat;
     margin-top: 2em;
 }
+
 
 .btn-primary {
     background-color: var(--calming-blue);
@@ -41,3 +48,64 @@
 /* .bg-light {
     background-color: #F3E1D7 !important;
 } */
+
+.btn-primary.disabled,
+.btn-primary:disabled {
+background-color: grey;
+border-color: grey;
+}
+
+em {
+    color: var(--vibrant-pink);
+    font-weight: bold;
+}
+
+
+.quick_activity_wrap {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-gap: 15px;
+    /* margin-bottom: 30px; */
+}
+
+.quick_admin_wrap {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-gap: 5px;
+    /* margin-bottom: 30px; */
+}
+
+
+
+.single_quick_activity, .welcome-message, .single_quick_admin {
+    color: white;
+    background-color: #fff;
+    border-radius: 10px;
+    -webkit-transition: .5s;
+    transition: .5s;
+    padding: 41px 30px;
+    position: relative;
+    background: var(--calming-blue);
+}
+
+
+.welcome-message {
+    background: var(--vibrant-pink);
+    padding: 20px;
+    text-align: center;
+}
+
+.single_quick_activity:nth-child(2), .single_quick_admin:nth-child(1) {
+    background: var(--warm-beige);
+    color: black;
+}
+
+.single_quick_admin:nth-child(2) {
+    background: #c0c0c0;
+
+}
+
+
+
+
+
