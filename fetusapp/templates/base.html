@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../static/style.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <meta charset="UTF-8">
     <title>
@@ -11,31 +12,77 @@
       {% endblock %}
     </title>
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="{{url_for('core.index')}}">Fetus</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
-          <a class="nav-item nav-link {% if active_page == 'index' %}active{% endif %}" href="{{url_for('core.index')}}">Αρχική</a>
-          
-          
-          {% if current_user.is_authenticated %}
-            <a class="nav-item nav-link" href="#">Καρτέλα Ασθενή</a>
-            {% if current_user.is_admin %}
-            <a class="nav-link {% if active_page == 'signup' %}active{% endif %}" href="{{url_for('users.signup')}}">Διαχείριση Χρηστών</a>
+<body class="d-flex flex-column h-100">
+
+  <header>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark"> 
+      <div class="container-fluid">
+        <a class="navbar-brand" style="color: blueviolet;" href="{{url_for('core.index')}}"><img src="../static/_online_assets/logo.svg" alt="Logo" width="100" height="auto"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="navbar-nav me-auto mb-2 mb-md-0">
+
+            <li class="nav-item">
+              <a class="nav-link {% if active_page == 'index' %}active{% endif %}" aria-current="page" href="{{url_for('core.index')}}">Αρχική</a>
+            </li>
+
+
+            {% if current_user.is_authenticated %}
+            <li>
+              <a class="nav-link" href="#">Καρτέλα Ασθενή</a>
+            </li>
+              {% if current_user.is_admin %}
+              <li>
+                <a class="nav-link {% if active_page == 'signup' %}active{% endif %}" href="{{url_for('users.signup')}}">Διαχείριση Χρηστών</a>
+              </li>
+              {% else %}
+              <li>
+                <a class="nav-link {% if active_page == 'update_password' %}active{% endif %}" href="{{url_for('users.update_password')}}">Αλλαγή Κωδικού</a>
+              </li>
+              {% endif %}
+            <li>
+              <a class="nav-item nav-link" href="{{url_for('users.logout')}}">Αποσύνδεση</a>
+            </li>
             {% endif %}
-            <a class="nav-item nav-link" href="{{url_for('users.logout')}}">Αποσύνδεση</a>
-          {% endif %}
+          </ul>
+
+          <form class="d-flex" role="search">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+          </form>
         </div>
       </div>
     </nav>
-    <div class="container">
-        {% block content %}
-        {% endblock %}
+  </header>
+      
+  <main class="flex-shrink-0">
+    <div class="container mt-5">
+      {% block content %}
+      {% endblock %}
     </div>
+  </main>
 
+
+
+  <footer class="footer mt-auto py-3 bg-dark text-light text-end">
+    <div class="container">
+      {% if current_user.is_authenticated %}
+      <!-- User display, visible only on large screens -->
+      <small>
+        Είστε συνδεδεμένοι ως χρήστης <em>{{ current_user.username }}</em> (powered by pdgr54)
+      </small>
+
+      {% else %}
+      <small>
+        Είστε αποσυνδεμένοι (powered by pdgr54)
+      </small>
+      {% endif %}
+    </div>
+  </footer>
+
+  {% block javascript %}
+  {% endblock %}
 </body>
 </html>
