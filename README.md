@@ -20,3 +20,5 @@ Warm Beige (#F3E1D7) - A neutral, warm tone that adds an understated elegance an
 Rich Navy (#0B3C5D) - A deeper blue that enhances the seriousness and trustworthiness of the palette.
 
 https://help.pythonanywhere.com/pages/Virtualenvs
+
+pip freeze > requirements2.txt
