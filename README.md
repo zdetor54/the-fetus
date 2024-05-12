@@ -22,3 +22,13 @@ Rich Navy (#0B3C5D) - A deeper blue that enhances the seriousness and trustworth
 https://help.pythonanywhere.com/pages/Virtualenvs
 
 pip freeze > requirements2.txt
+
+Aftert deploying the app to pythonanywhere using the instructions detailed here: https://www.youtube.com/watch?v=Bx_jHawKn5A&list=PLWYY9UuOfmS2czQgos9-StzLE3eqKkZTi&index=5
+1. go to the vm and migrate the database using the above instructions.
+2. create an admin user as per the _assets/admin_user.txt
+3. deploy the app
+
+for updates...
+1. cd to the-fetus folder
+2. run the git pull origin main
+3. redeploy the app
