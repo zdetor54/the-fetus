@@ -1,0 +1,29 @@
+INSERT INTO users (first_name, last_name, username, password_hash, is_active, is_admin)
+VALUES ('Admin', 'User', 'admin', 'scrypt:32768:8:1$JwYLXDcqGMZI16Rq$cdd70e21f8f5b4446848e6388b291e8f8571c3b47e0e8861b1697686155d41f04655bfba12878c9342db8cd11f3952764aabb634583a4810c4ffb14c3e28d81c', 1, 1);
+
+
+
+import sqlite3
+
+# Replace the following path with the path to your SQLite database
+db_path = '/home/zdetor54/the-fetus/fetusapp/data.sqlite'
+
+# Establish a connection to the database
+conn = sqlite3.connect(db_path)
+
+# Create a cursor object using the cursor method
+cursor = conn.cursor()
+
+# For example, to execute a query
+cursor.execute("INSERT INTO users (first_name, last_name, username, password_hash, is_active, is_admin)\
+                VALUES ('Admin', 'User', 'admin', 'scrypt:32768:8:1$JwYLXDcqGMZI16Rq$cdd70e21f8f5b4446848e6388b291e8f8571c3b47e0e8861b1697686155d41f04655bfba12878c9342db8cd11f3952764aabb634583a4810c4ffb14c3e28d81c', 1, 1);")
+conn.commit()
+
+cursor.execute("select * from users")
+rows = cursor.fetchall()
+
+for row in rows:
+    print(row)
+
+# Don't forget to close the connection
+conn.close()
