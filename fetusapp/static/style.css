@@ -10,7 +10,69 @@
 
 html, body {
     height: 100%;
-  }
+}
+
+.form-control:focus {
+    border: none;
+    box-shadow: 0 0 8px 0.1rem var(--vibrant-pink);
+}
+
+
+.navbar .btn-outline-light {
+    color: var(--vibrant-pink);
+    border-color: var(--vibrant-pink);
+}
+
+.navbar .btn-outline-light:hover {
+    color: black;
+    background-color: var(--vibrant-pink);
+    border-color: var(--vibrant-pink);
+}
+
+/* Custom CSS to adjust spacing for the .logged-user-icon when navbar is collapsed (below 768px) */
+@media (max-width: 767.98px) {
+    .navbar-collapse .logged-user-icon {
+        margin-top: 10px; /* Adds space at the top only when navbar is collapsed */
+    }
+}
+
+/* Ensures no left margin when navbar is collapsed */
+@media (max-width: 767.98px) {
+    .navbar-collapse .logged-user-icon {
+        margin-left: 0; /* Ensures no margin on the left in collapsed state */
+    }
+}
+
+.logged-user-icon {
+    width: 40px;
+    height: 40px;
+    background-color: var(--vibrant-pink); /* Gray background, you can change the color */
+    color: black; /* White text color */
+    display: flex;
+    align-items: center; /* Center content vertically */
+    justify-content: center; /* Center content horizontally */
+    border-radius: 50%; /* Makes the div circular */
+    font-weight: bold; /* Bolder text for initials */
+    font-size: 16px; /* Adjust font size as needed */
+}
+
+.custom-link {
+    text-decoration: none; /* Removes underline from the link */
+}
+
+footer small{
+    color: grey
+}
+
+footer a{
+    text-decoration: none;
+    color: var(--vibrant-pink);
+}
+
+footer a:hover{
+    color: white;
+}
+
 
 .zd {
     background-image: linear-gradient(
@@ -34,6 +96,45 @@ html, body {
     background-color: var(--rich-navy);
     border-color: var(--rich-navy);
 }
+
+
+
+.form-signin {
+    max-width: 330px;
+    padding: 1rem;
+}
+
+/* Login Page */
+
+.form-signin input[type="username"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+    margin-top: -1px;
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+}
+
+.form-signin .form-control:focus {
+    border: 1px solid #ced4da;
+    box-shadow: none
+}
+
+/* end login page */
+
+
+
+
+
+
+
+
+
+
+
 
 .nav-pills .nav-link.active {
     background-color: var(--vibrant-pink);

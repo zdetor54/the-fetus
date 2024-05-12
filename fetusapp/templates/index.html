@@ -1,71 +1,88 @@
 {% extends "base.html" %} {% block page_title %} Αρχική Σελίδα {% endblock %} {%
 block content %}
-<div class="p-5 mb-4 bg-light rounded-3">
+
     {% if current_user.is_authenticated %}
 
-    <div class="row mb-3">
-      <div class="col-12">
-        <div class="welcome-message">
-          <h5>Welcome to the Fetus.app, {{current_user.first_name}}!</h5>
-        </div>
-      </div>
-    </div>
+    <main class="flex-shrink-0 m-auto py-3 bg-dark flex-grow-1">
+      <div class="container mt-5">
 
-    <div class="quick_activity">
-      <div class="row">
-        <div class="col-12">
-          <div class="quick_activity_wrap">
-            <div class="single_quick_activity">
-              <p>{{ quote[0]['content']}}</p>
-              <p style="text-align: right; font-style: italic">
-                {{ quote[0]['author']}}
-              </p>
+        <div class="quick_activity mb-3">
+          <div class="row">
+            <div class="col-12">
+              <div class="quick_activity_wrap">
+                <div class="single_quick_activity">
+                  <p>{{ quote[0]['content']}}</p>
+                  <p style="text-align: right; font-style: italic">
+                    {{ quote[0]['author']}}
+                  </p>
+                </div>
+                {% if weather %}
+                <div class="single_quick_activity">
+                  <h2 style="text-align: right">
+                    {{ weather['current']['temperature'] }}°C
+                    <img
+                      src="../static/_online_assets/weather_icons/{{ weather['current']['icon_num']}}.png"
+                      alt=""
+                    />
+                  </h2>
+                  <p>{{ weather['daily']['data'][0]['summary'] }}</p>
+                </div>
+                {% endif %}
+              </div>
             </div>
-            {% if weather %}
-            <div class="single_quick_activity">
-              <h2 style="text-align: right">
-                {{ weather['current']['temperature'] }}°C
-                <img
-                  src="../static/_online_assets/weather_icons/{{ weather['current']['icon_num']}}.png"
-                  alt=""
-                />
-              </h2>
-              <p>{{ weather['daily']['data'][0]['summary'] }}</p>
-            </div>
-            {% endif %}
           </div>
         </div>
+
+        <p class="text-light">
+          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quam est eos odio quod eligendi quae atque in culpa dicta dignissimos quaerat esse, reprehenderit sunt veritatis illum id eaque minus quasi?
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur libero voluptas sint expedita. Illo fuga laudantium, earum dicta ab, tenetur ratione, velit officia animi qui reiciendis asperiores omnis iusto laboriosam!
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad fuga laborum fugiat. Perferendis quam adipisci doloremque explicabo! Maiores ipsam enim, facere a quam voluptatibus nam molestiae qui mollitia cum dolor?
+          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Doloribus vitae ipsa nemo tempora obcaecati possimus dicta sint corporis ab vel impedit, accusamus natus dolor ratione optio laborum illum aliquid facere!
+          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Veniam, quibusdam amet, quam ipsam doloribus officiis impedit expedita laborum eos exercitationem optio alias necessitatibus quaerat ipsa sunt. Nostrum molestiae ratione doloribus.
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum sed, necessitatibus fuga voluptate vero eaque voluptatibus, consequuntur, eum officia culpa corrupti? Cum consequatur voluptate, fugit veniam ea necessitatibus nisi tenetur!
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minus vel harum consequatur ipsam assumenda temporibus eligendi non cupiditate quasi porro neque perferendis numquam laboriosam est velit, in eaque ex molestias.
+        </p>
+        <p class="text-light">
+          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Debitis officia commodi fuga doloribus corrupti placeat itaque laboriosam hic! Error modi nulla consectetur blanditiis deleniti amet, quia maiores mollitia laborum ad.
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat autem corrupti accusantium veritatis dolore velit, ducimus possimus ipsa tempora voluptas repellendus ipsam aspernatur dicta, incidunt iure, odio praesentium nihil labore.
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet nobis, eveniet maxime optio tempora vel commodi est architecto recusandae cumque voluptatem totam. Eligendi aperiam quis consequuntur tenetur odit nihil pariatur?
+          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Vel deserunt cumque non quo! Quasi, fugit! Architecto odio optio, quasi earum ut eveniet facere ex ipsam odit voluptatem dolore reiciendis autem.
+        </p>
+
       </div>
-    </div>
+    </main>
+
 
 
     
 
     {% else %}
-    <p>Welcome to the Fetus.app!</p>
-    <p class="zd mt-4 pt-4">Please enter your details to login.</p>
-    <form method="post" class="mt-4">
-      {{form.hidden_tag()}}
-      <div class="row">
-        <div class="col-lg-6 col-12 mb-3">
-          {{ form.username(class="form-control", id="username",
-          aria_describedby="usernameHelp", placeholder="Usersername") }} {% if
-          error_message %}
-          <small class="form-text text-muted mt-2">{{ error_message }}</small>
+    <main class="form-signin w-100 m-auto pt-5">
+      <img class="mb-4 mx-auto d-block" src="../static/_online_assets/logo.svg" alt="" width="200" height=auto>
+      <form method="post">
+        {{form.hidden_tag()}}
+        
+        <div>
+          {{ form.username(class="form-control", id="username", type="username", aria_describedby="usernameHelp", placeholder="Username") }} 
+        </div>
+        <div>
+          {{ form.password(class="form-control", id="password", type="password", aria_describedby="passwordHelp", type="password", placeholder="Password") }}
+          {% if error_message %}
+          <small class="form-text text-muted mt-2 px-1">{{ error_message }}</small>
           {% endif %}
         </div>
-        <div class="col-lg-6 col-12 mb-3">
-          {{ form.password(class="form-control", id="password",
-          aria_describedby="passwordHelp", type="password",
-          placeholder="Password") }}
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col">{{ form.submit(class="btn btn-primary") }}</div>
-      </div>
-    </form>
+        
+        <button class="btn btn-primary mt-4 w-100 py-2">
+        Log in
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-in-right" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"></path>
+          <path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"></path>
+        </svg>
+      </button>
+      </form>
+    </main>
+  
     {% endif %}
-</div>
+
 
 {% endblock %}
