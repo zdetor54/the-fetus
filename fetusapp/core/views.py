@@ -6,8 +6,45 @@ from fetusapp.users.views import users
 from ..users.forms import RegistrationForm, LoginForm
 # from werkzeug.security import generate_password_hash, check_password_hash
 import requests
+from datetime import datetime, timedelta
+
+import caldav
+from caldav import DAVClient
+
 
 core = Blueprint('core', __name__)
+
+def get_calendar_events(target_date = datetime.now().date(), days=7):
+     # This is where the calendar events are fetched
+    url = "https://caldav.icloud.com"
+    username = "zdetor54@gmail.com"
+    password = "nyvm-xzqu-fclb-iuox"
+
+    # Connect to the iCloud CalDAV server
+    client = DAVClient(url, username=username, password=password)
+    principal = client.principal()
+
+    # Get your calendars
+    calendars = principal.calendars()
+
+    # Replace with the name of your desired calendar
+    calendar_name = "Work"
+
+    # Find the specific calendar
+    try:
+        # Find the specific calendar
+        calendar = next(cal for cal in calendars if cal.name == calendar_name)
+    except StopIteration:
+        print("Calendar not found")
+
+    # Define the time range for the entire day
+    start = datetime.combine(target_date, datetime.min.time())
+    end = datetime.combine(target_date + timedelta(days), datetime.min.time())
+
+    # Get events for the specified day
+    events = calendar.date_search(start=start, end=end)
+
+    return events
 
 @core.route('/', methods=['GET', 'POST'])
 def index():
@@ -63,15 +100,32 @@ def index():
             login_user(user)
             flash('Logged in successfully.')
 
-            next = request.args.get('next')
+            next_user = request.args.get('next')
 
-            if next == None or not next[0] == '/':
-                next = url_for('core.index')
+            if next_user == None or not next[0] == '/':
+                next_user = url_for('core.index')
 
-            return redirect(next)
+            return redirect(next_user)
         else:
             error_message = 'Incorrect username and/or password.'
 
-    return render_template('index.html', form=form, active_page='index', error_message=error_message, quote=quote, weather=weather, messages=messages)
+        # Print event details
+
+
+     # Specify the day you want to get events for
+    target_date = datetime(2024, 5, 14)  # Replace with your desired date
+
+    events = get_calendar_events(target_date,7)
+    for event in events:
+        vevent = event.vobject_instance.vevent
+        print(f"UID: {vevent.uid.value if hasattr(vevent, 'uid') else 'No UID'}")
+        print(f"Summary: {vevent.summary.value if hasattr(vevent, 'summary') else 'No Summary'}")
+        print(f"Description: {vevent.description.value if hasattr(vevent, 'description') else 'No Description'}")
+        print(f"Start: {vevent.dtstart.value if hasattr(vevent, 'dtstart') else 'No Start Date'}")
+        print(f"End: {vevent.dtend.value if hasattr(vevent, 'dtend') else 'No End Date'}")
+        print("---")
+
+
+    return render_template('index.html', form=form, active_page='index', error_message=error_message, quote=quote, weather=weather, messages=messages, calendar_events=events)
 
 

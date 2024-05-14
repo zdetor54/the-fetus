@@ -29,6 +29,15 @@ html, body {
     border-color: var(--vibrant-pink);
 }
 
+
+.navbar-dark .navbar-toggler {
+    border-color: rgba(239, 83, 158, .99);
+}
+
+.navbar-dark .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28239, 83, 158, 0.99' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
 /* Custom CSS to adjust spacing for the .logged-user-icon when navbar is collapsed (below 768px) */
 @media (max-width: 767.98px) {
     .navbar-collapse .logged-user-icon {
@@ -178,7 +187,7 @@ em {
 
 
 
-.single_quick_activity, .welcome-message, .single_quick_admin {
+.single_quick_activity, .welcome-message, .single_quick_admin, .weather-pill {
     color: white;
     background-color: #fff;
     border-radius: 10px;
@@ -189,6 +198,13 @@ em {
     background: var(--calming-blue);
 }
 
+.quote-pill{
+    /* color: white; */
+    padding: 41px 30px;
+    position: relative;
+    border-radius: 10px;
+
+}
 
 .welcome-message {
     background: var(--vibrant-pink);
@@ -196,7 +212,7 @@ em {
     text-align: center;
 }
 
-.single_quick_activity:nth-child(2), .single_quick_admin:nth-child(1) {
+.single_quick_activity:nth-child(2), .single_quick_admin:nth-child(1), .weather-pill {
     background: var(--warm-beige);
     color: black;
 }
@@ -207,6 +223,14 @@ em {
 }
 
 
+.rounded-4 {
+    border-radius: 1rem !important;
+}
+
+.display-6 {
+    font-size: 2rem;
+    font-weight: 300;
+}
 
 
 
