@@ -3,53 +3,66 @@ block content %}
 
     {% if current_user.is_authenticated %}
 
-    <main class="flex-shrink-0 m-auto py-3 bg-dark flex-grow-1">
-      <div class="container mt-5">
-
-        <div class="quick_activity mb-3">
-          <div class="row">
-            <div class="col-12">
-              <div class="quick_activity_wrap">
-                <div class="single_quick_activity">
-                  <p>{{ quote[0]['content']}}</p>
-                  <p style="text-align: right; font-style: italic">
-                    {{ quote[0]['author']}}
-                  </p>
+    <main class="flex-shrink-0 m-auto py-3 flex-grow-1 bg-dark">
+        
+        <div class=" container px-4" id="custom-cards">
+     
+          <div class="row row-cols-1 row-cols-lg-2 align-items-stretch g-4 py-5 text-bg-dark">
+      
+            <div class="col-12 col-lg-8 order-1 order-lg-1 text-light">
+              <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-color: #EF539E;">
+                <div class="d-flex flex-column h-100 p-5 pb-3 text-shadow-1">
+                  <h3 class="pt-0 mt-0 mb-4 lh-1" style="font-weight: 100;">{{ quote[0]['content']}}</h3>
+                  <small class="ms-auto" style="font-style: italic">{{ quote[0]['author']}}</small>
                 </div>
-                {% if weather %}
-                <div class="single_quick_activity">
-                  <h2 style="text-align: right">
+              </div>
+            </div>
+       
+            <div class="col-12 col-md-6 col-lg-4 order-lg-2">
+              <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-color: #F3E1D7;">
+                <div class="d-flex flex-column h-100 p-5 pb-3 text-shadow-1">
+                  <h3 class="pt-0 mt-0 mb-4 display-6 lh-1 fw-bold">
                     {{ weather['current']['temperature'] }}°C
-                    <img
-                      src="../static/_online_assets/weather_icons/{{ weather['current']['icon_num']}}.png"
-                      alt=""
-                    />
-                  </h2>
+                    <img src="../static/_online_assets/weather_icons/{{ weather['current']['icon_num']}}.png" alt=""/>
+                  </h3>
                   <p>{{ weather['daily']['data'][0]['summary'] }}</p>
                 </div>
-                {% endif %}
               </div>
             </div>
           </div>
         </div>
+        
+        
+        <div class="zd pt-5 container px-4 text-light" id="icon-grid">
+          {% if calendar_events | length > 0 %}
+          <h2 class="pb-2 text-center" style="font-weight: 100; color: #EF539E;">There are {{ calendar_events | length }} scheduled appointments for today!</h2>
+      
+          <div class="zd row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 pt-4">
+            {% for event in calendar_events %}
+            {% set vevent = event.vobject_instance.vevent %}
+            <div class="col d-flex align-items-start">
+              <div>
+                <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">{{ vevent.summary.value }}</h3>
+                <p>
+                  {% if vevent.description %}
+                    {{ vevent.description.value }}
+                  {% else %}
+                      No description available
+                  {% endif %}
+                </p>
+                <p>
+                  <small class="text-muted">{{ vevent.dtstart.value }}</small>
+                </p>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
 
-        <p class="text-light">
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quam est eos odio quod eligendi quae atque in culpa dicta dignissimos quaerat esse, reprehenderit sunt veritatis illum id eaque minus quasi?
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur libero voluptas sint expedita. Illo fuga laudantium, earum dicta ab, tenetur ratione, velit officia animi qui reiciendis asperiores omnis iusto laboriosam!
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad fuga laborum fugiat. Perferendis quam adipisci doloremque explicabo! Maiores ipsam enim, facere a quam voluptatibus nam molestiae qui mollitia cum dolor?
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Doloribus vitae ipsa nemo tempora obcaecati possimus dicta sint corporis ab vel impedit, accusamus natus dolor ratione optio laborum illum aliquid facere!
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Veniam, quibusdam amet, quam ipsam doloribus officiis impedit expedita laborum eos exercitationem optio alias necessitatibus quaerat ipsa sunt. Nostrum molestiae ratione doloribus.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum sed, necessitatibus fuga voluptate vero eaque voluptatibus, consequuntur, eum officia culpa corrupti? Cum consequatur voluptate, fugit veniam ea necessitatibus nisi tenetur!
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minus vel harum consequatur ipsam assumenda temporibus eligendi non cupiditate quasi porro neque perferendis numquam laboriosam est velit, in eaque ex molestias.
-        </p>
-        <p class="text-light">
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Debitis officia commodi fuga doloribus corrupti placeat itaque laboriosam hic! Error modi nulla consectetur blanditiis deleniti amet, quia maiores mollitia laborum ad.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat autem corrupti accusantium veritatis dolore velit, ducimus possimus ipsa tempora voluptas repellendus ipsam aspernatur dicta, incidunt iure, odio praesentium nihil labore.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet nobis, eveniet maxime optio tempora vel commodi est architecto recusandae cumque voluptatem totam. Eligendi aperiam quis consequuntur tenetur odit nihil pariatur?
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Vel deserunt cumque non quo! Quasi, fugit! Architecto odio optio, quasi earum ut eveniet facere ex ipsam odit voluptatem dolore reiciendis autem.
-        </p>
+          {% else %}
+          <h2 class="pb-2 border-bottom">No appointments today</h2>
+          {% endif %}
+        </div>
 
-      </div>
     </main>
 
 
