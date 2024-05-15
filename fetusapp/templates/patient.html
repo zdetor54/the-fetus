@@ -1,0 +1,64 @@
+{% extends "base.html" %} 
+
+{% block page_title %} Καρτέλα Ασθενή {% endblock %}
+{% block content %}
+
+    {% if current_user.is_authenticated %}
+    <main class="flex-shrink-0 m-auto py-3 flex-grow-1 bg-dark">
+    <div class="container mt-2 text-light">
+
+        <!-- Row with the general history -->
+        <div class=" container px-4" id="custom-cards"> 
+
+            <!-- Section with personal details for patient and partner -->
+            <div class="row row-cols-1 row-cols-lg-2 align-items-stretch g-4 py-5 text-bg-dark">
+                <div class="col-12 col-lg-6 text-light">
+                    <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg bg-dark" style="; border-color: #EF539E;">
+                        <div class="d-flex flex-column h-100 p-4 text-shadow-1">
+                            <h3 class="pb-2">
+                                Personal Details
+                            </h3>
+                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea, praesentium minus. Recusandae beatae distinctio
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum, quia praesentium aut debitis facere officia. 
+                                Incidunt ab vero, numquam pariatur at aperiam, inventore tempore aliquid laborum saepe est nostrum provident!
+                                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Temporibus, nihil maiores perspiciatis commodi officia voluptate neque, unde rerum, sunt quam earum numquam. 
+                                Rerum quas laudantium alias unde nostrum earum incidunt?
+                            </p>
+                        </div>
+                    </div>  
+                </div>
+                <!-- End of ection with personal details for patient and partner -->
+
+                <!-- Section with contact details -->
+                <div class="col-12 col-lg-6 text-light">
+                    <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg bg-dark" style="; border-color: #EF539E;">
+                        <div class="d-flex flex-column h-100 p-4 text-shadow-1">
+                            <h3 class="pb-2">
+                                Contact Details
+                            </h3>
+                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea, praesentium minus. Recusandae beatae distinctio 
+                            similique alias rem culpa, corporis quaerat magnam molestias veritatis, porro, eius eos expedita nisi perspiciatis consequuntur!langl
+                            Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                        </div>
+                    </div>  
+                </div>
+                <!-- end of ection with contact details -->
+
+            </div>
+            <!-- end of row with the general history -->
+
+
+
+
+
+        </div>
+        
+    </div>
+    </main>
+    {% else %}
+    <div class="container mt-5 pt-5">
+        <p class="text-danger">You are not logged in</p>
+    </div>
+    {% endif %}
+
+{% endblock %}

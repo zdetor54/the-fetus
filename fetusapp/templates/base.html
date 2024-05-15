@@ -13,7 +13,7 @@
     {% endblock %}
   </title>
 </head>
-<body class="d-flex flex-column min-vh-100 pt-4 bg-dark">
+<body class="d-flex flex-column min-vh-100 pt-4 bg-light">
   <header>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark"> 
       <div class="container-fluid">
@@ -43,7 +43,7 @@
               <a class="nav-link {% if active_page == 'index' %}active{% endif %}" aria-current="page" href="{{url_for('core.index')}}">Αρχική</a>
             </li>
             <li>
-              <a class="nav-link" href="#">Καρτέλα Ασθενή</a>
+              <a class="nav-link" href="{{url_for('patients.no_patient')}}">Καρτέλα Ασθενή</a>
             </li>
               {% if current_user.is_admin %}
               <li>
