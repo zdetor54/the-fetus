@@ -10,6 +10,11 @@
 
 html, body {
     height: 100%;
+    font-weight: 100;
+}
+
+h3 {
+    font-weight: 100;
 }
 
 .form-control:focus {
@@ -99,6 +104,12 @@ footer a:hover{
 .btn-primary {
     background-color: var(--calming-blue);
     border-color: var(--calming-blue);
+}
+
+.login-btn {
+    background-color: var(--vibrant-pink);
+    border-radius: 5rem;
+    color: white;
 }
 
 .btn-primary:hover {

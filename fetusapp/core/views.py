@@ -115,15 +115,19 @@ def index():
      # Specify the day you want to get events for
     target_date = datetime(2024, 5, 14)  # Replace with your desired date
 
-    events = get_calendar_events(target_date,7)
-    for event in events:
-        vevent = event.vobject_instance.vevent
-        print(f"UID: {vevent.uid.value if hasattr(vevent, 'uid') else 'No UID'}")
-        print(f"Summary: {vevent.summary.value if hasattr(vevent, 'summary') else 'No Summary'}")
-        print(f"Description: {vevent.description.value if hasattr(vevent, 'description') else 'No Description'}")
-        print(f"Start: {vevent.dtstart.value if hasattr(vevent, 'dtstart') else 'No Start Date'}")
-        print(f"End: {vevent.dtend.value if hasattr(vevent, 'dtend') else 'No End Date'}")
-        print("---")
+    try:
+        events = get_calendar_events(target_date,7)
+    except ConnectionError:
+        events = None
+    if events:
+        for event in events:
+            vevent = event.vobject_instance.vevent
+            print(f"UID: {vevent.uid.value if hasattr(vevent, 'uid') else 'No UID'}")
+            print(f"Summary: {vevent.summary.value if hasattr(vevent, 'summary') else 'No Summary'}")
+            print(f"Description: {vevent.description.value if hasattr(vevent, 'description') else 'No Description'}")
+            print(f"Start: {vevent.dtstart.value if hasattr(vevent, 'dtstart') else 'No Start Date'}")
+            print(f"End: {vevent.dtend.value if hasattr(vevent, 'dtend') else 'No End Date'}")
+            print("---")
 
 
     return render_template('index.html', form=form, active_page='index', error_message=error_message, quote=quote, weather=weather, messages=messages, calendar_events=events)
