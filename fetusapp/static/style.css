@@ -110,6 +110,7 @@ footer a:hover{
     background-color: var(--vibrant-pink);
     border-radius: 5rem;
     color: white;
+    font-weight: 500;
 }
 
 .btn-primary:hover {
