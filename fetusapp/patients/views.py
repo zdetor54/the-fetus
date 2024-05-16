@@ -10,4 +10,4 @@ def no_patient():
     if not current_user.is_authenticated:
         flash('You need to be logged in to view the patient page.')
         return redirect(url_for('core.index'))
-    return render_template('patient.html')
+    return render_template('patient.html', active_page='patient')
