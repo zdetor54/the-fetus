@@ -27,13 +27,20 @@ def get_calendar_events(target_date = datetime.now().date(), days=7):
     # Get your calendars
     calendars = principal.calendars()
 
+    for calendar in calendars:
+        name = calendar.name
+        url = calendar.url
+        print(f"Name: {name}, URL: {url}")
+
     # Replace with the name of your desired calendar
     calendar_name = "Work"
+    calendar_url = "75fec20324b34821c0cfae15e8a9cee826762747257294ea3bc5c2e6bd2ab65d"
 
     # Find the specific calendar
     try:
         # Find the specific calendar
-        calendar = next(cal for cal in calendars if cal.name == calendar_name)
+        # calendar = next(cal for cal in calendars if cal.name == calendar_name)
+        calendar = next(cal for cal in calendars if cal.url == calendar_url)
     except StopIteration:
         print("Calendar not found")
 
@@ -116,7 +123,7 @@ def index():
     target_date = datetime(2024, 5, 14)  # Replace with your desired date
 
     try:
-        events = get_calendar_events(target_date,7)
+        events = get_calendar_events(days=1)
     except ConnectionError:
         events = None
     if events:

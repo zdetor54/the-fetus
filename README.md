@@ -30,6 +30,6 @@ Aftert deploying the app to pythonanywhere using the instructions detailed here:
 
 for updates...
 1. cd to the-fetus folder
-2. run the git pull origin main
+2. run the git stash / git pull origin main
 3. redeploy the app or
 4. pip install -r requirements.txt for the dependencies

@@ -141,14 +141,31 @@ footer a:hover{
 
 .form-signin .form-control:focus {
     border: 1px solid #ced4da;
-    box-shadow: none
+    box-shadow: none;
 }
 
 /* end login page */
 
 
 
+/* Appointments table */
 
+.btn-outline-secondary {
+    color: var(--vibrant-pink);
+    border-color: var(--vibrant-pink);
+}
+
+.btn-outline-secondary:hover {
+    background-color: var(--vibrant-pink);
+    border-color: var(--vibrant-pink);
+}
+
+
+.btn-outline-secondary:focus, .btn-outline-secondary:active {
+    box-shadow: none;
+}
+
+/* End of appointments table */
 
 
 
