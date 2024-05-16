@@ -123,7 +123,7 @@ def index():
     target_date = datetime(2024, 5, 14)  # Replace with your desired date
 
     try:
-        events = get_calendar_events(days=1)
+        events = get_calendar_events(days=2)
     except ConnectionError:
         events = None
     if events:
