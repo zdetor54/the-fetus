@@ -4,3 +4,6 @@ migrations/
 fetusapp/data.sqlite
 transcript.py
 openai_test.py
+**/__pycache__/
+*.pyc
+*.pyo
