@@ -43,6 +43,10 @@ h3 {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28239, 83, 158, 0.99' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }
 
+.navbar-dark .navbar-nav .nav-link.active, .navbar-dark .navbar-nav .show>.nav-link {
+    color: var(--vibrant-pink);
+}
+
 /* Custom CSS to adjust spacing for the .logged-user-icon when navbar is collapsed (below 768px) */
 @media (max-width: 767.98px) {
     .navbar-collapse .logged-user-icon {

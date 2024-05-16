@@ -43,7 +43,7 @@
               <a class="nav-link {% if active_page == 'index' %}active{% endif %}" aria-current="page" href="{{url_for('core.index')}}">Αρχική</a>
             </li>
             <li>
-              <a class="nav-link" href="{{url_for('patients.no_patient')}}">Καρτέλα Ασθενή</a>
+              <a class="nav-link {% if active_page == 'patient' %}active{% endif %}" href="{{url_for('patients.no_patient')}}">Καρτέλα Ασθενή</a>
             </li>
               {% if current_user.is_admin %}
               <li>

@@ -100,7 +100,7 @@ block content %}
                 <th scope="row">{{loop.index}}</th>
                 <td>{{ vevent.dtstart.value.strftime("%H:%M") }} - {{ vevent.dtend.value.strftime("%H:%M") }}</td>
                 <td>
-                  <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="border-radius: 2rem; min-width: 1rem;">
+                  <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="border-radius: 2rem; min-width: 2rem;">
                     <div class="progress-bar" style="background-color: #EF539E; width: {{ (vevent.dtend.value - vevent.dtstart.value).total_seconds() / 36 }}%; border-radius-left: 2rem;"></div>
                   </div>
                 </td>
