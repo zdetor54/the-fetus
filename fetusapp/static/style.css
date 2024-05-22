@@ -131,11 +131,14 @@ footer a:hover{
 }
 
 .secondary-nav-container{
-    border-radius: 2rem; 
-    display: inline-flex; 
-    box-shadow: inset 1px 1px 0.2rem #3e1629;
+    border-radius: 2rem;
+    display: inline-flex;
     flex-wrap: nowrap;
     overflow-x: auto;
+    box-shadow: inset 1px 1px 0.2rem #3e1629;
+    overflow-x: auto;
+    padding: 10px;
+    margin: 0;
 }
 
 .secondary-nav-container li{
