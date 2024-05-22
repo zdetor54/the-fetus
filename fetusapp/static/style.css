@@ -130,6 +130,18 @@ footer a:hover{
     border-color: var(--rich-navy);
 }
 
+.secondary-nav-container{
+    border-radius: 2rem; 
+    display: inline-flex; 
+    box-shadow: inset 1px 1px 0.2rem #3e1629;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+}
+
+.secondary-nav-container li{
+    flex: 0 0 auto;
+    margin: 0 5px;
+}
 
 
 .form-signin {
