@@ -124,8 +124,8 @@ def index():
 
     try:
         events = get_calendar_events(days=2)
-    except ConnectionError:
-        events = None
+    except:
+        events = []
     if events:
         for event in events:
             vevent = event.vobject_instance.vevent

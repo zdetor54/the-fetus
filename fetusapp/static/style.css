@@ -141,6 +141,8 @@ footer a:hover{
 
 .form-signin input[type="username"] {
     margin-bottom: -1px;
+    border-top-right-radius: 1rem;
+    border-top-left-radius: 1rem;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
 }
@@ -149,7 +151,10 @@ footer a:hover{
     margin-top: -1px;
     border-top-right-radius: 0;
     border-top-left-radius: 0;
+    border-bottom-right-radius: 1rem;
+    border-bottom-left-radius: 1rem;
 }
+
 
 .form-signin .form-control:focus {
     border: 1px solid #ced4da;
