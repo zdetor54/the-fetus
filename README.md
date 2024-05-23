@@ -33,3 +33,5 @@ for updates...
 2. run the git stash / git pull origin main
 3. redeploy the app or
 4. pip install -r requirements.txt for the dependencies
+
+Have a panel with the pregrancies that are about to BURST

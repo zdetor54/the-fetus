@@ -43,9 +43,32 @@
                             <h3 class="pb-2">
                                 Contact Details
                             </h3>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea, praesentium minus. Recusandae beatae distinctio 
-                            similique alias rem culpa, corporis quaerat magnam molestias veritatis, porro, eius eos expedita nisi perspiciatis consequuntur!langl
-                            Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+
+                            <!-- New content with slider card -->
+                            <div class="container my-4">
+                                <div class="form-container" id="formContainer">
+                                    <div class="read-only" id="readOnlyContent">
+                                        <p><strong>Name:</strong> John Doe</p>
+                                        <p><strong>Email:</strong> john.doe@example.com</p>
+                                        <button class="btn btn-outline-secondary" onclick="toggleEditMode()">Update</button>
+                                    </div>
+                                    <div class="editable" id="editableContent">
+                                        <form>
+                                            <div class="mb-3">
+                                                <label for="nameInput" class="form-label">Name</label>
+                                                <input type="text" class="form-control" id="nameInput" value="John Doe">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="emailInput" class="form-label">Email</label>
+                                                <input type="email" class="form-control" id="emailInput" value="john.doe@example.com">
+                                            </div>
+                                            <button type="button" class="btn btn-success" onclick="saveChanges()">Save</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end of new content with slider card -->
+                            
                         </div>
                     </div>  
                 </div>
@@ -153,4 +176,35 @@
     </div>
 {% endif %}
 
+{% endblock %}
+
+{% block javascript %}
+<script>
+    function toggleEditMode() {
+        const formContainer = document.getElementById('formContainer');
+        const readOnlyContent = document.getElementById('readOnlyContent');
+        const editableContent = document.getElementById('editableContent');
+
+        if (editableContent.style.display === 'none') {
+            editableContent.style.display = 'block';
+            readOnlyContent.style.display = 'none';
+            formContainer.style.maxHeight = editableContent.scrollHeight + 'px';
+        } else {
+            editableContent.style.display = 'none';
+            readOnlyContent.style.display = 'block';
+            formContainer.style.maxHeight = readOnlyContent.scrollHeight + 'px';
+        }
+    }
+
+    function saveChanges() {
+        // Implement save functionality here
+        toggleEditMode();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const formContainer = document.getElementById('formContainer');
+        const readOnlyContent = document.getElementById('readOnlyContent');
+        formContainer.style.maxHeight = readOnlyContent.scrollHeight + 'px';
+    });
+</script>
 {% endblock %}
