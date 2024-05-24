@@ -47,12 +47,23 @@
                             <!-- New content with slider card -->
                             <div class="container my-4">
                                 <div class="form-container" id="formContainer">
+
+
                                     <div class="read-only" id="readOnlyContent">
-                                        <p><strong>Name:</strong> John Doe</p>
-                                        <p><strong>Email:</strong> john.doe@example.com</p>
+                                        <p>
+                                            <muted style="color: #EF539E;">Name:</muted> Θεοφανία Βασιλειάδου <br>
+                                            <muted style="color: #EF539E;">Father's Name:</muted> Σπυρίδωνας <br>
+                                            <muted style="color: #EF539E;">Ημερομηνία Γεννήσεως:</muted> 1945-03-04 / 79<br>
+                                            <muted style="color: #EF539E;">Οικογενειακή Κατάσταση:</muted> Άγαμος<br>
+                                            <muted style="color: #EF539E;">Εθνικότητα:</muted> Ελληνική<br>
+                                            <muted style="color: #EF539E;">Επάγγελμα:</muted> Συνταξιούχος ΟΤΕ<br>
+                                            <muted style="color: #EF539E;">Email:</muted> john.doe@example.com
+                                        </p>
                                         <button class="btn btn-outline-secondary" onclick="toggleEditMode()">Update</button>
                                     </div>
-                                    <div class="editable" id="editableContent">
+
+
+                                    <div class="editable" id="editableContent" style="display: none;">
                                         <form>
                                             <div class="mb-3">
                                                 <label for="nameInput" class="form-label">Name</label>
@@ -65,10 +76,12 @@
                                             <button type="button" class="btn btn-success" onclick="saveChanges()">Save</button>
                                         </form>
                                     </div>
+
+
                                 </div>
                             </div>
                             <!-- end of new content with slider card -->
-                            
+
                         </div>
                     </div>  
                 </div>
