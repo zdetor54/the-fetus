@@ -35,3 +35,5 @@ for updates...
 4. pip install -r requirements.txt for the dependencies
 
 Have a panel with the pregrancies that are about to BURST
+
+PROMPT:  <instructions>Extract the following types of PII: surnames and phone numbers. Ignore anything related to ODS, Δώδος, Αλιακιόζογλου.</instructions>

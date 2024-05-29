@@ -26,7 +26,10 @@ class User(db.Model, UserMixin):
     created_on = db.Column(db.DateTime, server_default=db.func.now())
     last_updated_on = db.Column(db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
 
-    # patients = db.relationship('Patient', backref='user', lazy=True)
+    # Relationships
+    created_patients = db.relationship('Patient', foreign_keys='Patient.created_by', backref='creator', lazy=True)
+    updated_patients = db.relationship('Patient', foreign_keys='Patient.last_updated_by', backref='updater', lazy=True)
+
 
     def __init__(self, username, password, first_name, last_name, is_admin=False):
         self.username = username
@@ -46,25 +49,68 @@ class User(db.Model, UserMixin):
 class Patient(db.Model, UserMixin):
 
     __tablename__ = 'patients'
-    
-    # users = db.relationship(User)
 
     id = db.Column(db.Integer, primary_key=True)
-    # created_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    # last_updated_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    created_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    last_updated_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     created_on = db.Column(db.DateTime, server_default=db.func.now())
     last_updated_on = db.Column(db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
-    first_name = db.Column(db.String(64))
-    last_name = db.Column(db.String(64))
-    dob = db.Column(db.DateTime)
 
-    def __init__(self, first_name, last_name, dob):
+    first_name = db.Column(db.String(64), nullable=False)
+    last_name = db.Column(db.String(64), nullable=False)
+    father_name = db.Column(db.String(64))
+    date_of_birth = db.Column(db.Date)
+    marital_status = db.Column(db.String(32))
+    nationality = db.Column(db.String(64))
+    occupation = db.Column(db.String(64))
+    street_name = db.Column(db.String(64))
+    street_number = db.Column(db.String(16))
+    city = db.Column(db.String(64))
+    postal_code = db.Column(db.String(16))
+    county = db.Column(db.String(64))
+    home_phone = db.Column(db.String(16))
+    mobile_phone = db.Column(db.String(16))
+    alternative_phone = db.Column(db.String(16))
+    email = db.Column(db.String(128))
+    insurance = db.Column(db.String(64))
+    insurance_comment = db.Column(db.String(128), nullable=True)
+    amka = db.Column(db.String(16))
+    spouse_name = db.Column(db.String(64))
+    spouse_date_of_birth = db.Column(db.Date)
+    spouse_occupation = db.Column(db.String(64))
+    is_active = db.Column(db.Boolean, default=True)
+
+    def __init__(self, first_name, last_name, father_name, date_of_birth, marital_status, nationality, occupation,
+                 street_name, street_number, city, postal_code, county, home_phone=None, mobile_phone=None, alternative_phone=None,
+                 email=None, insurance=None, insurance_comment=None, amka = None, spouse_name=None, spouse_date_of_birth=None, spouse_occupation=None,
+                 created_by=None, last_updated_by=None):
         self.first_name = first_name
         self.last_name = last_name
-        self.dob = dob
+        self.father_name = father_name
+        self.date_of_birth = date_of_birth
+        self.marital_status = marital_status
+        self.nationality = nationality
+        self.occupation = occupation
+        self.street_name = street_name
+        self.street_number = street_number
+        self.city = city
+        self.postal_code = postal_code
+        self.county = county
+        self.home_phone = home_phone
+        self.mobile_phone = mobile_phone
+        self.alternative_phone = alternative_phone
+        self.email = email
+        self.insurance = insurance
+        self.insurance_comment = insurance_comment
+        self.amka = amka
+        self.spouse_name = spouse_name
+        self.spouse_date_of_birth = spouse_date_of_birth
+        self.spouse_occupation = spouse_occupation
+        self.created_by = created_by
+        self.last_updated_by = last_updated_by
 
     def __repr__(self):
-        return f"Patient: {self.first_name} {self.last_name}"
+        return f"Patient: {self.first_name} {self.last_name} dob: {self.date_of_birth}"
 
 
 # class Appointment(db.Model, UserMixin):
