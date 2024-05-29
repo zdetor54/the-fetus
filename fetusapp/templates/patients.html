@@ -1,0 +1,136 @@
+{% extends "base.html" %} 
+
+{% block page_title %} Καρτέλα Ασθενή {% endblock %}
+{% block content %}
+
+{% if current_user.is_authenticated %}
+
+<main class="flex-shrink-0 m-auto flex-grow-1 bg-dark pt-5" style="width: 100%;">
+
+    <div class="container mt-5">
+        <form action="" method="post" id="findPatient">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" name="search_query" placeholder="Search for a patient" aria-label="Search for a patient" aria-describedby="button-search">
+                <button class="btn btn-outline-secondary" type="submit" id="button-search">Search</button>
+            </div>
+        </form>
+
+        {% if has_searched %}
+            {% if patients | length > 0 %}
+
+            <!-- Table for the retrieved patients -->
+            <div class="flex-grow-1" style="overflow-x: auto;">
+                <table class="table table-dark table-hover">
+                <thead>
+                    <tr>
+                    <th scope="col">Full Name</th>
+                    <th scope="col">Mobile</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for patient in patients %}
+                    <tr>
+                        <td>{{ patient.first_name }} {{ patient.last_name }}</td>
+                        <td>
+                            {% if patient.mobile_phone%}
+                            {{ patient.mobile_phone }}
+                            {% elif patient.home_phone %}
+                            {{ patient.home_phone }}
+                            {% elif patient.alternative_phone %}
+                            {{ patient.alternative_phone }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                </table>
+            </div>
+            <!-- end of table for the retrieved results -->
+            {% else %}
+            <small class="mt-0 pt-0 text-light">No matches found based on your entry query</small>
+            {% endif %}
+        {% endif %}
+    </div>
+    
+
+    <div class="container pt-5 text-light">
+        <div class="row row-cols-1 row-cols-lg-2 align-items-stretch g-4 py-3 text-bg-dark">
+            <div class="col-12 col-lg-6 text-light">
+                <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg bg-dark" style="border-color: #EF539E;">
+                    <div class="d-flex flex-column h-100 p-4 text-shadow-1">
+                        <h3 class="pb-2">
+                            Personal Details
+                        </h3>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea, praesentium minus. Recusandae beatae distinctio
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum, quia praesentium aut debitis facere officia. 
+                            Incidunt ab vero, numquam pariatur at aperiam, inventore tempore aliquid laborum saepe est nostrum provident!
+                            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Temporibus, nihil maiores perspiciatis commodi officia voluptate neque, unde rerum, sunt quam earum numquam. 
+                            Rerum quas laudantium alias unde nostrum earum incidunt?
+                        </p>
+                    </div>
+                </div>  
+            </div>
+            <!-- End of ection with personal details for patient and partner -->
+
+            <!-- Section with contact details -->
+            <div class="col-12 col-lg-6 text-light">
+                <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg bg-dark" style="border-color: #EF539E;">
+                    <div class="d-flex flex-column h-100 p-4 text-shadow-1">
+                        <h3>
+                            Contact Details
+                        </h3>
+
+                        <!-- New content with slider card -->
+                        <div class="container px-0 ">
+                            <div class="form-container my-4" style="position: relative; transition: max-height 0.2s ease-in-out;" id="formContainer">
+
+                                <div class="read-only" id="readOnlyContent">
+                                    <p>
+                                        <muted style="color: #EF539E;">Name:</muted> Θεοφανία Βασιλειάδου <br>
+                                        <muted style="color: #EF539E;">Father's Name:</muted> Σπυρίδωνας <br>
+                                        <muted style="color: #EF539E;">Ημερομηνία Γεννήσεως:</muted> 1945-03-04 / 79<br>
+                                        <muted style="color: #EF539E;">Οικογενειακή Κατάσταση:</muted> Άγαμος<br>
+                                        <muted style="color: #EF539E;">Εθνικότητα:</muted> Ελληνική<br>
+                                        <muted style="color: #EF539E;">Επάγγελμα:</muted> Συνταξιούχος ΟΤΕ<br>
+                                        <muted style="color: #EF539E;">Email:</muted> john.doe@example.com
+                                    </p>
+                                    <button class="btn btn-outline-secondary" onclick="toggleEditMode()">Update</button>
+                                </div>
+
+
+                                <div class="editable" id="editableContent" style="display: none;">
+                                    <form>
+                                        <div class="mb-3">
+                                            <label for="nameInput" class="form-label">Name</label>
+                                            <input type="text" class="form-control" id="nameInput" value="John Doe">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="emailInput" class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="emailInput" value="john.doe@example.com">
+                                        </div>
+                                        <button type="button" class="btn btn-success" onclick="saveChanges()">Save</button>
+                                    </form>
+                                </div>
+
+
+                            </div>
+                        </div>
+                        <!-- end of new content with slider card -->
+
+                    </div>
+                </div>  
+            </div>
+            <!-- end of ection with contact details -->
+        </div>
+    </div>
+</main>
+{% else %}
+    <div class="container mt-5 pt-5">
+        <p class="text-danger">You are not logged in</p>
+    </div>
+{% endif %}
+
+{% endblock %}
+
+{% block javascript %}
+{% endblock %}

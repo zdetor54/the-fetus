@@ -8,10 +8,8 @@ from ..users.forms import RegistrationForm, LoginForm
 import requests
 from datetime import datetime, timedelta
 
-import caldav
-from caldav import DAVClient
-
-
+from caldav import DAVClient, Calendar
+    
 core = Blueprint('core', __name__)
 
 def get_calendar_events(target_date = datetime.now().date(), days=7):
@@ -23,26 +21,13 @@ def get_calendar_events(target_date = datetime.now().date(), days=7):
     # Connect to the iCloud CalDAV server
     client = DAVClient(url, username=username, password=password)
     principal = client.principal()
-
-    # Get your calendars
     calendars = principal.calendars()
 
-    for calendar in calendars:
-        name = calendar.name
-        url = calendar.url
-        print(f"Name: {name}, URL: {url}")
 
     # Replace with the name of your desired calendar
-    calendar_name = "Work"
-    calendar_url = "75fec20324b34821c0cfae15e8a9cee826762747257294ea3bc5c2e6bd2ab65d"
-
-    # Find the specific calendar
-    try:
-        # Find the specific calendar
-        # calendar = next(cal for cal in calendars if cal.name == calendar_name)
-        calendar = next(cal for cal in calendars if cal.url == calendar_url)
-    except StopIteration:
-        print("Calendar not found")
+    calendar_url = "https://p142-caldav.icloud.com:443/1101338323/calendars/75fec20324b34821c0cfae15e8a9cee826762747257294ea3bc5c2e6bd2ab65d/"
+    calendar = Calendar(client, calendar_url)
+    print(f"Calendar: {calendar}")
 
     # Define the time range for the entire day
     start = datetime.combine(target_date, datetime.min.time())
@@ -126,15 +111,15 @@ def index():
         events = get_calendar_events(days=2)
     except:
         events = []
-    if events:
-        for event in events:
-            vevent = event.vobject_instance.vevent
-            print(f"UID: {vevent.uid.value if hasattr(vevent, 'uid') else 'No UID'}")
-            print(f"Summary: {vevent.summary.value if hasattr(vevent, 'summary') else 'No Summary'}")
-            print(f"Description: {vevent.description.value if hasattr(vevent, 'description') else 'No Description'}")
-            print(f"Start: {vevent.dtstart.value if hasattr(vevent, 'dtstart') else 'No Start Date'}")
-            print(f"End: {vevent.dtend.value if hasattr(vevent, 'dtend') else 'No End Date'}")
-            print("---")
+    # if events:
+    #     for event in events:
+    #         vevent = event.vobject_instance.vevent
+    #         print(f"UID: {vevent.uid.value if hasattr(vevent, 'uid') else 'No UID'}")
+    #         print(f"Summary: {vevent.summary.value if hasattr(vevent, 'summary') else 'No Summary'}")
+    #         print(f"Description: {vevent.description.value if hasattr(vevent, 'description') else 'No Description'}")
+    #         print(f"Start: {vevent.dtstart.value if hasattr(vevent, 'dtstart') else 'No Start Date'}")
+    #         print(f"End: {vevent.dtend.value if hasattr(vevent, 'dtend') else 'No End Date'}")
+    #         print("---")
 
 
     return render_template('index.html', form=form, active_page='index', error_message=error_message, quote=quote, weather=weather, messages=messages, calendar_events=events)
