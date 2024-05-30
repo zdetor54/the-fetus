@@ -106,8 +106,14 @@ def no_patient():
 
 @patients.route('/patient', methods=['GET', 'POST'])
 def patient():
-    query_term = request.args.get('query_term')
-    return render_template('patient.html', active_page='patient',query_term=query_term)
+
+    patient_id = request.args.get('id')
+
+    if patient_id:
+        patient = Patient.query.get(patient_id)
+        return render_template('patient.html', active_page='patient',query_term=patient_id, patient=patient)
+    
+    return render_template('patient.html', active_page='patient')
 
 @patients.route('/patient_search', methods=['GET'])
 def cal_patient_search():
