@@ -65,7 +65,6 @@ def normalize_text(text):
 def find_patient(search_query):
     patients = []
 
-
     normalized_query = normalize_text(search_query)
 
     # Fetch all patients and normalize their names for comparison
@@ -77,11 +76,10 @@ def find_patient(search_query):
         normalized_last_name = normalize_text(patient.last_name)
         if (normalized_query in normalized_first_name) \
             or (normalized_query in normalized_last_name)\
-            or (normalized_query in patient.home_phone)\
-            or (normalized_query in patient.mobile_phone)\
-            or (normalized_query in patient.alternative_phone):
+            or (patient.home_phone and normalized_query in patient.home_phone) \
+            or (patient.mobile_phone and normalized_query in patient.mobile_phone) \
+            or (patient.alternative_phone and normalized_query in patient.alternative_phone):
             matching_patients.append(patient)
-
     patients = matching_patients
     return patients
 
@@ -91,47 +89,52 @@ def no_patient():
         flash('You need to be logged in to view the patient page.')
         return redirect(url_for('core.index'))
     
-
-
-    elif request.method == 'POST':
-            search_query = request.form.get('search_query')
-            print(search_query)
-            patients = find_patient(search_query)
-            if patients is not None:
-                for patient in patients:
-                    print(patient)
+    search_query = request.args.get('query_term')
+    if request.method == 'POST':
+        search_query = request.form.get('search_query')
+        patients = find_patient(search_query)
+        if patients is not None:
+            for patient in patients:
                 return render_template('patients.html', active_page='patient', patients=patients, has_searched=True)
-            return render_template('patients.html', active_page='patient', patients=patients, has_searched=True)
+        return render_template('patients.html', active_page='patient', patients=patients, has_searched=True)
+    
+    if search_query:
+        patients = find_patient(search_query)
+        return render_template('patients.html', active_page='patient', patients=patients, has_searched=True)
     
     return render_template('patients.html', active_page='patient')
+
+@patients.route('/patient', methods=['GET', 'POST'])
+def patient():
+    query_term = request.args.get('query_term')
+    return render_template('patient.html', active_page='patient',query_term=query_term)
 
 @patients.route('/patient_search', methods=['GET'])
 def cal_patient_search():
     query_term = 'no query'
     query = request.args.get('query')
     patient = extract_cal_patient_details(query)
-    print(patient)
     try:
         query_term = patient['phone']
         patients = find_patient(query_term)
         if patients is  None:
-            return render_template('patients.html', active_page='patient', patients=patients, has_searched=True)
+            return redirect(url_for('patients.no_patient', query_term=query_term))
         elif len(patients) == 1:
-            return render_template('patient.html', active_page='patient', query_term=query_term)
+            return redirect(url_for('patients.patient', id=patients[0].id))
         else:
-            return render_template('patients.html', active_page='patient', patients=patients, has_searched=True)
+            return redirect(url_for('patients.no_patient', query_term=query_term))
         
     except:
         try:
             query_term = patient['surname']
             patients = find_patient(query_term)
             if patients is  None:
-                return render_template('patients.html', active_page='patient', patients=patients, has_searched=True)
+                return redirect(url_for('patients.no_patient', query_term=query_term))
             elif len(patients) == 1:
-                return render_template('patient.html', active_page='patient', query_term=query_term)
+                return redirect(url_for('patients.patient', id=patients[0].id))
             else:
-                return render_template('patients.html', active_page='patient', patients=patients, has_searched=True)
+                return redirect(url_for('patients.no_patient', query_term=query_term))
         except:
             query_term = "No patient data found"
 
-    return render_template('patients.html', active_page='patient')
+    return redirect(url_for('patients.no_patient', query_term=''))

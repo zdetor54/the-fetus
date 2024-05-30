@@ -4,7 +4,8 @@ from flask_login import login_user,login_required,logout_user
 from fetusapp.models import User
 from fetusapp.users.views import users
 from ..users.forms import RegistrationForm, LoginForm
-# from werkzeug.security import generate_password_hash, check_password_hash
+import os
+from dotenv import load_dotenv
 import requests
 from datetime import datetime, timedelta
 
@@ -16,7 +17,10 @@ def get_calendar_events(target_date = datetime.now().date(), days=7):
      # This is where the calendar events are fetched
     url = "https://caldav.icloud.com"
     username = "zdetor54@gmail.com"
-    password = "nyvm-xzqu-fclb-iuox"
+
+    dotenv_path = os.path.join(os.getcwd(), 'keys.env')
+    load_dotenv(dotenv_path)
+    password = os.getenv("APPLE_CAL_KEY")
 
     # Connect to the iCloud CalDAV server
     client = DAVClient(url, username=username, password=password)
@@ -44,7 +48,10 @@ def index():
     error_message = None
     messages = get_flashed_messages()
 
-    meteo_api_key = 'x3i7ycpbrubvoi35v0obzlc93ihhb2yumy0ylp7e'
+    dotenv_path = os.path.join(os.getcwd(), 'keys.env')
+    load_dotenv(dotenv_path)  
+    meteo_api_key = os.getenv("METEO_API_KEY")
+    
     default_weather = {
             'current': {
                 'temperature': '--',
