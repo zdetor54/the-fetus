@@ -7,3 +7,4 @@ openai_test.py
 **/__pycache__/
 *.pyc
 *.pyo
+keys.env

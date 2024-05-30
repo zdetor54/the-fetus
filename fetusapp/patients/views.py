@@ -4,15 +4,24 @@ from flask_login import login_user,login_required,logout_user, current_user
 from fetusapp.models import User,Patient
 from .forms import FindPatientForm
 import unicodedata
+import os
+from dotenv import load_dotenv
+
 
 import openai
 import json
 
 patients = Blueprint('patients', __name__)
 
+
 def extract_cal_patient_details(text):
 
-    openai.api_key = "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"
+    dotenv_path = os.path.join(os.getcwd(), 'keys.env')
+    load_dotenv(dotenv_path)
+
+
+    openai.api_key = os.getenv("OPENAI_API_KEY")
+    
 
     # Define the prompt
     prompt = f"Extract the following types of PII from the following text: {text}"
