@@ -34,6 +34,7 @@ for updates...
 3. redeploy the app or
 4. pip install -r requirements.txt for the dependencies
 
-Have a panel with the pregrancies that are about to BURST
 
-PROMPT:  <instructions>Extract the following types of PII: surnames and phone numbers. Ignore anything related to ODS, Δώδος, Αλιακιόζογλου.</instructions>
+IDEAS:
+- Have a panel with the pregrancies that are about to BURST
+- Have a visual indication of the age of the patient, how many pregnancies she has, etc

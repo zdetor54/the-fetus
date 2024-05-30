@@ -152,16 +152,6 @@ block content %}
 <script>
   function performSearch(searchQuery) {
     window.location.href = `/patient_search?query=${searchQuery}`;
-      // fetch(`/search?query=${searchQuery}`)
-      //     .then(response => response.json())
-      //     .then(data => {
-      //         if (data.results.length === 1) {
-      //             window.location.href = `/single-result/${data.results[0].id}`;
-      //         } else {
-      //             window.location.href = '/multiple-results';
-      //         }
-      //     })
-      //     .catch(error => console.error('Error:', error));
   }
 </script>
 {% endblock %}
