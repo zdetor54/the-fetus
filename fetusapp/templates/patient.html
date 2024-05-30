@@ -31,7 +31,7 @@
                                 <div class="form-container my-4" style="position: relative; transition: max-height 0.2s ease-in-out;" id="formContainer">
 
                                     <div class="read-only" id="readOnlyContent">
-                                        <h3 >Προσωπικά Στοιχεία</h3>
+                                        <h3 class="text-center">Προσωπικά Στοιχεία</h3>
                                         <p class="zd mt-0 pt-2">
                                             {% if patient.first_name or patient.last_name %}
                                                 <span style="color: #EF539E;">Ονοματεπώνυμο:</span> {{ patient.first_name }} {{ patient.last_name }} <br>
@@ -59,7 +59,7 @@
                                             {% endif %}
                                         </p>
 
-                                        <h3 >Στοιχεία Συντρόφου</h3>
+                                        <h3 class="text-center">Στοιχεία Συντρόφου</h3>
                                         <p class="zd mt-0 pt-2">
                                             {% if patient.spouse_name %}
                                                 <span style="color: #EF539E;">Ονοματεπώνυμο:</span> {{ patient.spouse_name }} <br>
@@ -124,7 +124,6 @@
             <!-- end of row with the general history -->
 
         </div>
-        <button class="btn login-btn ms-4">Update</button>
     </div>
 
     <div class="container zd text-light py-5" style="text-align: center;">
