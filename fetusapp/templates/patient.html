@@ -8,7 +8,7 @@
 <main class="flex-shrink-0 m-auto flex-grow-1 bg-dark" style="width: 100%;">
 
     <div class="pt-2 container px-4 text-light" id="icon-grid">
-        <h2 class="zd py-2 text-center" style="font-weight: 100; color: #EF539E;">{{ query_term }}</h2>
+        <h2 class="zd py-2 text-center" style="font-weight: 100; color: #EF539E;">{{ patient.first_name }} {{ patient.last_name }}</h2>
     </div>
 
 
@@ -17,47 +17,61 @@
         <!-- Row with the general history -->
         <div class=" container px-4" id="custom-cards"> 
 
-            <!-- Section with personal details for patient and partner -->
+            <!-- Row with the general history -->
             <div class="row row-cols-1 row-cols-lg-2 align-items-stretch g-4 py-3 text-bg-dark">
+                
+                
+                <!-- Section with personal details for patient and partner -->
                 <div class="col-12 col-lg-6 text-light">
                     <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg bg-dark" style="border-color: #EF539E;">
                         <div class="d-flex flex-column h-100 p-4 text-shadow-1">
-                            <h3 class="pb-2">
-                                Personal Details
-                            </h3>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea, praesentium minus. Recusandae beatae distinctio
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum, quia praesentium aut debitis facere officia. 
-                                Incidunt ab vero, numquam pariatur at aperiam, inventore tempore aliquid laborum saepe est nostrum provident!
-                                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Temporibus, nihil maiores perspiciatis commodi officia voluptate neque, unde rerum, sunt quam earum numquam. 
-                                Rerum quas laudantium alias unde nostrum earum incidunt?
-                            </p>
-                        </div>
-                    </div>  
-                </div>
-                <!-- End of ection with personal details for patient and partner -->
-
-                <!-- Section with contact details -->
-                <div class="col-12 col-lg-6 text-light">
-                    <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg bg-dark" style="border-color: #EF539E;">
-                        <div class="d-flex flex-column h-100 p-4 text-shadow-1">
-                            <h3>
-                                Contact Details
-                            </h3>
 
                             <!-- New content with slider card -->
                             <div class="container px-0 ">
                                 <div class="form-container my-4" style="position: relative; transition: max-height 0.2s ease-in-out;" id="formContainer">
 
                                     <div class="read-only" id="readOnlyContent">
-                                        <p>
-                                            <muted style="color: #EF539E;">Name:</muted> Θεοφανία Βασιλειάδου <br>
-                                            <muted style="color: #EF539E;">Father's Name:</muted> Σπυρίδωνας <br>
-                                            <muted style="color: #EF539E;">Ημερομηνία Γεννήσεως:</muted> 1945-03-04 / 79<br>
-                                            <muted style="color: #EF539E;">Οικογενειακή Κατάσταση:</muted> Άγαμος<br>
-                                            <muted style="color: #EF539E;">Εθνικότητα:</muted> Ελληνική<br>
-                                            <muted style="color: #EF539E;">Επάγγελμα:</muted> Συνταξιούχος ΟΤΕ<br>
-                                            <muted style="color: #EF539E;">Email:</muted> john.doe@example.com
+                                        <h3 >Προσωπικά Στοιχεία</h3>
+                                        <p class="zd mt-0 pt-2">
+                                            {% if patient.first_name or patient.last_name %}
+                                                <span style="color: #EF539E;">Ονοματεπώνυμο:</span> {{ patient.first_name }} {{ patient.last_name }} <br>
+                                            {% endif %}
+                                            {% if patient.father_name %}
+                                                <span style="color: #EF539E;">Πατρώνυμο:</span> {{ patient.father_name }} <br>
+                                            {% endif %}
+                                            {% if patient.date_of_birth %}
+                                                <span style="color: #EF539E;">Ημερομηνία Γεννήσεως:</span> {{ patient.date_of_birth }} <br>
+                                            {% endif %}
+                                            {% if patient.marital_status %}
+                                                <span style="color: #EF539E;">Οικογενειακή Κατάσταση:</span> {{ patient.marital_status }} <br>
+                                            {% endif %}
+                                            {% if patient.nationality %}
+                                                <span style="color: #EF539E;">Εθνικότητα:</span> {{ patient.nationality }} <br>
+                                            {% endif %}
+                                            {% if patient.occupation %}
+                                                <span style="color: #EF539E;">Επάγγελμα:</span> {{ patient.occupation }} <br>
+                                            {% endif %}
+                                            {% if patient.insurance or patient.insurance_comment %}
+                                                <span style="color: #EF539E;">Ασφάλιση:</span> {{ patient.insurance }} / {{ patient.insurance_comment }} <br>
+                                            {% endif %}
+                                            {% if patient.amka %}
+                                                <span style="color: #EF539E;">AMKA:</span> {{ patient.amka }} 
+                                            {% endif %}
                                         </p>
+
+                                        <h3 >Στοιχεία Συντρόφου</h3>
+                                        <p class="zd mt-0 pt-2">
+                                            {% if patient.spouse_name %}
+                                                <span style="color: #EF539E;">Ονοματεπώνυμο:</span> {{ patient.spouse_name }} <br>
+                                            {% endif %}
+                                            {% if patient.spouse_date_of_birth %}
+                                                <span style="color: #EF539E;">Ημερομηνία Γεννήσεως / Ηλικία:</span> {{ patient.spouse_date_of_birth }} <br>
+                                            {% endif %}
+                                            {% if patient.spouse_occupation %}
+                                                <span style="color: #EF539E;">Επάγγελμα:</span> {{ patient.spouse_occupation }}
+                                            {% endif %}
+                                        </p>
+                                        
                                         <button class="btn btn-outline-secondary" onclick="toggleEditMode()">Update</button>
                                     </div>
 
@@ -84,7 +98,27 @@
                         </div>
                     </div>  
                 </div>
-                <!-- end of ection with contact details -->
+                <!-- end of section with personal details for patient and partner -->
+
+                <!-- Section with contact details -->
+                <div class="col-12 col-lg-6 text-light">
+                    <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg bg-dark" style="border-color: #EF539E;">
+                        <div class="d-flex flex-column h-100 p-4 text-shadow-1">
+                            <h3 class="pb-2">
+                                Contact Details
+                            </h3>
+                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea, praesentium minus. Recusandae beatae distinctio
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum, quia praesentium aut debitis facere officia. 
+                                Incidunt ab vero, numquam pariatur at aperiam, inventore tempore aliquid laborum saepe est nostrum provident!
+                                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Temporibus, nihil maiores perspiciatis commodi officia voluptate neque, unde rerum, sunt quam earum numquam. 
+                                Rerum quas laudantium alias unde nostrum earum incidunt?
+                            </p>
+                        </div>
+                    </div>  
+                </div>
+                <!-- end of section with contact details -->
+
+                
 
             </div>
             <!-- end of row with the general history -->
@@ -121,52 +155,9 @@
         </div>
           <div class="tab-content p-3" style="text-align: left;" id="pills-tabContent">
             <div class="tab-pane fade show active rounded-4 m-2" style="border-color: #EF539E;" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
-                <ul class="list-unstyled">
-                    <li>
-                        <label for="fullName">Ονοματεπώνυμο</label>
-                        <input type="text" name="fullName" id="fullName" tabindex="10" value="Φανή Βασιλειάδου" disabled="disabled">
-                    </li>
-                    <li>
-                        <label for="fatherName">Πατρώνυμο</label>
-                        <input type="text" name="fatherName" id="fatherName" tabindex="20" value="Σπυρίδωνας" disabled="disabled">
-                    </li>
-                    <li>
-                        <label for="dateOfBirth">Ημερομηνία Γεννήσεως / Ηλικία</label>
-                        <input name="dateOfBirth" id="dateOfBirth" tabindex="30" value="1945-03-04" disabled="disabled">
-                        /
-                        <input name="age" id="age" size="2" value="79" disabled="disabled">
-                    </li>
-                    <li>
-                        <label for="maritalStatus">Οικογενειακή Κατάσταση </label>
-                        <select name="maritalStatus" id="maritalStatus" tabindex="40" disabled="disabled">
-                            <option value=""></option>
-                            <option value="single" selected="">Άγαμος</option>
-                            <option value="married">Έγγαμος</option>
-                        </select>
-                    </li>
-                    <li>
-                        <label for="nationality">Εθνικότητα</label>
-                        <input type="text" name="nationality" id="nationality" tabindex="50" value="Ελληνική" disabled="disabled">
-                    </li>
-                    <li>
-                        <label for="occupation">Επάγγελμα</label>
-                        <input type="text" name="occupation" id="occupation" tabindex="60" value="Συνταξιούχος ΟΤΕ" disabled="disabled">
-                    </li>
-                    <li>
-                        <label for="insurance">Ασφάλιση</label>
-                        <select name="insurance" id="insurance" tabindex="70" disabled="disabled">
-                            <option value=""></option>
-                            <option value="eopy">ΕΟΠΥΥ</option>
-                            <option value="other" selected="">Ιδιωτική Ασφάλεια</option>
-                        </select>
-                        <input type="text" name="insuranceComment" id="insuranceComment" tabindex="75" value="Axxa Ασφαλιστική" disabled="disabled">
-                    </li>
-                    <li>
-                        <label for="amka">ΑΜΚΑ</label>
-                        <input type="text" name="amka" id="amka" tabindex="77" value="13745541" disabled="disabled">
-                        <a href="http://www.amka.gr/AMKAGR/Default.aspx" target="_blank" style="padding:4px; color:rgba(239, 83, 158,1.0); font-size: 12px">Αναζήτηση</a>
-                    </li>
-                </ul>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis accusantium voluptates, facere animi, eveniet consectetur hic veniam, dolores perferendis iusto doloremque? Eos atque veniam necessitatibus vel sapiente laboriosam quod rem.
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores cumque fugit vero ducimus saepe unde officiis impedit, optio quisquam ullam doloribus repellat provident sunt incidunt repudiandae dignissimos mollitia placeat perspiciatis?
+                </p>
             </div>
             <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
                 <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Esse, quasi enim mollitia doloribus praesentium dolores aut nostrum atque. Eveniet praesentium mollitia, quasi quia maxime expedita impedit odit sed modi? Quisquam.
