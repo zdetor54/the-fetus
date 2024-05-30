@@ -16,7 +16,7 @@ patients = Blueprint('patients', __name__)
 
 def extract_cal_patient_details(text):
 
-    dotenv_path = os.path.join(os.getcwd(), 'keys.env')
+    dotenv_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', '..', 'keys.env')
     load_dotenv(dotenv_path)
 
 

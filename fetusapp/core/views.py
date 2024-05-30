@@ -18,7 +18,8 @@ def get_calendar_events(target_date = datetime.now().date(), days=7):
     url = "https://caldav.icloud.com"
     username = "zdetor54@gmail.com"
 
-    dotenv_path = os.path.join(os.getcwd(), 'keys.env')
+    dotenv_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', '..', 'keys.env')
+    print(dotenv_path)
     load_dotenv(dotenv_path)
     password = os.getenv("APPLE_CAL_KEY")
 
@@ -48,7 +49,7 @@ def index():
     error_message = None
     messages = get_flashed_messages()
 
-    dotenv_path = os.path.join(os.getcwd(), 'keys.env')
+    dotenv_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', '..', 'keys.env')
     load_dotenv(dotenv_path)  
     meteo_api_key = os.getenv("METEO_API_KEY")
     
