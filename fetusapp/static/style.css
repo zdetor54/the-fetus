@@ -310,3 +310,7 @@ em {
     border-radius: 2rem;
     padding: 1rem;
 }
+
+.read-only-labels span{
+    color: var(--vibrant-pink);
+}

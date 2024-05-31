@@ -28,55 +28,55 @@
 
                             <!-- New content with slider card -->
                             <div class="container px-0 ">
-                                <div class="form-container my-4" style="position: relative; transition: max-height 0.2s ease-in-out;" id="formContainer">
+                                <div class="form-container my-4" style="position: relative; transition: max-height 0.2s ease-in-out;" id="formContainerPersonalDetails">
 
-                                    <div class="read-only" id="readOnlyContent">
+                                    <div class="read-only read-only-labels" id="readOnlyContentPD">
                                         <h3 class="text-center">Προσωπικά Στοιχεία</h3>
                                         <p class="zd mt-0 pt-2">
                                             {% if patient.first_name or patient.last_name %}
-                                                <span style="color: #EF539E;">Ονοματεπώνυμο:</span> {{ patient.first_name }} {{ patient.last_name }} <br>
+                                                <span>Ονοματεπώνυμο:</span> {{ patient.first_name }} {{ patient.last_name }} <br>
                                             {% endif %}
                                             {% if patient.father_name %}
-                                                <span style="color: #EF539E;">Πατρώνυμο:</span> {{ patient.father_name }} <br>
+                                                <span>Πατρώνυμο:</span> {{ patient.father_name }} <br>
                                             {% endif %}
                                             {% if patient.date_of_birth %}
-                                                <span style="color: #EF539E;">Ημερομηνία Γεννήσεως:</span> {{ patient.date_of_birth }} <br>
+                                                <span>Ημερομηνία Γεννήσεως:</span> {{ patient.date_of_birth }} <br>
                                             {% endif %}
                                             {% if patient.marital_status %}
-                                                <span style="color: #EF539E;">Οικογενειακή Κατάσταση:</span> {{ patient.marital_status }} <br>
+                                                <span>Οικογενειακή Κατάσταση:</span> {{ patient.marital_status }} <br>
                                             {% endif %}
                                             {% if patient.nationality %}
-                                                <span style="color: #EF539E;">Εθνικότητα:</span> {{ patient.nationality }} <br>
+                                                <span>Εθνικότητα:</span> {{ patient.nationality }} <br>
                                             {% endif %}
                                             {% if patient.occupation %}
-                                                <span style="color: #EF539E;">Επάγγελμα:</span> {{ patient.occupation }} <br>
+                                                <span>Επάγγελμα:</span> {{ patient.occupation }} <br>
                                             {% endif %}
                                             {% if patient.insurance or patient.insurance_comment %}
-                                                <span style="color: #EF539E;">Ασφάλιση:</span> {{ patient.insurance }} / {{ patient.insurance_comment }} <br>
+                                                <span>Ασφάλιση:</span> {{ patient.insurance }} / {{ patient.insurance_comment }} <br>
                                             {% endif %}
                                             {% if patient.amka %}
-                                                <span style="color: #EF539E;">AMKA:</span> {{ patient.amka }} 
+                                                <span>AMKA:</span> {{ patient.amka }} 
                                             {% endif %}
                                         </p>
 
                                         <h3 class="text-center">Στοιχεία Συντρόφου</h3>
                                         <p class="zd mt-0 pt-2">
                                             {% if patient.spouse_name %}
-                                                <span style="color: #EF539E;">Ονοματεπώνυμο:</span> {{ patient.spouse_name }} <br>
+                                                <span>Ονοματεπώνυμο:</span> {{ patient.spouse_name }} <br>
                                             {% endif %}
                                             {% if patient.spouse_date_of_birth %}
-                                                <span style="color: #EF539E;">Ημερομηνία Γεννήσεως / Ηλικία:</span> {{ patient.spouse_date_of_birth }} <br>
+                                                <span>Ημερομηνία Γεννήσεως / Ηλικία:</span> {{ patient.spouse_date_of_birth }} <br>
                                             {% endif %}
                                             {% if patient.spouse_occupation %}
-                                                <span style="color: #EF539E;">Επάγγελμα:</span> {{ patient.spouse_occupation }}
+                                                <span>Επάγγελμα:</span> {{ patient.spouse_occupation }}
                                             {% endif %}
                                         </p>
                                         
-                                        <button class="btn btn-outline-secondary" onclick="toggleEditMode()">Update</button>
+                                        <button class="btn btn-outline-secondary" onclick="toggleEditModePersonalDetails()">Update</button>
                                     </div>
 
 
-                                    <div class="editable" id="editableContent" style="display: none;">
+                                    <div class="editable" id="editableContentPD" style="display: none;">
                                         <form>
                                             <div class="mb-3">
                                                 <label for="nameInput" class="form-label">Name</label>
@@ -86,7 +86,7 @@
                                                 <label for="emailInput" class="form-label">Email</label>
                                                 <input type="email" class="form-control" id="emailInput" value="john.doe@example.com">
                                             </div>
-                                            <button type="button" class="btn btn-success" onclick="saveChanges()">Save</button>
+                                            <button type="button" class="btn btn-success" onclick="saveChangesPersonalDetails()">Save</button>
                                         </form>
                                     </div>
 
@@ -104,15 +104,65 @@
                 <div class="col-12 col-lg-6 text-light">
                     <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg bg-dark" style="border-color: #EF539E;">
                         <div class="d-flex flex-column h-100 p-4 text-shadow-1">
-                            <h3 class="pb-2">
-                                Contact Details
-                            </h3>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea, praesentium minus. Recusandae beatae distinctio
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum, quia praesentium aut debitis facere officia. 
-                                Incidunt ab vero, numquam pariatur at aperiam, inventore tempore aliquid laborum saepe est nostrum provident!
-                                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Temporibus, nihil maiores perspiciatis commodi officia voluptate neque, unde rerum, sunt quam earum numquam. 
-                                Rerum quas laudantium alias unde nostrum earum incidunt?
-                            </p>
+
+                            <!-- New content with slider card -->
+                            <div class="container px-0 ">
+                                <div class="form-container my-4" style="position: relative; transition: max-height 0.2s ease-in-out;" id="formContainerContactDetails">
+
+                                    <div class="read-only read-only-labels" id="readOnlyContentCD">
+                                        <h3 class="text-center">Στοιχεία Επικοινωνίας</h3>
+                                        <p class="zd mt-0 pt-2">
+                                            {% if patient.street_name %}
+                                                <span>Οδός:</span> {{ patient.street_name }} <br>
+                                            {% endif %}
+                                            {% if patient.street_number %}
+                                                <span>Αριθμός:</span> {{ patient.street_number }} <br>
+                                            {% endif %}
+                                            {% if patient.city %}
+                                                <span>Πόλη:</span> {{ patient.city }} <br>
+                                            {% endif %}
+                                            {% if patient.postal_code %}
+                                                <span>Ταχυδρομικός Κωδικός:</span> {{ patient.postal_code }} <br>
+                                            {% endif %}
+                                            {% if patient.county %}
+                                                <span>Νομός:</span> {{ patient.county }} <br>
+                                            {% endif %}
+                                            {% if patient.home_phone %}
+                                                <span>Σταθερό Τηλ:</span> {{ patient.home_phone }} <br>
+                                            {% endif %}
+                                            {% if patient.mobile_phone %}
+                                                <span>Κινητό Τηλ:</span> {{ patient.mobile_phone }} <br>
+                                            {% endif %}
+                                            {% if patient.alternative_phone %}
+                                                <span>Εναλλακτικό Τηλ:</span> {{ patient.alternative_phone }} <br>
+                                            {% endif %}
+                                            {% if patient.email %}
+                                                <span>Ε-mail:</span> {{ patient.email }} 
+                                            {% endif %}
+                                        </p>
+                                        <button class="btn btn-outline-secondary" onclick="toggleEditModeContactDetails()">Update</button>
+                                    </div>
+
+
+                                    <div class="editable" id="editableContentCD" style="display: none;">
+                                        <form>
+                                            <div class="mb-3">
+                                                <label for="nameInput" class="form-label">Name</label>
+                                                <input type="text" class="form-control" id="nameInput" value="John Doe">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="emailInput" class="form-label">Email</label>
+                                                <input type="email" class="form-control" id="emailInput" value="john.doe@example.com">
+                                            </div>
+                                            <button type="button" class="btn btn-success" onclick="saveChangesContactDetails()">Save</button>
+                                        </form>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <!-- end of new content with slider card -->
+
                         </div>
                     </div>  
                 </div>
@@ -182,10 +232,10 @@
 
 {% block javascript %}
 <script>
-    function toggleEditMode() {
-        const formContainer = document.getElementById('formContainer');
-        const readOnlyContent = document.getElementById('readOnlyContent');
-        const editableContent = document.getElementById('editableContent');
+    function toggleEditModePersonalDetails() {
+        const formContainer = document.getElementById('formContainerPersonalDetails');
+        const readOnlyContent = document.getElementById('readOnlyContentPD');
+        const editableContent = document.getElementById('editableContentPD');
 
         if (editableContent.style.display === 'none') {
             editableContent.style.display = 'block';
@@ -198,14 +248,41 @@
         }
     }
 
-    function saveChanges() {
+    function toggleEditModeContactDetails() {
+        const formContainer = document.getElementById('formContainerContactDetails');
+        const readOnlyContent = document.getElementById('readOnlyContentCD');
+        const editableContent = document.getElementById('editableContentCD');
+
+        if (editableContent.style.display === 'none') {
+            editableContent.style.display = 'block';
+            readOnlyContent.style.display = 'none';
+            formContainer.style.maxHeight = editableContent.scrollHeight + 'px';
+        } else {
+            editableContent.style.display = 'none';
+            readOnlyContent.style.display = 'block';
+            formContainer.style.maxHeight = readOnlyContent.scrollHeight + 'px';
+        }
+    }
+
+    function saveChangesPersonalDetails() {
         // Implement save functionality here
-        toggleEditMode();
+        toggleEditModePersonalDetails();
+    }
+
+    function saveChangesContactDetails() {
+        // Implement save functionality here
+        toggleEditModeContactDetails();
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        const formContainer = document.getElementById('formContainer');
-        const readOnlyContent = document.getElementById('readOnlyContent');
+        const formContainer = document.getElementById('formContainerPersonalDetails');
+        const readOnlyContent = document.getElementById('readOnlyContentPD');
+        formContainer.style.maxHeight = readOnlyContent.scrollHeight + 'px';
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const formContainer = document.getElementById('formContainerContactDetails');
+        const readOnlyContent = document.getElementById('readOnlyContentCD');
         formContainer.style.maxHeight = readOnlyContent.scrollHeight + 'px';
     });
 </script>
