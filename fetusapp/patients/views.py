@@ -13,6 +13,19 @@ import json
 
 patients = Blueprint('patients', __name__)
 
+def proper_case(value):
+    return ' '.join(word.capitalize() for word in value.split())
+
+# Register the custom filter
+app.jinja_env.filters['proper_case'] = proper_case
+
+# Define the custom filter
+def zfill(value, width=4):
+    return str(value).zfill(width)
+
+# Register the custom filter
+app.jinja_env.filters['zfill'] = zfill
+
 
 def extract_cal_patient_details(text):
 

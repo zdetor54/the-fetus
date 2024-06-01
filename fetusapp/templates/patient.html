@@ -8,7 +8,7 @@
 <main class="flex-shrink-0 m-auto flex-grow-1 bg-dark" style="width: 100%;">
 
     <div class="pt-2 container px-4 text-light" id="icon-grid">
-        <h2 class="zd py-2 text-center" style="font-weight: 100; color: #EF539E;">{{ patient.first_name }} {{ patient.last_name }}</h2>
+        <h2 class="zd py-2 text-center" style="font-weight: 100; color: #EF539E;">{{ patient.first_name | proper_case}} {{ patient.last_name | proper_case}}</h2>
     </div>
 
 
@@ -113,7 +113,7 @@
                                         <h3 class="text-center">Στοιχεία Επικοινωνίας</h3>
                                         <p class="zd mt-0 pt-2">
                                             {% if patient.street_name %}
-                                                <span>Οδός:</span> {{ patient.street_name }} <br>
+                                                <span>Οδός:</span> {{ patient.street_name }}<br>
                                             {% endif %}
                                             {% if patient.street_number %}
                                                 <span>Αριθμός:</span> {{ patient.street_number }} <br>

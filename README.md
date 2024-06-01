@@ -38,3 +38,5 @@ for updates...
 IDEAS:
 - Have a panel with the pregrancies that are about to BURST
 - Have a visual indication of the age of the patient, how many pregnancies she has, etc
+- API for greek addresses
+- in no patients have infographics
