@@ -144,8 +144,8 @@ footer a:hover{
 }
 
 .btn-primary:hover {
-    background-color: var(--rich-navy);
-    border-color: var(--rich-navy);
+    background-color: var(--vibrant-pink);
+    border-color: var(--vibrant-pink);
 }
 
 .btn-primary:focus,
@@ -255,8 +255,7 @@ footer a:hover{
 }
 
 .nav-pills .nav-link {
-    /* color: #212529; */
-    color: var(--rich-navy);
+    color: #212529;
 }
 
 /* .bg-light {
