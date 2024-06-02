@@ -15,9 +15,8 @@
 }
 
 .dark-mode {
-    --vibrant-pink: #9FE870;
-    --gradient-color: 159, 232, 112;    /* wise */
-    background-color: white;
+    --vibrant-pink: #297FB9;
+    --gradient-color: 41, 127, 185;    /* wise */
 }
 
 html, body {
