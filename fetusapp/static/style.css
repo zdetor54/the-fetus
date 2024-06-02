@@ -1,11 +1,23 @@
+
 :root {
     /* Define color variables */
-    --calming-blue: #297FB9;         /* Primary button color */
-    --rich-navy: #0B3C5D;   /* Primary button hover color */
-    --gradient-color: 239, 83, 158;   /* RGB values for gradient without alpha */
+    --calming-blue: #297FB9;          /* Primary button color */
+    --gradient-color: 239, 83, 158;     /* fetus*/
+    --gradient-color: 255, 79, 64;      /* monzo */
+    --gradient-color: 159, 232, 112;    /* wise */
+    --gradient-color: 239, 83, 158;     /* fetus*/
     --vibrant-pink: #EF539E;          /* Active state color for nav link */
-    --muted-coral: #F9A5A5;           /* Secondary color */
+    --vibrant-pink: #ff4f40;          /* monzo*/
+    --vibrant-pink: #9FE870;          /* wise*/
+    --vibrant-pink: #EF539E;          /* fetus */
     --warm-beige: #F3E1D7;            /* Background color */
+    background-color: black;
+}
+
+.dark-mode {
+    --vibrant-pink: #9FE870;
+    --gradient-color: 159, 232, 112;    /* wise */
+    background-color: white;
 }
 
 html, body {
@@ -17,18 +29,25 @@ h3 {
     font-weight: 100;
 }
 
+h2 {
+    font-weight: 100;
+    color: var(--vibrant-pink);
+}
+
+.navbar-dark .navbar-brand{
+    color: var(--vibrant-pink);
+}
 .form-control:focus {
     border: none;
     box-shadow: 0 0 8px 0.1rem var(--vibrant-pink);
 }
 
-
-.navbar .btn-outline-light {
+.btn-outline-light{
     color: var(--vibrant-pink);
     border-color: var(--vibrant-pink);
 }
 
-.navbar .btn-outline-light:hover {
+.btn-outline-light:hover {
     color: black;
     background-color: var(--vibrant-pink);
     border-color: var(--vibrant-pink);
@@ -36,7 +55,7 @@ h3 {
 
 
 .navbar-dark .navbar-toggler {
-    border-color: rgba(239, 83, 158, .99);
+    border-color: var(--vibrant-pink)
 }
 
 .navbar-dark .navbar-toggler-icon {
@@ -130,12 +149,18 @@ footer a:hover{
     border-color: var(--rich-navy);
 }
 
+.btn-primary:focus,
+.btn-primary:active {
+    outline: none;
+    box-shadow: none;
+}
+
 .secondary-nav-container{
     border-radius: 2rem;
     display: inline-flex;
     flex-wrap: nowrap;
     overflow-x: auto;
-    box-shadow: inset 1px 1px 0.2rem #3e1629;
+    box-shadow: inset 1px 1px 0.2rem black;
     overflow-x: auto;
     padding: 10px;
     margin: 0;
@@ -178,9 +203,28 @@ footer a:hover{
 
 /* end login page */
 
+/* index page */
+
+.index-quote {
+    background: var(--vibrant-pink);
+    color: white;
+    /* border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px; */
+}
+
 
 
 /* Appointments table */
+
+.index-app {
+    font-weight: 100; 
+    color: var(--vibrant-pink);
+}
+
+.progress-bar {
+    background-color: var(--vibrant-pink);
+}
 
 .btn-outline-secondary {
     color: var(--vibrant-pink);
@@ -273,9 +317,10 @@ em {
     text-align: center;
 }
 
-.single_quick_activity:nth-child(2), .single_quick_admin:nth-child(1), .weather-pill {
+#weather-bubble {
     background: var(--warm-beige);
     color: black;
+    border: none;
 }
 
 .single_quick_admin:nth-child(2) {
@@ -313,4 +358,8 @@ em {
 
 .read-only-labels span{
     color: var(--vibrant-pink);
+}
+
+.card-cover{
+    border-color: var(--vibrant-pink);
 }
