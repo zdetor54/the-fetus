@@ -15,6 +15,13 @@
     {% block page_title %}
     {% endblock %}
   </title>
+
+  <script>
+      function performNavSearch() {
+        const query = document.querySelector('input[name="nav_search_query"]').value;
+        window.location.href = `/patient_search?query=${query}`;
+      }
+  </script>
 </head>
 <body class="d-flex flex-column min-vh-100 pt-4 bg-dark" >
   <header>
@@ -62,9 +69,11 @@
           
           
           {% if current_user.is_authenticated %}
-          <form class="d-flex" role="search">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-light" type="submit">Search</button>
+          <form action="" method="post" id="findPatient">
+            <div class="input-group">
+                <input type="text" class="form-control" name="nav_search_query" placeholder="Search for a patient" aria-label="Search for a patient" aria-describedby="button-search" style="border-start-start-radius: 5rem ; border-end-start-radius: 5rem ;">
+                <button class="btn btn-outline-secondary" type="submit" id="button-search" onclick="performNavSearch()">Search</button>
+            </div>
           </form>
             {% if current_user.is_admin %}
             <!-- <a class="ms-md-2 custom-link" href="{{url_for('users.signup')}}"> -->
@@ -120,7 +129,8 @@
   <script>
     document.getElementById('mode-toggle').addEventListener('click', function() {
         document.body.classList.toggle('dark-mode');
-    });
+    })
+
   </script>
 
   {% block javascript %}
