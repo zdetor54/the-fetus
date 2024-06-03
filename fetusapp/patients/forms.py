@@ -5,11 +5,9 @@ from wtforms import ValidationError
 from fetusapp.models import User
 
 
-class FindPatientForm(FlaskForm):
-    # email = StringField('Email', validators=[DataRequired(), Email()])
-    home_phone = StringField('Home Phone')
-    mobile_phone = StringField('Mobile Phone')
-    alternative_phone = StringField('Alternative Phone')
-    first_name = StringField('First Name')
-    last_name = StringField('Last Name')
-    submit = SubmitField('Register')
+class PatientContactForm(FlaskForm):
+    id = StringField('PatiendID:', validators=[DataRequired()])
+    home_phone = StringField('Σταθερό Τηλ:')
+    mobile_phone = StringField('Κινητό Τηλ:')
+    alternative_phone = StringField('Εναλλακτικό Τηλ:')
+    email = StringField('Ε-mail:', validators=[Email()])

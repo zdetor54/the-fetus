@@ -2,7 +2,7 @@ from flask import render_template, request, Blueprint,flash,redirect,url_for, ge
 from fetusapp import app,db
 from flask_login import login_user,login_required,logout_user, current_user
 from fetusapp.models import User,Patient
-from .forms import FindPatientForm
+from .forms import PatientContactForm
 import unicodedata
 import os
 from dotenv import load_dotenv
