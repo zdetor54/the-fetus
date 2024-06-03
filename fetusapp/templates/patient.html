@@ -140,11 +140,11 @@
                                         <form>
                                             <div class="mb-3">
                                                 <label for="nameInput" class="form-label">Σταθερό Τηλ:</label>
-                                                <input type="text" class="form-control" id="nameInput" value="210xxxxxxx">
+                                                <input type="text" class="form-control" id="nameInput" placeholder="210xxxxxxx" value="{{patient.home_phone}}">
                                             </div>
                                             <div class="mb-3">
                                                 <label for="emailInput" class="form-label">Ε-mail:</label>
-                                                <input type="email" class="form-control" id="emailInput" value="john.doe@example.com">
+                                                <input type="email" class="form-control" id="emailInput" placeholder="john.doe@example.com" value="{{patient.email}}">
                                             </div>
                                             <button type="button" class="btn login-btn" onclick="saveChangesContactDetails()">Save</button>
                                         </form>
