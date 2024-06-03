@@ -103,17 +103,25 @@ def no_patient():
         return redirect(url_for('core.index'))
     
     search_query = request.args.get('query_term')
+    print(search_query)
+
+    if search_query:
+        print(search_query)
+        patients = find_patient(search_query)
+        return render_template('patients.html', active_page='patient', patients=patients, has_searched=True)
+    
     if request.method == 'POST':
         search_query = request.form.get('search_query')
+
+        print(search_query)
+
         patients = find_patient(search_query)
         if patients is not None:
             for patient in patients:
                 return render_template('patients.html', active_page='patient', patients=patients, has_searched=True)
         return render_template('patients.html', active_page='patient', patients=patients, has_searched=True)
     
-    if search_query:
-        patients = find_patient(search_query)
-        return render_template('patients.html', active_page='patient', patients=patients, has_searched=True)
+    
     
     return render_template('patients.html', active_page='patient')
 
