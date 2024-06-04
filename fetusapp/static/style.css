@@ -5,11 +5,11 @@
     --gradient-color: 239, 83, 158;     /* fetus*/
     --gradient-color: 255, 79, 64;      /* monzo */
     --gradient-color: 159, 232, 112;    /* wise */
-    --gradient-color: 255, 79, 64;      /* monzo */
+    --gradient-color: 239, 83, 158;     /* fetus*/
     --vibrant-pink: #EF539E;          /* Active state color for nav link */
     --vibrant-pink: #ff4f40;          /* monzo*/
     --vibrant-pink: #9FE870;          /* wise*/
-    --vibrant-pink: #ff4f40;          /* monzo*/
+    --vibrant-pink: #EF539E;          /* monzo*/
     --warm-beige: #F3E1D7;            /* Background color */
     background-color: black;
 }
