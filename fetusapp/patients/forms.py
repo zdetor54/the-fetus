@@ -11,3 +11,11 @@ class PatientContactForm(FlaskForm):
     mobile_phone = StringField('Κινητό Τηλ:')
     alternative_phone = StringField('Εναλλακτικό Τηλ:')
     email = StringField('Ε-mail:', validators=[Email()])
+
+class BasicPatientForm(FlaskForm):
+    id = StringField('PatiendID:', validators=[DataRequired()])
+    first_name = StringField('Όνομα:', validators=[DataRequired()])
+    last_name = StringField('Επώνυμο:', validators=[DataRequired()])
+    father_name = StringField('Πατρώνυμο:')
+    home_phone = StringField('Σταθερό Τηλ:')
+    email = StringField('Ε-mail:', validators=[Email()])
