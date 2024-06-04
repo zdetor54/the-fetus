@@ -8,60 +8,105 @@
 <main class="flex-shrink-0 m-auto flex-grow-1 bg-dark pt-5" style="width: 100%;">
 
     <div class="container mt-5">
-        <form action="" method="post" id="findPatient">
-            <div class="input-group mb-3">
-                <input type="text" class="form-control" name="search_query" placeholder="Search for a patient" aria-label="Search for a patient" aria-describedby="button-search" style="border-start-start-radius: 5rem ; border-end-start-radius: 5rem ;">
-                <button class="btn btn-outline-secondary" type="submit" id="button-search">Search</button>
+
+
+        <div class="container px-4 pt-3 " id="custom-cards" >
+     
+            <div class="row row-cols-1 row-cols-lg-2 align-items-stretch g-4 py-4 text-bg-dark mt-1">
+        
+              <div class="col-12 col-lg-8 text-light">
+                <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg bg-dark">
+                  <div class="d-flex flex-column h-100 p-3 pb-3 text-shadow-1">
+                    <form action="" method="post" id="findPatient">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" name="search_query" placeholder="Search for a patient" aria-label="Search for a patient" aria-describedby="button-search" style="border-start-start-radius: 5rem ; border-end-start-radius: 5rem ;">
+                            <button class="btn btn-outline-secondary" type="submit" id="button-search">Search</button>
+                        </div>
+                    </form>
+
+                    {% if has_searched %}
+                        {% if patients | length > 0 %}
+            
+                        <!-- Table for the retrieved patients -->
+                        <div class="flex-grow-1" style="overflow-x: auto;">
+                            <table class="table table-dark table-hover">
+                            <thead>
+                                <tr>
+                                <th scope="col">Full Name</th>
+                                <th scope="col">Mobile</th>
+                                <th scope="col">UID</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for patient in patients %}
+                                <tr>
+                                    <td>{{ patient.first_name }} {{ patient.last_name }}</td>
+                                    <td>
+                                        {% if patient.mobile_phone%}
+                                        {{ patient.mobile_phone }}
+                                        {% elif patient.home_phone %}
+                                        {{ patient.home_phone }}
+                                        {% elif patient.alternative_phone %}
+                                        {{ patient.alternative_phone }}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-outline-secondary px-4" onclick="goToPatient(`{{ patient.id }}`)">
+            
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-bounding-box" viewBox="0 0 16 16">
+                                            <path d="M1.5 1a.5.5 0 0 0-.5.5v3a.5.5 0 0 1-1 0v-3A1.5 1.5 0 0 1 1.5 0h3a.5.5 0 0 1 0 1zM11 .5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 16 1.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5M.5 11a.5.5 0 0 1 .5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 1 0 1h-3A1.5 1.5 0 0 1 0 14.5v-3a.5.5 0 0 1 .5-.5m15 0a.5.5 0 0 1 .5.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 1 .5-.5"/>
+                                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                                            </svg>
+            
+                                            {{ patient.id | zfill}}
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            </table>
+                        </div>
+                        <!-- end of table for the retrieved results -->
+                        {% else %}
+                        <small class="mt-0 pt-0 text-light">No matches found based on your entry query</small>
+                        {% endif %}
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+         
+              <div class="col-12 col-lg-4">
+                <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" id="weather-bubble">
+                  <div class="d-flex flex-column h-100 p-3 pb-3 text-shadow-1">
+                    <div class="wrapper">
+                        <div class="form-wrapper patient-lite px-3">
+                            <form action="">
+                                <h2>Create new patient</h2>
+                                <div class="input-group">
+                                    <input type="text" name="first_name" id="" required>
+                                    <label for="first_name">Όνομα</label>
+                                </div>
+                                <div class="input-group">
+                                    <input type="text" name="last_name" id="" value="" required>
+                                    <label for="last_name">Επώνυμο</label>
+                                </div>
+                                <div class="input-group">
+                                    <input type="text" name="home_phone" id="" value="" required>
+                                    <label for="home_phone">Σταθερό Τηλ</label>
+                                </div>
+                                <div class="input-group">
+                                    <input type="email" name="email" id="" value="" required>
+                                    <label for="email">Email</label>
+                                </div>
+                            </form>
+                            <button type="submit" class="btn login-btn">Αποθήκευση</button>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-        </form>
-
-        {% if has_searched %}
-            {% if patients | length > 0 %}
-
-            <!-- Table for the retrieved patients -->
-            <div class="flex-grow-1" style="overflow-x: auto;">
-                <table class="table table-dark table-hover">
-                <thead>
-                    <tr>
-                    <th scope="col">Full Name</th>
-                    <th scope="col">Mobile</th>
-                    <th scope="col">UID</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for patient in patients %}
-                    <tr>
-                        <td>{{ patient.first_name }} {{ patient.last_name }}</td>
-                        <td>
-                            {% if patient.mobile_phone%}
-                            {{ patient.mobile_phone }}
-                            {% elif patient.home_phone %}
-                            {{ patient.home_phone }}
-                            {% elif patient.alternative_phone %}
-                            {{ patient.alternative_phone }}
-                            {% endif %}
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-outline-secondary px-4" onclick="goToPatient(`{{ patient.id }}`)">
-
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-bounding-box" viewBox="0 0 16 16">
-                                  <path d="M1.5 1a.5.5 0 0 0-.5.5v3a.5.5 0 0 1-1 0v-3A1.5 1.5 0 0 1 1.5 0h3a.5.5 0 0 1 0 1zM11 .5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 16 1.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5M.5 11a.5.5 0 0 1 .5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 1 0 1h-3A1.5 1.5 0 0 1 0 14.5v-3a.5.5 0 0 1 .5-.5m15 0a.5.5 0 0 1 .5.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 1 .5-.5"/>
-                                  <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-                                </svg>
-
-                                {{ patient.id | zfill}}
-                            </button>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-                </table>
-            </div>
-            <!-- end of table for the retrieved results -->
-            {% else %}
-            <small class="mt-0 pt-0 text-light">No matches found based on your entry query</small>
-            {% endif %}
-        {% endif %}
+          </div>
     </div>
     
 </main>
