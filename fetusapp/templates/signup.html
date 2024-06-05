@@ -18,45 +18,60 @@
 
 
         <!-- Register user -->
-        <div class="tab-pane fade {% if active_pill == 'register' %}show active{% endif %} rounded-4 m-2" style="border-color: #EF539E;" id="pills-register" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
-          <p class="">
-            Please fill in the details of the user you want to register.
-          </p>
-          <form method="post" class="mt-4" id="registrationForm">
+        <div class="tab-pane fade {% if active_pill == 'register' %}show active{% endif %} rounded-4 m-2 form-wrapper patient-lite p-3 py-5" id="pills-register" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+          <h2 class="text-center">Καρτέλα Νέου Χρήστη</h2>
+          <form method="post" class="mt-4 px-3" id="registrationForm">
             {{form.hidden_tag()}}
-            <div class="form-group mb-3">
-              {{ form.username(class="form-control ", id="username",aria_describedby="usernameHelp", placeholder="Enter your username") }} 
+              <div class="form-group">
+                <div class="input-group">
+                  {{ form.username(class="", id="username", aria_describedby="usernameHelp") }} 
+                  <label for="username">Username</label>
+                </div>
+              
               
               {% if form.username.errors %}
               <div class="errors">
                 {% for error in form.username.errors %}
-                <small id="usernameHelp" class="form-text text-muted">{{error}}</small>
+                <small id="usernameHelp" class="form-text text-warning">{{error}}</small>
                 {% endfor %}
               </div>
               {% endif %}
             </div>
             <div class="row">
-              <div class="col-lg-6 col-12 mb-3">
-                {{ form.password(class="form-control", id="password",aria_describedby="passwordHelp", type="password", placeholder="Password") }}
+              <div class="col-lg-6 col-12">
+
+                <div class="input-group">
+                  {{ form.password(id="password",aria_describedby="passwordHelp", type="password") }}
+                  <label for="password">Password</label>
+                </div>
                 
                 {% if form.password.errors %}
                 <div class="errors">
                   {% for error in form.password.errors %}
-                  <small id="passwordHelp" class="form-text text-muted">{{error}}</small>
+                  <small id="passwordHelp" class="form-text text-warning">{{error}}</small>
                   {% endfor %}
                 </div>
                 {% endif %}
               </div>
-              <div class="col-lg-6 col-12 mb-3">
-                {{ form.pass_confirm(class="form-control",id="pass_confirm", type="password", placeholder="Re-enter password") }}
+              <div class="col-lg-6 col-12">
+                <div class="input-group">
+                  {{ form.pass_confirm(id="pass_confirm", type="password") }}
+                  <label for="password">Re-enter password</label>
+                </div>
               </div>
             </div>
             <div class="row">
-              <div class="col-lg-6 col-12 mb-3">
-                {{ form.first_name(class="form-control", id="first_name", type="text", placeholder="First Name") }}
+              <div class="col-lg-6 col-12">
+                <div class="input-group">
+                  {{ form.first_name(id="first_name", type="text") }}
+                  <label for="first_name">Όνομα</label>
+                </div>
               </div>
-              <div class="col-lg-6 col-12 mb-3">
-                {{ form.last_name(class="form-control", id="last_name", type="text", placeholder="Last Name") }}
+              <div class="col-lg-6 col-12">
+                <div class="input-group">
+                  {{ form.last_name(id="last_name", type="text") }} 
+                  <label for="last_name">Επώνυμο</label>
+                </div>
               </div>
             </div>
             <div class="row mb-3 ">
@@ -68,14 +83,14 @@
                 {% if messages%}
               <div class="errors">
                   {% for message in messages %}
-                <small class="form-text text-muted">{{message}}</small>
+                <small class="form-text text-warning">{{message}}</small>
                   {% endfor %}
               </div>
                 {% endif %}
               {% endwith %}
             </div>
             <div class="row">
-              <div class="col">
+              <div class="col text-center">
                 <button type="submit" name="action" value="register" class="btn login-btn px-5">Register</button>
               </div>
             </div>
@@ -84,11 +99,11 @@
         <!-- End register user -->
 
         <!-- Update password -->
-        <div class="tab-pane fade {% if active_pill == 'update' %}show active{% endif %}" id="pills-update" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
-          <form method="post" class="mt-4" id="updateForm">
+        <div class="tab-pane fade {% if active_pill == 'update' %}show active{% endif %} rounded-4 m-2 form-wrapper patient-lite p-3 py-5" id="pills-update" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
+          <h2 class="text-center">Αλλαγή Κωδικού Χρήστη</h2>
+          <form method="post" class="mt-4 px-3" id="updateForm">
             {{updateform.hidden_tag()}}
             <div class="form-group mb-3">
-              <label for="datalistOptions" class="form-label">Select the user you want to update</label>
 
               {{ updateform.username(class="form-control", list="datalistOptions", id="updateUserlist", autocomplete="off", placeholder="Type to search user...", onclick="this.value='';") }}
               <datalist id="datalistOptions">
@@ -111,7 +126,7 @@
                 {% if updateform.password.errors %}
                 <div class="errors">
                   {% for error in updateform.password.errors %}
-                  <small id="passwordHelp" class="form-text text-muted">{{error}}</small>
+                  <small id="passwordHelp" class="form-text text-warning">{{error}}</small>
                   {% endfor %}
                 </div>
                 {% endif %}
@@ -126,14 +141,14 @@
                 {% if updateform.password.errors %}
                 <div class="errors">
                   {% for error in updateform.password.errors %}
-                  <small class="text-muted">{{error}}</small>
+                  <small class="text-warning">{{error}}</small>
                   {% endfor %}
                 </div>
                 {% endif %} {% with messages = get_flashed_messages() %}
                 {% if messages %}
                 <div class="errors">
                   {% for message in messages %}
-                  <small class="text-muted">{{message}}</small>
+                  <small class="text-warning">{{message}}</small>
                   {% endfor %}
                 </div>
                 {% endif %} {% endwith %}
@@ -172,37 +187,43 @@
         <!-- End update password -->
 
         <!-- Delete user -->
-        <div class="tab-pane fade  {% if active_pill == 'delete' %}show active{% endif %}" id="pills-delete" role="tabpanel" aria-labelledby="pills-contact-tab" tabindex="0">
-          <form method="post" id="deleteForm">
+        <div class="tab-pane fade  {% if active_pill == 'delete' %}show active{% endif %} rounded-4 m-2 form-wrapper patient-lite p-3 py-5" id="pills-delete" role="tabpanel" aria-labelledby="pills-contact-tab" tabindex="0">
+          <form method="post" id="deleteForm" class="px-3">
             {{deleteform.hidden_tag()}}
+            <h2 class="text-center">Διαγραφή Χρήστη</h2>
             <div class="form-group mb-3">
-              <label for="datalistOptions" class="form-label"
-                >Select the user you want to delete</label
-              >
-              {{ deleteform.username(class="form-control",
-              list="datalistOptions", id="userlist", autocomplete="off",
-              placeholder="Type to search user...",
-              onclick="this.value='';") }}
-              <datalist id="datalistOptions">
-                <option value="dummy"></option>
-                {%for user in users%}
-                <option value="{{user.username}}">{% endfor %}</option>
-              </datalist>
+
+              <div class="input-group">
+                  {{ deleteform.username( list="datalistOptions", id="userlist", autocomplete="off",  onclick="this.value='';") }}
+                  <label for="username">Username</label>
+                
+                
+                
+                <datalist id="datalistOptions">
+                  <option value="dummy"></option>
+                  {%for user in users%}
+                  <option value="{{user.username}}">{% endfor %}</option>
+                </datalist>
+              </div>
             </div>
             <div class="row mb-3">
               {% with messages = get_flashed_messages() %} {% if messages
               %}
               <div class="errors">
                 {% for message in messages %}
-                <small class="form-text text-muted">{{message}}</small>
+                <small class="form-text text-warning">{{message}}</small>
                 {% endfor %}
               </div>
               {% endif %} {% endwith %}
             </div>
             <!-- Button trigger modal -->
-            <button type="button" class="btn login-btn px-5" data-bs-toggle="modal" data-bs-target="#exampleModal2" id="deleteUserButton" disabled>
-              Delete User
-            </button>
+            <div class="row">
+              <div class="col text-center">
+                <button type="button" class="btn login-btn px-5" data-bs-toggle="modal" data-bs-target="#exampleModal2" id="deleteUserButton" disabled>
+                  Delete User
+                </button>
+              </div>
+            </div>
 
             <!-- Modal -->
             <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
