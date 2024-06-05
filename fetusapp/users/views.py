@@ -35,7 +35,7 @@ def signup():
         else:
             flash('User not created. Please review errors in the form!')
             messages = get_flashed_messages()
-            return render_template('signup.html', form=form, deleteform=delete_form, users=users, active_page='signup', active_pill='register', messages=messages)
+            return render_template('signup.html', form=form, updateform = update_form, deleteform=delete_form, users=users, active_page='signup', active_pill='register', messages=messages)
 
     elif 'action' in request.form and request.form['action'] == 'delete':
         if delete_form.validate_on_submit():
