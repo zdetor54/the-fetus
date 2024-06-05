@@ -24,7 +24,7 @@
             {{form.hidden_tag()}}
               <div class="form-group">
                 <div class="input-group">
-                  {{ form.username(class="", id="username", aria_describedby="usernameHelp") }} 
+                  {{ form.username(class="", id="username", aria_describedby="usernameHelp", placeholder=" ") }} 
                   <label for="username">Username</label>
                 </div>
               
@@ -41,7 +41,7 @@
               <div class="col-lg-6 col-12">
 
                 <div class="input-group">
-                  {{ form.password(id="password",aria_describedby="passwordHelp", type="password") }}
+                  {{ form.password(id="password",aria_describedby="passwordHelp", type="password", placeholder=" ") }}
                   <label for="password">Password</label>
                 </div>
                 
@@ -55,7 +55,7 @@
               </div>
               <div class="col-lg-6 col-12">
                 <div class="input-group">
-                  {{ form.pass_confirm(id="pass_confirm", type="password") }}
+                  {{ form.pass_confirm(id="pass_confirm", type="password", placeholder=" ") }}
                   <label for="password">Re-enter password</label>
                 </div>
               </div>
@@ -63,13 +63,13 @@
             <div class="row">
               <div class="col-lg-6 col-12">
                 <div class="input-group">
-                  {{ form.first_name(id="first_name", type="text") }}
+                  {{ form.first_name(id="first_name", type="text", placeholder=" ") }}
                   <label for="first_name">Όνομα</label>
                 </div>
               </div>
               <div class="col-lg-6 col-12">
                 <div class="input-group">
-                  {{ form.last_name(id="last_name", type="text") }} 
+                  {{ form.last_name(id="last_name", type="text", placeholder=" ") }} 
                   <label for="last_name">Επώνυμο</label>
                 </div>
               </div>
@@ -194,7 +194,7 @@
             <div class="form-group mb-3">
 
               <div class="input-group">
-                  {{ deleteform.username( list="datalistOptions", id="userlist", autocomplete="off",  onclick="this.value='';") }}
+                  {{ deleteform.username( list="datalistOptions", id="userlist", autocomplete="off",  onclick="this.value='';", placeholder=" ") }}
                   <label for="username">Username</label>
                 
                 
