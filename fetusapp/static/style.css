@@ -400,8 +400,7 @@ em {
 }
 
 .patient-lite .input-group input:focus~label,
-.patient-lite .input-group input:valid~label 
-.patient-lite .input-group input:not(:placeholder-shown) ~ label{
+.patient-lite .input-group input:valid~label {
     top: -5px;
 }
 
