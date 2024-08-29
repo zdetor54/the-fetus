@@ -12,6 +12,10 @@ To migrate the database
 2. flask db migrate -m "Initial migration."
 3. flask db upgrade
 
+To include the keys to the APIs
+1. Create the keys.env in the root folder (same as this README.md)
+2. Update with the required Keys
+
 Colour pallete
 Calming Blue (#297FB9) - Provides a sense of trust and professionalism.
 Vibrant Pink (#EF539E) - Offers a warm, engaging contrast.
