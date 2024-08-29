@@ -116,7 +116,7 @@ def index():
     target_date = datetime(2024, 6, 4)  # Replace with your desired date
 
     try:
-        events = get_calendar_events(target_date = target_date, days=2)
+        events = get_calendar_events(days=2)
     except:
         events = []
     # if events:

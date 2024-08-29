@@ -141,6 +141,7 @@ def patient():
 def cal_patient_search():
     query_term = 'no query'
     query = request.args.get('query')
+    print(f'query: {query}')
     patient = extract_cal_patient_details(query)
     try:
         query_term = patient['phone']
