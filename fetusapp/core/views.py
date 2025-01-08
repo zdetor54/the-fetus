@@ -133,3 +133,8 @@ def index():
     return render_template('index.html', form=form, active_page='index', error_message=error_message, quote=quote, weather=weather, messages=messages, calendar_events=events)
 
 
+@core.route('/chat')
+def chat():
+    return render_template('chat.html')
+
+
