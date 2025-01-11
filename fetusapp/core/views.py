@@ -83,12 +83,15 @@ def index():
         'author': 'Unknown'
     }]
     try:
-        response = requests.get('https://api.quotable.io/quotes/random')
+        # Adding verify=False to bypass SSL verification
+        response = requests.get('https://api.quotable.io/quotes/random', verify=False)
         if response.status_code == 200:
             quote = response.json()
         else:
+            print(f"Quote API error: Status code {response.status_code}")
             quote = default_quote
-    except:
+    except Exception as e:
+        print(f"Quote API exception: {str(e)}")
         quote = default_quote
 
     if form.validate_on_submit():
