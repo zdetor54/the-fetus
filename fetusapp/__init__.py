@@ -35,9 +35,11 @@ from fetusapp.core.views import core
 from fetusapp.error_pages.handlers import error_pages
 from fetusapp.users.views import users
 from fetusapp.patients.views import patients
+from fetusapp.chatai.views import chatai
 
 
 app.register_blueprint(core)
 app.register_blueprint(error_pages)
 app.register_blueprint(users)
 app.register_blueprint(patients)
+app.register_blueprint(chatai)

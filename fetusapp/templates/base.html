@@ -55,6 +55,9 @@
             <li>
               <a class="nav-link {% if active_page == 'patient' %}active{% endif %}" href="{{url_for('patients.no_patient')}}">Καρτέλα Ασθενή</a>
             </li>
+            <li>
+              <a class="nav-link {% if active_page == 'chat' %}active{% endif %}" href="{{url_for('chatai.chat')}}">AI Chat</a>
+            </li>
               {% if current_user.is_admin %}
               <li>
                 <a class="nav-link {% if active_page == 'signup' %}active{% endif %}" href="{{url_for('users.signup')}}">Διαχείριση Χρηστών</a>
