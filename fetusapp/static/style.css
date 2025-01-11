@@ -405,3 +405,16 @@ em {
 }
 
 /* end of patients: patiend lite form */
+
+.calendar-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.calendar-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
