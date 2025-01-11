@@ -44,7 +44,18 @@ def get_calendar_events(target_date = datetime.now().date(), days=7):
     return events
 
 @core.route('/', methods=['GET', 'POST'])
-def index():
+@core.route('/<string:target_date>', methods=['GET', 'POST'])
+def index(target_date=None):
+    if target_date:
+        try:
+            current_date = datetime.strptime(target_date, '%Y-%m-%d')
+        except ValueError:
+            current_date = datetime.now()
+    else:
+        current_date = datetime.now()
+
+    today = datetime.today()
+
     form = LoginForm()
     error_message = None
     messages = get_flashed_messages()
@@ -119,21 +130,20 @@ def index():
     target_date = datetime(2024, 6, 4)  # Replace with your desired date
 
     try:
-        events = get_calendar_events(days=2)
+        events = get_calendar_events(target_date=current_date, days=2)
     except:
         events = []
-    # if events:
-    #     for event in events:
-    #         vevent = event.vobject_instance.vevent
-    #         print(f"UID: {vevent.uid.value if hasattr(vevent, 'uid') else 'No UID'}")
-    #         print(f"Summary: {vevent.summary.value if hasattr(vevent, 'summary') else 'No Summary'}")
-    #         print(f"Description: {vevent.description.value if hasattr(vevent, 'description') else 'No Description'}")
-    #         print(f"Start: {vevent.dtstart.value if hasattr(vevent, 'dtstart') else 'No Start Date'}")
-    #         print(f"End: {vevent.dtend.value if hasattr(vevent, 'dtend') else 'No End Date'}")
-    #         print("---")
 
-
-    return render_template('index.html', form=form, active_page='index', error_message=error_message, quote=quote, weather=weather, messages=messages, calendar_events=events)
+    return render_template('index.html', 
+                         form=form, 
+                         active_page='index', 
+                         error_message=error_message, 
+                         quote=quote, 
+                         weather=weather, 
+                         messages=messages, 
+                         calendar_events=events,
+                         current_date=current_date,
+                         today=today)
 
 
 @core.route('/chat')
