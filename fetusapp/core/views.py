@@ -83,12 +83,15 @@ def index():
         'author': 'Unknown'
     }]
     try:
-        response = requests.get('https://api.quotable.io/quotes/random')
+        # Adding verify=False to bypass SSL verification
+        response = requests.get('https://api.quotable.io/quotes/random', verify=False)
         if response.status_code == 200:
             quote = response.json()
         else:
+            print(f"Quote API error: Status code {response.status_code}")
             quote = default_quote
-    except:
+    except Exception as e:
+        print(f"Quote API exception: {str(e)}")
         quote = default_quote
 
     if form.validate_on_submit():
@@ -116,7 +119,7 @@ def index():
     target_date = datetime(2024, 6, 4)  # Replace with your desired date
 
     try:
-        events = get_calendar_events(target_date=target_date, days=2)
+        events = get_calendar_events(days=2)
     except:
         events = []
     # if events:
@@ -131,5 +134,10 @@ def index():
 
 
     return render_template('index.html', form=form, active_page='index', error_message=error_message, quote=quote, weather=weather, messages=messages, calendar_events=events)
+
+
+@core.route('/chat')
+def chat():
+    return render_template('chat.html')
 
 
