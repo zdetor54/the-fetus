@@ -8,12 +8,12 @@ import os
 from dotenv import load_dotenv
 import requests
 from datetime import datetime, timedelta
-import urllib3
+
 
 from caldav import DAVClient, Calendar
     
 core = Blueprint('core', __name__)
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
 
 def get_quote():
 
