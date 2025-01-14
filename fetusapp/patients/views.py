@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 
 import openai
 import json
+import pandas as pd
 
 patients = Blueprint('patients', __name__)
 
@@ -27,7 +28,7 @@ def zfill(value, width=4):
 app.jinja_env.filters['zfill'] = zfill
 
 
-def extract_cal_patient_details(text):
+def extract_patient_details(text: str) -> dict:
 
     dotenv_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', '..', 'keys.env')
     load_dotenv(dotenv_path)
@@ -38,32 +39,40 @@ def extract_cal_patient_details(text):
 
     # Define the prompt
     prompt = f"Extract the following types of PII from the following text: {text}"
+    print (prompt)
 
     # Make the API call
-    response = openai.ChatCompletion.create(
-        model="gpt-4",
-        messages=[
-            {"role": "system", "content": """Extract the following types of PII: 
-                                            - Last name, not first name 
-                                            - any phone numbers
-                                            - Ignore anything related to ODS, Δώδος, Δώδου, Αλιακιόζογλου. 
-                                            - I want the extract to be in a json format.
-                                            - I only want one last name and/or one phone number to be extracted per prompt.
+    try:    
+        response = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant extracting PII from text"},
+                {"role": "user", "content": """Extract the following types of PII: 
+                                                - First name as "name",
+                                                - Last name as "surname", 
+                                                - any phone numbers as "phone"
+                                                - Ignore anything related to ODS, Δώδος, Δώδου, Αλιακιόζογλου. 
+                                                - I want the extract to be in a json format.
+                                                - I only want one last name and/or one phone number to be extracted per prompt.
+                                                - if there a attribute can't be found ignore the key
 
-                                            The prompts are all in Greek and it's around obstetrics and gynecology appointments.
-             
-                                            Example: Λάμπρου Μαριάνα κυηση -> {"surname": "Λαμπρου"}
-                                            """},
-            {"role": "user", "content": prompt},
-        ],
-        max_tokens=150,
-        n=1,
-        stop=None,
-        temperature=0.5,
-    )
+                                                The prompts are all in Greek and it's around obstetrics and gynecology appointments.
+                
+                                                Example: Λάμπρου Μαριάνα κυηση κινητό τηλέφωνο 6977221781-> {"name": "Μαριάνα", "surname": "Λαμπρου", "phone": "6977221781"}
+                                                """ + prompt},
+            ],
+            max_tokens=150,
+            n=1,
+            stop=None,
+            temperature=0.5,
+        )
 
-    # Extract the PII from the response
-    extracted_data = response['choices'][0]['message']['content'].strip()
+        # Extract the PII from the response
+        extracted_data = response['choices'][0]['message']['content'].strip()
+    except Exception as e:
+        print(e)
+        extracted_data = ""
+        return {"surname": "no quota"}
 
     # Parse the JSON response (if the model outputs JSON)
     try:
@@ -72,10 +81,69 @@ def extract_cal_patient_details(text):
     except json.JSONDecodeError:
         return {}
 
+def extract_patient_details_regex(text: str) -> dict:
+    elements = text.split()
+    extracted_data = dict()
+    for element in elements:
+        try:
+            int(element)
+            extracted_data['phone'] = element
+        except ValueError:
+            if 'name' not in extracted_data:
+                extracted_data['name'] = element
+            else:
+                extracted_data['surname'] = element
+    print(elements)
+    return extracted_data
+
 def normalize_text(text):
     return ''.join(c for c in unicodedata.normalize('NFKD', text) if unicodedata.category(c) != 'Mn').lower()
 
-def find_patient(search_query):
+def normalize_json(json_data:dict) -> dict:
+    for key, value in json_data.items():
+        # if value is string, normalize it
+        if isinstance(value, str):
+            json_data[key] = normalize_text(value)
+    return json_data
+
+def filter_patients(patients: pd.DataFrame, search_parameters: dict) -> pd.DataFrame:
+    # Create working copy of the dataframe
+    search_row =pd.DataFrame([search_parameters]).iloc[0]
+
+    if len(search_row)>0:
+        # Initialize matches as all True
+        matches = pd.Series(True, index=patients.index)
+        # Handle name matching if name is provided
+        if 'name' in search_row and not pd.isna(search_row['name']):
+            name_matches = (
+                (patients['first_name'] == search_row['name']) |
+                (patients['last_name'] == search_row['name'])
+            )
+            matches &= name_matches
+        
+        # Handle surname matching if surname is provided
+        if 'surname' in search_row and not pd.isna(search_row['surname']):
+            surname_matches = (
+                (patients['first_name'] == search_row['surname']) |
+                (patients['last_name'] == search_row['surname'])
+            )
+            matches &= surname_matches
+        
+        # Handle phone matching if phone is provided
+        if 'phone' in search_row and not pd.isna(search_row['phone']):
+            phone_matches = (
+                (patients['home_phone'] == search_row['phone']) |
+                (patients['mobile_phone'] == search_row['phone']) |
+                (patients['alternative_phone'] == search_row['phone'])
+            )
+            matches &= phone_matches    
+    
+    else:
+        matches = pd.Series(False, index=patients.index)
+
+    return patients[matches]
+
+def find_patient_TO_DELETE(search_query): # TO DELETE
     patients = []
 
     normalized_query = normalize_text(search_query)
@@ -102,29 +170,31 @@ def no_patient():
         flash('You need to be logged in to view the patient page.')
         return redirect(url_for('core.index'))
     
-    search_query = request.args.get('query_term')
-    print(search_query)
-
+    search_query = request.args.get('search_query')
     
     if request.method == 'POST':
         search_query = request.form.get('search_query')
+        
+    patients = get_patients(search_query)
 
-        print(search_query)
-
-        patients = find_patient(search_query)
-        if patients is not None:
-            for patient in patients:
-                return render_template('patients.html', active_page='patient', patients=patients, has_searched=True)
-        return render_template('patients.html', active_page='patient', patients=patients, has_searched=True)
-    
-    if search_query:
-        print(search_query)
-        patients = find_patient(search_query)
-        return render_template('patients.html', active_page='patient', patients=patients, has_searched=True)
-    
-    
-    
-    return render_template('patients.html', active_page='patient')
+    if len(patients) > 0:
+        # Convert DataFrame to list of dictionaries for template
+        if isinstance(patients, pd.DataFrame):
+            patients_list = patients.to_dict('records')
+        else:
+            patients_list = [
+                {
+                    'id': patient.id,
+                    'first_name': patient.first_name,
+                    'last_name': patient.last_name,
+                    'mobile_phone': patient.mobile_phone,
+                    'home_phone': patient.home_phone,
+                    'alternative_phone': patient.alternative_phone
+                }
+                for patient in patients
+            ]
+        return render_template('patients.html', active_page='patient', patients=patients_list, has_searched=True)
+    return render_template('patients.html', active_page='patient', patients=[], has_searched=True)
 
 @patients.route('/patient', methods=['GET', 'POST'])
 def patient():
@@ -137,33 +207,59 @@ def patient():
     
     return render_template('patient.html', active_page='patient')
 
-@patients.route('/patient_search', methods=['GET'])
-def cal_patient_search():
-    query_term = 'no query'
-    query = request.args.get('query')
-    print(f'query: {query}')
-    patient = extract_cal_patient_details(query)
-    try:
-        query_term = patient['phone']
-        patients = find_patient(query_term)
-        if patients is  None:
-            return redirect(url_for('patients.no_patient', query_term=query_term))
-        elif len(patients) == 1:
-            return redirect(url_for('patients.patient', id=patients[0].id))
-        else:
-            return redirect(url_for('patients.no_patient', query_term=query_term))
-        
-    except:
-        try:
-            query_term = patient['surname']
-            patients = find_patient(query_term)
-            if patients is  None:
-                return redirect(url_for('patients.no_patient', query_term=query_term))
-            elif len(patients) == 1:
-                return redirect(url_for('patients.patient', id=patients[0].id))
-            else:
-                return redirect(url_for('patients.no_patient', query_term=query_term))
-        except:
-            query_term = "No patient data found"
+@patients.route('/calendar_patient_search', methods=['GET'])
+def calendar_patient_search():
 
-    return redirect(url_for('patients.no_patient', query_term=''))
+    search_query = request.args.get('search_query')
+    patients = get_patients(search_query)
+
+    if len(patients) < 1:       # No patients found so no need to preserve the query string
+        return redirect(url_for('patients.no_patient', search_query=search_query)) #TO DO: remove ', search_query=search_query'
+    elif len(patients) == 1:
+        return redirect(url_for('patients.patient', id=patients.iloc[0].id))
+    
+    return redirect(url_for('patients.no_patient', search_query=search_query))   # Multiple patients found, preserve the query string and show the search results
+
+
+@patients.route('/get_patients/<string:search_query>', methods=['GET', 'POST'])
+def get_patients(search_query: str) -> pd.DataFrame:
+    """
+    Get patients based on the search query provided.
+    """
+
+    # Extract the patient details from the search query
+    search_parameters = extract_patient_details(search_query)
+    
+    # if the surname is found, and has the value "no quota", return an empty list
+    if 'surname' in search_parameters and search_parameters['surname'] == "no quota":
+        search_parameters = extract_patient_details_regex(search_query)
+    # Normalize the search parameters
+    norm_search_parameters = normalize_json(search_parameters)
+
+    print(norm_search_parameters)
+    
+
+    # Fetch all patients and normalize their names for comparison
+    all_patients = Patient.query.all()
+    patients_data = [
+        {
+            'id': p.id,
+            'first_name': p.first_name,
+            'last_name': p.last_name,
+            'home_phone': p.home_phone,
+            'mobile_phone': p.mobile_phone,
+            'alternative_phone': p.alternative_phone
+        } 
+        for p in all_patients
+    ]
+    df_all_patients = pd.DataFrame(patients_data)
+
+    df_all_patients['first_name'] = df_all_patients['first_name'].apply(normalize_text)
+    df_all_patients['last_name'] = df_all_patients['last_name'].apply(normalize_text)
+
+    # Find the matching patients
+
+    filtered_patients = filter_patients(df_all_patients, norm_search_parameters)
+    print(f"The type of Filtered patients is: {type(filtered_patients)}")
+
+    return filtered_patients
