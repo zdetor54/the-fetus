@@ -194,7 +194,7 @@ block content %}
 {% block javascript %}
 <script>
   function performSearch(searchQuery) {
-    window.location.href = `/patient_search?query=${searchQuery}`;
+    window.location.href = `/calendar_patient_search?search_query=${searchQuery}`;
   }
 
   function changeDate(days) {
