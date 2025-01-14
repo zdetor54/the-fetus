@@ -82,7 +82,12 @@ def extract_patient_details(text: str) -> dict:
         return {}
 
 def extract_patient_details_regex(text: str) -> dict:
-    elements = text.split()
+    try:
+        elements = text.split()
+    except AttributeError:
+        elements = []
+
+        
     extracted_data = dict()
     for element in elements:
         try:
@@ -96,7 +101,7 @@ def extract_patient_details_regex(text: str) -> dict:
     print(elements)
     return extracted_data
 
-def normalize_text(text):
+def normalize_text(text: str) -> str:	
     return ''.join(c for c in unicodedata.normalize('NFKD', text) if unicodedata.category(c) != 'Mn').lower()
 
 def normalize_json(json_data:dict) -> dict:
@@ -142,27 +147,6 @@ def filter_patients(patients: pd.DataFrame, search_parameters: dict) -> pd.DataF
         matches = pd.Series(False, index=patients.index)
 
     return patients[matches]
-
-def find_patient_TO_DELETE(search_query): # TO DELETE
-    patients = []
-
-    normalized_query = normalize_text(search_query)
-
-    # Fetch all patients and normalize their names for comparison
-    all_patients = Patient.query.all()
-    matching_patients = []
-
-    for patient in all_patients:
-        normalized_first_name = normalize_text(patient.first_name)
-        normalized_last_name = normalize_text(patient.last_name)
-        if (normalized_query in normalized_first_name) \
-            or (normalized_query in normalized_last_name)\
-            or (patient.home_phone and normalized_query in patient.home_phone) \
-            or (patient.mobile_phone and normalized_query in patient.mobile_phone) \
-            or (patient.alternative_phone and normalized_query in patient.alternative_phone):
-            matching_patients.append(patient)
-    patients = matching_patients
-    return patients
 
 @patients.route('/patients', methods=['GET', 'POST'])
 def no_patient():
@@ -219,7 +203,6 @@ def calendar_patient_search():
         return redirect(url_for('patients.patient', id=patients.iloc[0].id))
     
     return redirect(url_for('patients.no_patient', search_query=search_query))   # Multiple patients found, preserve the query string and show the search results
-
 
 @patients.route('/get_patients/<string:search_query>', methods=['GET', 'POST'])
 def get_patients(search_query: str) -> pd.DataFrame:
