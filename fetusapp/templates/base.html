@@ -67,7 +67,7 @@
           {% if current_user.is_authenticated %}
           <form action="" method="post" id="findPatient" onsubmit="event.preventDefault(); performNavSearch();">
             <div class="input-group">
-                <input type="text" class="form-control" name="nav_search_query" placeholder="Search for a patient" aria-label="Search for a patient" aria-describedby="button-search" style="border-start-start-radius: 5rem ; border-end-start-radius: 5rem ;">
+                <input type="text" class="form-control" name="nav_search_query" placeholder="Ονοματεπώνυμο/Τηλ" aria-label="Search for a patient" aria-describedby="button-search" style="border-start-start-radius: 5rem ; border-end-start-radius: 5rem ;">
                 <button class="btn btn-outline-secondary" type="submit" id="button-search" onclick="performNavSearch()">Search</button>
             </div>
           </form>
