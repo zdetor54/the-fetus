@@ -8,58 +8,35 @@ import os
 from dotenv import load_dotenv
 import requests
 from datetime import datetime, timedelta
+import urllib3
 
 from caldav import DAVClient, Calendar
     
 core = Blueprint('core', __name__)
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-def get_calendar_events(target_date = datetime.now().date(), days=7):
-     # This is where the calendar events are fetched
-    url = "https://caldav.icloud.com"
-    username = "zdetor54@gmail.com"
+def get_quote():
 
-    dotenv_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', '..', 'keys.env')
-    print(dotenv_path)
-    load_dotenv(dotenv_path)
-    password = os.getenv("APPLE_CAL_KEY")
+    default_quote = [{
+        'content': 'Wisdom is not a product of schooling but of the lifelong attempt to acquire it.',
+        'author': 'Albert Einstein'
+    }]
+    
+    try:
+        
+        response = requests.get(
+            'https://api.quotable.io/quotes/random',
+            verify=False,
+            timeout=5
+        )
+        
+        if response.status_code == 200:
+            return [response.json()[0]]
+        return default_quote
+    except:
+        return default_quote      
 
-    # Connect to the iCloud CalDAV server
-    client = DAVClient(url, username=username, password=password)
-    principal = client.principal()
-    calendars = principal.calendars()
-
-
-    # Replace with the name of your desired calendar
-    calendar_url = "https://p142-caldav.icloud.com:443/1101338323/calendars/75fec20324b34821c0cfae15e8a9cee826762747257294ea3bc5c2e6bd2ab65d/"
-    calendar = Calendar(client, calendar_url)
-    print(f"Calendar: {calendar}")
-
-    # Define the time range for the entire day
-    start = datetime.combine(target_date, datetime.min.time())
-    end = datetime.combine(target_date + timedelta(days), datetime.min.time())
-
-    # Get events for the specified day
-    events = calendar.date_search(start=start, end=end)
-
-    return events
-
-@core.route('/', methods=['GET', 'POST'])
-@core.route('/<string:target_date>', methods=['GET', 'POST'])
-def index(target_date=None):
-    if target_date:
-        try:
-            current_date = datetime.strptime(target_date, '%Y-%m-%d')
-        except ValueError:
-            current_date = datetime.now()
-    else:
-        current_date = datetime.now()
-
-    today = datetime.today()
-
-    form = LoginForm()
-    error_message = None
-    messages = get_flashed_messages()
-
+def get_weather():
     dotenv_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', '..', 'keys.env')
     load_dotenv(dotenv_path)  
     meteo_api_key = os.getenv("METEO_API_KEY")
@@ -88,22 +65,59 @@ def index(target_date=None):
             weather = default_weather
     except:
         weather = default_weather
+    
+    return weather
 
-    default_quote = [{
-        'content': 'Could not fetch quote data.',
-        'author': 'Unknown'
-    }]
-    try:
-        # Adding verify=False to bypass SSL verification
-        response = requests.get('https://api.quotable.io/quotes/random', verify=False)
-        if response.status_code == 200:
-            quote = response.json()
-        else:
-            print(f"Quote API error: Status code {response.status_code}")
-            quote = default_quote
-    except Exception as e:
-        print(f"Quote API exception: {str(e)}")
-        quote = default_quote
+def get_calendar_events(target_date = datetime.now().date(), days=7):
+     # This is where the calendar events are fetched
+    url = "https://caldav.icloud.com"
+    username = "zdetor54@gmail.com"
+
+    dotenv_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', '..', 'keys.env')
+    load_dotenv(dotenv_path)
+    password = os.getenv("APPLE_CAL_KEY")
+
+    # Connect to the iCloud CalDAV server
+    client = DAVClient(url, username=username, password=password)
+    principal = client.principal()
+    calendars = principal.calendars()
+
+
+    # Replace with the name of your desired calendar
+    calendar_url = "https://p142-caldav.icloud.com:443/1101338323/calendars/75fec20324b34821c0cfae15e8a9cee826762747257294ea3bc5c2e6bd2ab65d/"
+    calendar = Calendar(client, calendar_url)
+
+    # Define the time range for the entire day
+    start = datetime.combine(target_date, datetime.min.time())
+    end = datetime.combine(target_date + timedelta(days), datetime.min.time())
+
+    # Get events for the specified day
+    events = calendar.date_search(start=start, end=end)
+
+    return events
+
+@core.route('/', methods=['GET', 'POST'])
+@core.route('/<string:target_date>', methods=['GET', 'POST'])
+def index(target_date=None):
+
+
+    if target_date:
+        try:
+            current_date = datetime.strptime(target_date, '%Y-%m-%d')
+        except ValueError:
+            current_date = datetime.now()
+    else:
+        current_date = datetime.now()
+
+    today = datetime.today()
+
+    form = LoginForm()
+    error_message = None
+    messages = get_flashed_messages()
+
+    weather = get_weather()
+
+    quote = get_quote()
 
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
@@ -123,11 +137,6 @@ def index(target_date=None):
         else:
             error_message = 'Incorrect username and/or password.'
 
-        # Print event details
-
-
-     # Specify the day you want to get events for
-    target_date = datetime(2024, 6, 4)  # Replace with your desired date
 
     try:
         events = get_calendar_events(target_date=current_date, days=1)
@@ -145,9 +154,5 @@ def index(target_date=None):
                          current_date=current_date,
                          today=today)
 
-
-@core.route('/chat')
-def chat():
-    return render_template('chat.html')
 
 
