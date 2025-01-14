@@ -87,7 +87,7 @@ def extract_patient_details_regex(text: str) -> dict:
     except AttributeError:
         elements = []
 
-        
+
     extracted_data = dict()
     for element in elements:
         try:
@@ -96,8 +96,10 @@ def extract_patient_details_regex(text: str) -> dict:
         except ValueError:
             if 'name' not in extracted_data:
                 extracted_data['name'] = element
-            else:
+            elif 'surname' not in extracted_data:
                 extracted_data['surname'] = element
+            else:
+                break
     print(elements)
     return extracted_data
 
