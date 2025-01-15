@@ -221,11 +221,23 @@ def patient():
 
     patient_id = request.args.get('id')
 
+    contact_fields = {
+        'street_name': {'label': 'Οδός', 'type': 'text'},
+        'street_number': {'label': 'Αριθμός', 'type': 'text'},
+        'city': {'label': 'Πόλη', 'type': 'text'},
+        'postal_code': {'label': 'Ταχυδρομικός Κωδικός', 'type': 'text'},
+        'county': {'label': 'Νομός', 'type': 'text'},
+        'home_phone': {'label': 'Σταθερό Τηλ', 'type': 'text'},
+        'mobile_phone': {'label': 'Κινητό Τηλ', 'type': 'text'},
+        'alternative_phone': {'label': 'Εναλλακτικό Τηλ', 'type': 'text'},
+        'email': {'label': 'Ε-mail', 'type': 'email'}
+    }
+
     if patient_id:
         patient = Patient.query.get(patient_id)
-        return render_template('patient.html', active_page='patient',query_term=patient_id, patient=patient)
+        return render_template('patient.html', active_page='patient',query_term=patient_id, patient=patient, contact_fields=contact_fields)
     
-    return render_template('patient.html', active_page='patient')
+    return render_template('patient.html', active_page='patient', contact_fields=contact_fields)
 
 @patients.route('/api/patients', methods=['POST'])
 @login_required
@@ -276,41 +288,10 @@ def update_patient_api(id):
         for key, value in data.items():
             if hasattr(patient, key):
                 setattr(patient, key, value)
-                
+
         # Update timestamps and user
         patient.last_updated_on = datetime.utcnow()
         patient.last_updated_by = current_user.id
-
-        # # General patient information
-        # patient.first_name = data.get('first_name')
-        # patient.last_name = data.get('last_name')
-        # patient.father_name = data.get('father_name')
-        # patient.date_of_birth = datetime.strptime(data.get('date_of_birth'), '%Y-%m-%d').date() if data.get('date_of_birth') else None
-        # patient.marital_status = data.get('marital_status')
-        # patient.nationality = data.get('nationality')
-        # patient.occupation = data.get('occupation')
-        # patient.insurance = data.get('insurance')
-        # patient.insurance_comment = data.get('insurance_comment')
-        # patient.amka = data.get('amka')
-
-        # # Spouse information
-        # patient.spouse_name = data.get('spouse_name')
-        # patient.spouse_date_of_birth = datetime.strptime(data.get('spouse_date_of_birth'), '%Y-%m-%d').date() if data.get('spouse_date_of_birth') else None
-        # patient.spouse_occupation = data.get('spouse_occupation')
-
-        # # Contact information
-        # patient.street_name = data.get('street_name')
-        # patient.street_number = data.get('street_number')
-        # patient.city = data.get('city')
-        # patient.postal_code = data.get('postal_code')
-        # patient.county = data.get('county')
-        # patient.home_phone = data.get('home_phone')
-        # patient.mobile_phone = data.get('mobile_phone')
-        # patient.alternative_phone = data.get('alternative_phone')
-        # patient.email = data.get('email')
-
-        # patient.last_updated_by = current_user.id
-        # patient.last_updated_on = datetime.now()
 
         db.session.commit()
         return jsonify({'success': True}), 200

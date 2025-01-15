@@ -9,6 +9,7 @@ from flask_bcrypt import Bcrypt
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'mysecretkey'
 bcrypt = Bcrypt(app)
+app.jinja_env.globals.update(getattr=getattr)
 
 #######################
 ### DATABASE SETUP ####
