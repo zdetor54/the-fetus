@@ -1,4 +1,4 @@
-from flask import render_template, request, Blueprint,flash,redirect,url_for, get_flashed_messages
+from flask import render_template, request, Blueprint,flash,redirect,url_for, get_flashed_messages, jsonify
 from fetusapp import app,db
 from flask_login import login_user,login_required,logout_user, current_user
 from fetusapp.models import User,Patient
@@ -6,11 +6,13 @@ from .forms import PatientContactForm
 import unicodedata
 import os
 from dotenv import load_dotenv
+import datetime
 
 
 import openai
 import json
 import pandas as pd
+
 
 patients = Blueprint('patients', __name__)
 
@@ -100,7 +102,6 @@ def extract_patient_details_regex(text: str) -> dict:
                 extracted_data['surname'] = element
             else:
                 break
-    print(elements)
     return extracted_data
 
 def normalize_text(text: str) -> str:	
@@ -150,6 +151,39 @@ def filter_patients(patients: pd.DataFrame, search_parameters: dict) -> pd.DataF
 
     return patients[matches]
 
+def search_patients_service(search_query: str) -> pd.DataFrame:
+    """Service function for patient search logic"""
+    if not search_query:
+        return pd.DataFrame()
+        
+    search_parameters = extract_patient_details(search_query)
+    # if the surname is found, and has the value "no quota", return an empty list
+    if 'surname' in search_parameters and search_parameters['surname'] == "no quota":
+        search_parameters = extract_patient_details_regex(search_query)
+    # Normalize the search parameters
+    norm_search_parameters = normalize_json(search_parameters)
+
+    all_patients = Patient.query.all()
+    patients_data = [
+        {
+            'id': p.id,
+            'first_name': p.first_name,
+            'last_name': p.last_name,
+            'home_phone': p.home_phone,
+            'mobile_phone': p.mobile_phone,
+            'alternative_phone': p.alternative_phone
+        } 
+        for p in all_patients
+    ]
+    df_all_patients = pd.DataFrame(patients_data)
+
+    df_all_patients['first_name'] = df_all_patients['first_name'].apply(normalize_text)
+    df_all_patients['last_name'] = df_all_patients['last_name'].apply(normalize_text)
+
+    patients_df = filter_patients(df_all_patients, norm_search_parameters)
+
+    return patients_df
+
 @patients.route('/patients', methods=['GET', 'POST'])
 def no_patient():
     if not current_user.is_authenticated:
@@ -161,7 +195,7 @@ def no_patient():
     if request.method == 'POST':
         search_query = request.form.get('search_query')
         
-    patients = get_patients(search_query)
+    patients = search_patients_service(search_query)
 
     if len(patients) > 0:
         # Convert DataFrame to list of dictionaries for template
@@ -193,58 +227,71 @@ def patient():
     
     return render_template('patient.html', active_page='patient')
 
-@patients.route('/calendar_patient_search', methods=['GET'])
-def calendar_patient_search():
-
-    search_query = request.args.get('search_query')
-    patients = get_patients(search_query)
-
-    if len(patients) < 1:       # No patients found so no need to preserve the query string
-        return redirect(url_for('patients.no_patient', search_query=search_query)) #TO DO: remove ', search_query=search_query'
-    elif len(patients) == 1:
-        return redirect(url_for('patients.patient', id=patients.iloc[0].id))
+@patients.route('/api/patients', methods=['POST'])
+@login_required
+def create_patient_api():
+    try:
+        data = request.get_json()
+        patient = Patient(
+            first_name=data.get('first_name'),
+            last_name=data.get('last_name'),
+            father_name=data.get('father_name'),
+            date_of_birth=datetime.strptime(data.get('date_of_birth'), '%Y-%m-%d').date() if data.get('date_of_birth') else None,
+            marital_status=data.get('marital_status'),
+            nationality=data.get('nationality'),
+            occupation=data.get('occupation'),
+            street_name=data.get('street_name'),
+            street_number=data.get('street_number'),
+            city=data.get('city'),
+            postal_code=data.get('postal_code'),
+            county=data.get('county'),
+            home_phone=data.get('home_phone'),
+            mobile_phone=data.get('mobile_phone'),
+            alternative_phone=data.get('alternative_phone'),
+            email=data.get('email'),
+            insurance=data.get('insurance'),
+            insurance_comment=data.get('insurance_comment'),
+            amka=data.get('amka'),
+            spouse_name=data.get('spouse_name'),
+            spouse_date_of_birth=datetime.strptime(data.get('spouse_date_of_birth'), '%Y-%m-%d').date() if data.get('spouse_date_of_birth') else None,
+            spouse_occupation=data.get('spouse_occupation'),
+            created_by=current_user.id,
+            last_updated_by=current_user.id
+        )
+        db.session.add(patient)
+        db.session.commit()
+        return jsonify({'success': True, 'patient_id': patient.id}), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'error': str(e)}), 400
     
-    return redirect(url_for('patients.no_patient', search_query=search_query))   # Multiple patients found, preserve the query string and show the search results
+@patients.route('/api/patients/search', methods=['GET'])
+def search_patients_api():
+    """API endpoint for patient search"""
+    search_query = request.args.get('query')
+    try:
+        patients = search_patients_service(search_query)
 
-@patients.route('/get_patients/<string:search_query>', methods=['GET', 'POST'])
-def get_patients(search_query: str) -> pd.DataFrame:
-    """
-    Get patients based on the search query provided.
-    """
-
-    # Extract the patient details from the search query
-    search_parameters = extract_patient_details(search_query)
+        return jsonify({
+            'success': True,
+            'count': len(patients),
+            'data': patients.to_dict('records') if isinstance(patients, pd.DataFrame) else patients
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 400
     
-    # if the surname is found, and has the value "no quota", return an empty list
-    if 'surname' in search_parameters and search_parameters['surname'] == "no quota":
-        search_parameters = extract_patient_details_regex(search_query)
-    # Normalize the search parameters
-    norm_search_parameters = normalize_json(search_parameters)
-
-    print(norm_search_parameters)
+@patients.route('/patients/search', methods=['GET'])
+def search_patients_view():
+    """View for patient search results"""
+    search_query = request.args.get('query')
+    if not search_query:
+        return render_template('patients.html', patients=[], has_searched=False)
     
+    response = search_patients_service(search_query)
 
-    # Fetch all patients and normalize their names for comparison
-    all_patients = Patient.query.all()
-    patients_data = [
-        {
-            'id': p.id,
-            'first_name': p.first_name,
-            'last_name': p.last_name,
-            'home_phone': p.home_phone,
-            'mobile_phone': p.mobile_phone,
-            'alternative_phone': p.alternative_phone
-        } 
-        for p in all_patients
-    ]
-    df_all_patients = pd.DataFrame(patients_data)
-
-    df_all_patients['first_name'] = df_all_patients['first_name'].apply(normalize_text)
-    df_all_patients['last_name'] = df_all_patients['last_name'].apply(normalize_text)
-
-    # Find the matching patients
-
-    filtered_patients = filter_patients(df_all_patients, norm_search_parameters)
-    print(f"The type of Filtered patients is: {type(filtered_patients)}")
-
-    return filtered_patients
+    if len(response) == 0:
+        return render_template('patients.html', active_page='patient', patients=[], has_searched=True)
+    elif len(response) == 1:
+        return redirect(url_for('patients.patient', active_page='patient', id=response.iloc[0].id))
+    else:
+        return render_template('patients.html', active_page='patient', patients=response.to_dict('records'), has_searched=True)
