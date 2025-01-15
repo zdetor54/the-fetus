@@ -6,7 +6,7 @@ from .forms import PatientContactForm
 import unicodedata
 import os
 from dotenv import load_dotenv
-import datetime
+from datetime import datetime
 
 
 import openai
@@ -264,7 +264,60 @@ def create_patient_api():
     except Exception as e:
         db.session.rollback()
         return jsonify({'success': False, 'error': str(e)}), 400
-    
+
+@patients.route('/api/patients/<int:id>', methods=['PUT'])
+@login_required
+def update_patient_api(id):
+    try:
+        data = request.get_json()
+        patient = Patient.query.get_or_404(id)
+
+        # Update fields
+        for key, value in data.items():
+            if hasattr(patient, key):
+                setattr(patient, key, value)
+                
+        # Update timestamps and user
+        patient.last_updated_on = datetime.utcnow()
+        patient.last_updated_by = current_user.id
+
+        # # General patient information
+        # patient.first_name = data.get('first_name')
+        # patient.last_name = data.get('last_name')
+        # patient.father_name = data.get('father_name')
+        # patient.date_of_birth = datetime.strptime(data.get('date_of_birth'), '%Y-%m-%d').date() if data.get('date_of_birth') else None
+        # patient.marital_status = data.get('marital_status')
+        # patient.nationality = data.get('nationality')
+        # patient.occupation = data.get('occupation')
+        # patient.insurance = data.get('insurance')
+        # patient.insurance_comment = data.get('insurance_comment')
+        # patient.amka = data.get('amka')
+
+        # # Spouse information
+        # patient.spouse_name = data.get('spouse_name')
+        # patient.spouse_date_of_birth = datetime.strptime(data.get('spouse_date_of_birth'), '%Y-%m-%d').date() if data.get('spouse_date_of_birth') else None
+        # patient.spouse_occupation = data.get('spouse_occupation')
+
+        # # Contact information
+        # patient.street_name = data.get('street_name')
+        # patient.street_number = data.get('street_number')
+        # patient.city = data.get('city')
+        # patient.postal_code = data.get('postal_code')
+        # patient.county = data.get('county')
+        # patient.home_phone = data.get('home_phone')
+        # patient.mobile_phone = data.get('mobile_phone')
+        # patient.alternative_phone = data.get('alternative_phone')
+        # patient.email = data.get('email')
+
+        # patient.last_updated_by = current_user.id
+        # patient.last_updated_on = datetime.now()
+
+        db.session.commit()
+        return jsonify({'success': True}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'error': str(e)}), 400
+
 @patients.route('/api/patients/search', methods=['GET'])
 def search_patients_api():
     """API endpoint for patient search"""
