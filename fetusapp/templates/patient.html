@@ -143,23 +143,23 @@
                                                     <form>
                                                         <h2 class="text-center">Στοιχεία Επικοινωνίας</h2>
                                                         <div class="input-group">
-                                                            <input type="text" id="street_nameInput" value="{{patient.street_name}}" required>
+                                                            <input type="text" id="street_nameInput" value="{{patient.street_name if patient.street_name else ''}}" required>
                                                             <label for="street_nameInput" class="form-label">Οδός:</label>
                                                         </div>
                                                         <div class="input-group">
-                                                            <input type="text" id="street_numberInput" value="{{patient.street_number}}" required>
+                                                            <input type="text" id="street_numberInput" value="{{patient.street_number if patient.street_number else ''}}" required>
                                                             <label for="street_numberInput" class="form-label">Αριθμός:</label>
                                                         </div>
                                                         <div class="input-group">
-                                                            <input type="text" id="cityInput" value="{{patient.city}}" required>
+                                                            <input type="text" id="cityInput" value="{{patient.city if patient.city else ''}}" required>
                                                             <label for="cityInput" class="form-label">Πόλη:</label>
                                                         </div>
                                                         <div class="input-group">
-                                                            <input type="text" id="postal_codeInput" value="{{patient.postal_code}}" required>
+                                                            <input type="text" id="postal_codeInput" value="{{patient.postal_code if patient.postal_code else ''}}" required>
                                                             <label for="postal_codeInput" class="form-label">Ταχυδρομικός Κωδικός:</label>
                                                         </div>
                                                         <div class="input-group">
-                                                            <input type="text" id="countyInput" value="{{patient.county}}" required>
+                                                            <input type="text" id="countyInput" value="{{patient.county if patient.county else ''}}" required>
                                                             <label for="countyInput" class="form-label">Νομός:</label>
                                                         </div>
                                                         <div class="input-group">
@@ -171,11 +171,11 @@
                                                             <label for="mobile_phoneInput">Κινητό Τηλ:</label>
                                                         </div>
                                                         <div class="input-group">
-                                                            <input type="text" id="alternative_phoneInput" value="{{patient.alternative_phone}}" required>
+                                                            <input type="text" id="alternative_phoneInput" value="{{patient.alternative_phone if patient.alternative_phone else ''}}" required>
                                                             <label for="alternative_phoneInput" class="form-label">Εναλλακτικό Τηλ:</label>
                                                         </div>
                                                         <div class="input-group">
-                                                            <input type="email" id="emailInput" placeholder="john.doe@example.com" value="{{patient.email}}" required>
+                                                            <input type="email" id="emailInput" placeholder="john.doe@example.com" value="{{patient.email if patient.email else ''}}" required>
                                                             <label for="emailInput" class="form-label">Ε-mail:</label>
                                                         </div>
                                                         <button type="button" class="btn login-btn" onclick="saveChangesContactDetails()">Save</button>
