@@ -17,10 +17,10 @@
               <div class="col-12 col-lg-8 text-light">
                 <div class="card overflow-hidden text-bg-dark rounded-4 shadow-lg bg-dark">
                   <div class="d-flex flex-column h-100 p-3 pb-3 text-shadow-1">
-                    <form action="" method="post" id="findPatient">
+                    <form action="" method="post" id="findPatient" onsubmit="event.preventDefault(); performMainSearch();">
                         <div class="input-group mb-3">
                             <input type="text" class="form-control" name="search_query" placeholder="Ονοματεπώνυμο ή/και τηλέφωνο" aria-label="Search for a patient" aria-describedby="button-search" style="border-start-start-radius: 5rem ; border-end-start-radius: 5rem ;">
-                            <button class="btn btn-outline-secondary" type="submit" id="button-search">Search</button>
+                            <button class="btn btn-outline-secondary" type="submit" id="button-search">Αναζήτηση</button>
                         </div>
                     </form>
 
@@ -80,7 +80,7 @@
                   <div class="d-flex flex-column h-100 p-3 text-shadow-1">
                     <div class="wrapper">
                         <div class="form-wrapper patient-lite px-3">
-                            <form action="">
+                            <form id="createPatientForm" onsubmit="handleCreatePatient(event)">
                                 <h2 class="text-center">Create new patient</h2>
                                 <div class="input-group">
                                     <input type="text" name="first_name" id="" required>
@@ -91,18 +91,17 @@
                                     <label for="last_name">Επώνυμο</label>
                                 </div>
                                 <div class="input-group">
-                                    <input type="text" name="home_phone" id="" value="" required>
-                                    <label for="home_phone">Σταθερό Τηλ</label>
+                                    <input type="text" name="mobile_phone" id="" value="" required>
+                                    <label for="mobile_phone">Κινητό Τηλ</label>
                                 </div>
                                 <div class="input-group">
                                     <input type="email" name="email" id="" value="" required>
                                     <label for="email">Email</label>
                                 </div>
+                                <div class="text-center pb-3">
+                                    <button type="submit" class="btn login-btn px-4">Δημιουργία Καρτέλας</button>
+                                </div>
                             </form>
-                            <div class="text-center pb-3">
-                                <button type="submit" class="btn login-btn px-4">Δημιουργία Καρτέλας</button>
-                            </div>
-                            
                         </div>
                     </div>
                   </div>
@@ -126,5 +125,39 @@
     function goToPatient(patient_id) {
       window.location.href = `/patient?id=${patient_id}`;
     }
-  </script>
+
+    function performMainSearch() {
+        const query = document.querySelector('input[name="search_query"]').value;
+        if (query) {
+            performSearch(query);
+        }
+    }
+
+    async function handleCreatePatient(event) {
+        event.preventDefault();
+        
+        const form = event.target;
+        const formData = new FormData(form);
+        
+        try {
+            const response = await fetch('/api/patients', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(Object.fromEntries(formData))
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                window.location.href = `/patient?id=${data.patient_id}`;
+            } else {
+                alert('Error creating patient: ' + data.error);
+            }
+        } catch (error) {
+            alert('Error: ' + error.message);
+        }
+    }
+</script>
 {% endblock %}
