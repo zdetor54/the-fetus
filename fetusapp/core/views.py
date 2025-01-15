@@ -25,8 +25,7 @@ def get_quote():
     try:
         
         response = requests.get(
-            'https://api.quotable.io/quotes/random',
-            verify=False,
+            'http://api.quotable.io/quotes/random',
             timeout=5
         )
         
