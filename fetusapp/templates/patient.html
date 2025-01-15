@@ -256,15 +256,56 @@
         }
     }
 
-    function saveChangesPersonalDetails() {
-        // Implement save functionality here
+
+    async function savePatientDetails(formContainerId) {
+        const form = document.querySelector(`#${formContainerId} form`);
+        const patientId = '{{ patient.id }}';  // Get ID directly from template
+        const formData = {};
+        
+        // Get all input fields
+        form.querySelectorAll('input').forEach(input => {
+            const fieldName = input.id.replace('Input', '');
+            const snakeCase = fieldName.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+            formData[snakeCase] = input.value;
+        });
+
+        try {
+            const response = await fetch(`/api/patients/${patientId}`, {
+                method: 'PUT',
+                headers: { 
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            
+            if (data.success) {
+                location.reload();
+            } else {
+                throw new Error(data.error || 'Update failed');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert(`Failed to update contact details: ${error.message}`);
+        }
+    }
+    
+    async function saveChangesPersonalDetails() {
+        // await savePatientDetails('editableContentPD');
         toggleEditModePersonalDetails();
     }
 
-    function saveChangesContactDetails() {
-        // Implement save functionality here
-        toggleEditModeContactDetails();
+    // Section-specific handlers
+    async function saveChangesContactDetails() {
+        await savePatientDetails('editableContentCD');
     }
+
+    
 
     document.addEventListener('DOMContentLoaded', () => {
         const formContainer = document.getElementById('formContainerPersonalDetails');
