@@ -193,9 +193,6 @@ block content %}
 
 {% block javascript %}
 <script>
-  function performSearch(searchQuery) {
-    window.location.href = `/calendar_patient_search?search_query=${searchQuery}`;
-  }
 
   function changeDate(days) {
     const currentDate = new Date(document.getElementById('current-date').textContent);
