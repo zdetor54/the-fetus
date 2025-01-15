@@ -327,7 +327,8 @@ em {
 #weather-bubble, 
 #pills-register,
 #pills-delete,
-#pills-update {
+#pills-update,
+#editableContentCD {
     background: var(--warm-beige);
     color: black;
     border: none;

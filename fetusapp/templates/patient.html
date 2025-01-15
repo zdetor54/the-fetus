@@ -136,18 +136,25 @@
                                     </div>
 
 
-                                    <div class="editable" id="editableContentCD" style="display: none;">
-                                        <form>
-                                            <div class="mb-3">
-                                                <label for="nameInput" class="form-label">Σταθερό Τηλ:</label>
-                                                <input type="text" class="form-control" id="nameInput" placeholder="210xxxxxxx" value="{{patient.home_phone}}">
+                                    <div class="editable card card-cover overflow-hidden text-bg-dark rounded-4 shadow-lg" id="editableContentCD" style="display: none;">
+                                        <div class="d-flex flex-column h-100 p-3 text-shadow-1">  
+                                            <div class="wrapper">
+                                                <div class="form-wrapper patient-lite px-3">
+                                                    <form>
+                                                        <h2 class="text-center">Στοιχεία Επικοινωνίας</h2>
+                                                        <div class="input-group">
+                                                            <input type="text" id="mobile_phoneInput" value="{{patient.mobile_phone}}">
+                                                            <label for="mobile_phoneInput" class="form-label">Κινητό Τηλ:</label>
+                                                        </div>
+                                                        <div class="input-group">
+                                                            <input type="email" id="emailInput" placeholder="john.doe@example.com" value="{{patient.email}}">
+                                                            <label for="emailInput" class="form-label">Ε-mail:</label>
+                                                        </div>
+                                                        <button type="button" class="btn login-btn" onclick="saveChangesContactDetails()">Save</button>
+                                                    </form>
+                                                </div>
                                             </div>
-                                            <div class="mb-3">
-                                                <label for="emailInput" class="form-label">Ε-mail:</label>
-                                                <input type="email" class="form-control" id="emailInput" placeholder="john.doe@example.com" value="{{patient.email}}">
-                                            </div>
-                                            <button type="button" class="btn login-btn" onclick="saveChangesContactDetails()">Save</button>
-                                        </form>
+                                        </div>  
                                     </div>
 
 
@@ -256,15 +263,56 @@
         }
     }
 
-    function saveChangesPersonalDetails() {
-        // Implement save functionality here
+
+    async function savePatientDetails(formContainerId) {
+        const form = document.querySelector(`#${formContainerId} form`);
+        const patientId = '{{ patient.id }}';  // Get ID directly from template
+        const formData = {};
+        
+        // Get all input fields
+        form.querySelectorAll('input').forEach(input => {
+            const fieldName = input.id.replace('Input', '');
+            const snakeCase = fieldName.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+            formData[snakeCase] = input.value;
+        });
+
+        try {
+            const response = await fetch(`/api/patients/${patientId}`, {
+                method: 'PUT',
+                headers: { 
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            
+            if (data.success) {
+                location.reload();
+            } else {
+                throw new Error(data.error || 'Update failed');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert(`Failed to update contact details: ${error.message}`);
+        }
+    }
+    
+    async function saveChangesPersonalDetails() {
+        // await savePatientDetails('editableContentPD');
         toggleEditModePersonalDetails();
     }
 
-    function saveChangesContactDetails() {
-        // Implement save functionality here
-        toggleEditModeContactDetails();
+    // Section-specific handlers
+    async function saveChangesContactDetails() {
+        await savePatientDetails('editableContentCD');
     }
+
+    
 
     document.addEventListener('DOMContentLoaded', () => {
         const formContainer = document.getElementById('formContainerPersonalDetails');
