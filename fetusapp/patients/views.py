@@ -1,4 +1,4 @@
-from flask import render_template, request, Blueprint,flash,redirect,url_for, get_flashed_messages
+from flask import render_template, request, Blueprint,flash,redirect,url_for, get_flashed_messages, jsonify
 from fetusapp import app,db
 from flask_login import login_user,login_required,logout_user, current_user
 from fetusapp.models import User,Patient
@@ -11,6 +11,7 @@ from dotenv import load_dotenv
 import openai
 import json
 import pandas as pd
+
 
 patients = Blueprint('patients', __name__)
 
@@ -248,3 +249,20 @@ def get_patients(search_query: str) -> pd.DataFrame:
     print(f"The type of Filtered patients is: {type(filtered_patients)}")
 
     return filtered_patients
+
+@patients.route('/api/patients', methods=['POST'])
+def create_patient_api():
+    try:
+        data = request.get_json()
+        patient = Patient(
+            first_name=data.get('first_name'),
+            last_name=data.get('last_name'),
+            mobile_phone=data.get('mobile_phone'),
+            email=data.get('email')
+        )
+        db.session.add(patient)
+        db.session.commit()
+        return jsonify({'success': True, 'patient_id': patient.id}), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'error': str(e)}), 400
