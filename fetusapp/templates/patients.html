@@ -17,10 +17,10 @@
               <div class="col-12 col-lg-8 text-light">
                 <div class="card overflow-hidden text-bg-dark rounded-4 shadow-lg bg-dark">
                   <div class="d-flex flex-column h-100 p-3 pb-3 text-shadow-1">
-                    <form action="" method="post" id="findPatient">
+                    <form action="" method="post" id="findPatient" onsubmit="event.preventDefault(); performMainSearch();">
                         <div class="input-group mb-3">
                             <input type="text" class="form-control" name="search_query" placeholder="Ονοματεπώνυμο ή/και τηλέφωνο" aria-label="Search for a patient" aria-describedby="button-search" style="border-start-start-radius: 5rem ; border-end-start-radius: 5rem ;">
-                            <button class="btn btn-outline-secondary" type="submit" id="button-search">Search</button>
+                            <button class="btn btn-outline-secondary" type="submit" id="button-search">Αναζήτηση</button>
                         </div>
                     </form>
 
@@ -91,8 +91,8 @@
                                     <label for="last_name">Επώνυμο</label>
                                 </div>
                                 <div class="input-group">
-                                    <input type="text" name="home_phone" id="" value="" required>
-                                    <label for="home_phone">Σταθερό Τηλ</label>
+                                    <input type="text" name="mobile_phone" id="" value="" required>
+                                    <label for="mobile_phone">Κινητό Τηλ</label>
                                 </div>
                                 <div class="input-group">
                                     <input type="email" name="email" id="" value="" required>
@@ -124,6 +124,13 @@
 <script>
     function goToPatient(patient_id) {
       window.location.href = `/patient?id=${patient_id}`;
+    }
+
+    function performMainSearch() {
+        const query = document.querySelector('input[name="search_query"]').value;
+        if (query) {
+            performSearch(query);
+        }
     }
 
     async function handleCreatePatient(event) {

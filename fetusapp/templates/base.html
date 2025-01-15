@@ -68,7 +68,7 @@
           <form action="" method="post" id="findPatient" onsubmit="event.preventDefault(); performNavSearch();">
             <div class="input-group">
                 <input type="text" class="form-control" name="nav_search_query" placeholder="Ονοματεπώνυμο/Τηλ" aria-label="Search for a patient" aria-describedby="button-search" style="border-start-start-radius: 5rem ; border-end-start-radius: 5rem ;">
-                <button class="btn btn-outline-secondary" type="submit" id="button-search" onclick="performNavSearch()">Search</button>
+                <button class="btn btn-outline-secondary" type="submit" id="button-search" onclick="performNavSearch()">Αναζήτηση</button>
             </div>
           </form>
             {% if current_user.is_admin %}
@@ -126,13 +126,29 @@
     document.getElementById('mode-toggle').addEventListener('click', function() {
         document.body.classList.toggle('dark-mode');
     })
+
+    async function performSearch(query) {
+      try {
+          const response = await fetch(`/api/patients/search?query=${encodeURIComponent(query)}`);
+          const data = await response.json();
+          
+          if (data.success) {
+              if (data.count === 1) {
+                  window.location.href = `/patient?id=${data.data[0].id}`;
+              } else {
+                  window.location.href = `/patients/search?query=${encodeURIComponent(query)}`;
+              }
+          }
+      } catch (error) {
+          console.error('Search failed:', error);
+      }
+    }
     
     function performNavSearch() {
       const query = document.querySelector('input[name="nav_search_query"]').value;
       if (query) {
-          window.location.href = `/calendar_patient_search?search_query=${encodeURIComponent(query)}`;
+          performSearch(query);
       }
-      return false;
     }
   </script>
 
