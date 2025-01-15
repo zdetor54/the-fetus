@@ -143,14 +143,43 @@
                                                     <form>
                                                         <h2 class="text-center">Στοιχεία Επικοινωνίας</h2>
                                                         <div class="input-group">
-                                                            <input type="text" id="mobile_phoneInput" value="{{patient.mobile_phone}}">
-                                                            <label for="mobile_phoneInput" class="form-label">Κινητό Τηλ:</label>
+                                                            <input type="text" id="street_nameInput" value="{{patient.street_name}}" required>
+                                                            <label for="street_nameInput" class="form-label">Οδός:</label>
                                                         </div>
                                                         <div class="input-group">
-                                                            <input type="email" id="emailInput" placeholder="john.doe@example.com" value="{{patient.email}}">
+                                                            <input type="text" id="street_numberInput" value="{{patient.street_number}}" required>
+                                                            <label for="street_numberInput" class="form-label">Αριθμός:</label>
+                                                        </div>
+                                                        <div class="input-group">
+                                                            <input type="text" id="cityInput" value="{{patient.city}}" required>
+                                                            <label for="cityInput" class="form-label">Πόλη:</label>
+                                                        </div>
+                                                        <div class="input-group">
+                                                            <input type="text" id="postal_codeInput" value="{{patient.postal_code}}" required>
+                                                            <label for="postal_codeInput" class="form-label">Ταχυδρομικός Κωδικός:</label>
+                                                        </div>
+                                                        <div class="input-group">
+                                                            <input type="text" id="countyInput" value="{{patient.county}}" required>
+                                                            <label for="countyInput" class="form-label">Νομός:</label>
+                                                        </div>
+                                                        <div class="input-group">
+                                                            <input type="text" id="home_phoneInput" value="{{ patient.home_phone if patient.home_phone else '' }}" required>
+                                                            <label for="home_phoneInput" class="form-label">Σταθερό Τηλ:</label>
+                                                        </div>
+                                                        <div class="input-group">
+                                                            <input type="text" id="mobile_phoneInput" name="mobile_phoneInput" value="{{ patient.mobile_phone if patient.mobile_phone else '' }}" required>
+                                                            <label for="mobile_phoneInput">Κινητό Τηλ:</label>
+                                                        </div>
+                                                        <div class="input-group">
+                                                            <input type="text" id="alternative_phoneInput" value="{{patient.alternative_phone}}" required>
+                                                            <label for="alternative_phoneInput" class="form-label">Εναλλακτικό Τηλ:</label>
+                                                        </div>
+                                                        <div class="input-group">
+                                                            <input type="email" id="emailInput" placeholder="john.doe@example.com" value="{{patient.email}}" required>
                                                             <label for="emailInput" class="form-label">Ε-mail:</label>
                                                         </div>
                                                         <button type="button" class="btn login-btn" onclick="saveChangesContactDetails()">Save</button>
+                                                        <button type="button" class="btn btn-outline-light" onclick="cancelChangesContactDetails()">Cancel</button>
                                                     </form>
                                                 </div>
                                             </div>
@@ -310,6 +339,10 @@
     // Section-specific handlers
     async function saveChangesContactDetails() {
         await savePatientDetails('editableContentCD');
+    }
+
+    async function cancelChangesContactDetails() {
+        location.reload();
     }
 
     
