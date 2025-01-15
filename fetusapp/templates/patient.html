@@ -28,7 +28,7 @@
 
                             <!-- New content with slider card -->
                             <div class="container px-0 ">
-                                <div class="form-container my-4" style="position: relative; transition: max-height 0.2s ease-in-out;" id="formContainerPersonalDetails">
+                                <div class="form-container my-2" style="position: relative; transition: max-height 0.2s ease-in-out;" id="formContainerPersonalDetails">
 
                                     <div class="read-only read-only-labels" id="readOnlyContentPD">
                                         <h3 class="text-center">Προσωπικά Στοιχεία</h3>
@@ -95,91 +95,53 @@
                 <!-- Section with contact details -->
                 <div class="col-12 col-lg-6 text-light">
                     <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg bg-dark">
-                        <div class="d-flex flex-column h-100 p-4 text-shadow-1">
+                        <div class="d-flex flex-column h-100 text-shadow-1">
 
                             <!-- New content with slider card -->
                             <div class="container px-0 ">
-                                <div class="form-container my-4" style="position: relative; transition: max-height 0.2s ease-in-out;" id="formContainerContactDetails">
+                                <div class="form-container" style="position: relative; transition: max-height 0.2s ease-in-out;" id="formContainerContactDetails">
 
-                                    <div class="read-only read-only-labels" id="readOnlyContentCD">
-                                        <h3 class="text-center">Στοιχεία Επικοινωνίας</h3>
+                                    <div class="read-only read-only-labels p-4" id="readOnlyContentCD">
+                                        <h3 class="text-center mt-2">Στοιχεία Επικοινωνίας</h3>
+
+                                        {% macro display_field(field_name, field_config, value) %}
+                                            {% if value %}
+                                                <span>{{ field_config.label }}:</span> {{ value }}<br>
+                                            {% endif %}
+                                        {% endmacro %}
+
                                         <p class="zd mt-0 pt-2">
-                                            {% if patient.street_name %}
-                                                <span>Οδός:</span> {{ patient.street_name }}<br>
-                                            {% endif %}
-                                            {% if patient.street_number %}
-                                                <span>Αριθμός:</span> {{ patient.street_number }} <br>
-                                            {% endif %}
-                                            {% if patient.city %}
-                                                <span>Πόλη:</span> {{ patient.city }} <br>
-                                            {% endif %}
-                                            {% if patient.postal_code %}
-                                                <span>Ταχυδρομικός Κωδικός:</span> {{ patient.postal_code }} <br>
-                                            {% endif %}
-                                            {% if patient.county %}
-                                                <span>Νομός:</span> {{ patient.county }} <br>
-                                            {% endif %}
-                                            {% if patient.home_phone %}
-                                                <span>Σταθερό Τηλ:</span> {{ patient.home_phone }} <br>
-                                            {% endif %}
-                                            {% if patient.mobile_phone %}
-                                                <span>Κινητό Τηλ:</span> {{ patient.mobile_phone }} <br>
-                                            {% endif %}
-                                            {% if patient.alternative_phone %}
-                                                <span>Εναλλακτικό Τηλ:</span> {{ patient.alternative_phone }} <br>
-                                            {% endif %}
-                                            {% if patient.email %}
-                                                <span>Ε-mail:</span> {{ patient.email }} 
-                                            {% endif %}
+                                            {% for field_name, field_config in contact_fields.items() %}
+                                                {{ display_field(field_name, field_config, getattr(patient, field_name)) }}
+                                            {% endfor %}
                                         </p>
-                                        <button class="btn btn-outline-secondary" onclick="toggleEditModeContactDetails()">Update</button>
+
+                                        <button class="btn btn-outline-secondary mb-2" onclick="toggleEditModeContactDetails()">Update</button>
                                     </div>
 
 
                                     <div class="editable card card-cover overflow-hidden text-bg-dark rounded-4 shadow-lg" id="editableContentCD" style="display: none;">
                                         <div class="d-flex flex-column h-100 p-3 text-shadow-1">  
                                             <div class="wrapper">
-                                                <div class="form-wrapper patient-lite px-3">
+                                                <div class="form-wrapper patient-lite px-2">
+
+                                                    {% macro input_group(field_name, field_config, value) %}
+                                                    <div class="input-group">
+                                                        <input type="{{ field_config.type }}" 
+                                                            id="{{ field_name }}Input"
+                                                            value="{{ value if value else '' }}"
+                                                            {% if field_config.type == 'email' %}placeholder="john.doe@example.com"{% endif %}>
+                                                        <label for="{{ field_name }}Input" class="form-label">{{ field_config.label }}:</label>
+                                                    </div>
+                                                    {% endmacro %}
+
                                                     <form>
-                                                        <h2 class="text-center">Στοιχεία Επικοινωνίας</h2>
-                                                        <div class="input-group">
-                                                            <input type="text" id="street_nameInput" value="{{patient.street_name if patient.street_name else ''}}" required>
-                                                            <label for="street_nameInput" class="form-label">Οδός:</label>
-                                                        </div>
-                                                        <div class="input-group">
-                                                            <input type="text" id="street_numberInput" value="{{patient.street_number if patient.street_number else ''}}" required>
-                                                            <label for="street_numberInput" class="form-label">Αριθμός:</label>
-                                                        </div>
-                                                        <div class="input-group">
-                                                            <input type="text" id="cityInput" value="{{patient.city if patient.city else ''}}" required>
-                                                            <label for="cityInput" class="form-label">Πόλη:</label>
-                                                        </div>
-                                                        <div class="input-group">
-                                                            <input type="text" id="postal_codeInput" value="{{patient.postal_code if patient.postal_code else ''}}" required>
-                                                            <label for="postal_codeInput" class="form-label">Ταχυδρομικός Κωδικός:</label>
-                                                        </div>
-                                                        <div class="input-group">
-                                                            <input type="text" id="countyInput" value="{{patient.county if patient.county else ''}}" required>
-                                                            <label for="countyInput" class="form-label">Νομός:</label>
-                                                        </div>
-                                                        <div class="input-group">
-                                                            <input type="text" id="home_phoneInput" value="{{ patient.home_phone if patient.home_phone else '' }}" required>
-                                                            <label for="home_phoneInput" class="form-label">Σταθερό Τηλ:</label>
-                                                        </div>
-                                                        <div class="input-group">
-                                                            <input type="text" id="mobile_phoneInput" name="mobile_phoneInput" value="{{ patient.mobile_phone if patient.mobile_phone else '' }}" required>
-                                                            <label for="mobile_phoneInput">Κινητό Τηλ:</label>
-                                                        </div>
-                                                        <div class="input-group">
-                                                            <input type="text" id="alternative_phoneInput" value="{{patient.alternative_phone if patient.alternative_phone else ''}}" required>
-                                                            <label for="alternative_phoneInput" class="form-label">Εναλλακτικό Τηλ:</label>
-                                                        </div>
-                                                        <div class="input-group">
-                                                            <input type="email" id="emailInput" placeholder="john.doe@example.com" value="{{patient.email if patient.email else ''}}" required>
-                                                            <label for="emailInput" class="form-label">Ε-mail:</label>
-                                                        </div>
-                                                        <button type="button" class="btn login-btn" onclick="saveChangesContactDetails()">Save</button>
-                                                        <button type="button" class="btn btn-outline-light" onclick="cancelChangesContactDetails()">Cancel</button>
+                                                        <h2 class="text-center mt-2">Στοιχεία Επικοινωνίας</h2>
+                                                        {% for field_name, field_config in contact_fields.items() %}
+                                                            {{ input_group(field_name, field_config, getattr(patient, field_name)) }}
+                                                        {% endfor %}
+                                                        <button type="button" class="btn login-btn mb-2" onclick="saveChangesContactDetails()">Save</button>
+                                                        <button type="button" class="btn btn-outline-light mb-2" onclick="cancelChangesContactDetails()">Cancel</button>
                                                     </form>
                                                 </div>
                                             </div>
