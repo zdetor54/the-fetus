@@ -392,7 +392,8 @@ em {
     transition: .5s;
 }
 
-.patient-lite .input-group input {
+.patient-lite .input-group input,
+.patient-lite .input-group select{
     width: 100%;
     height: 2.5rem;
     left: 1rem;
@@ -402,7 +403,9 @@ em {
 }
 
 .patient-lite .input-group input:focus~label,
-.patient-lite .input-group input:valid~label {
+.patient-lite .input-group input:valid~label,
+.patient-lite .input-group select:focus~label,
+.patient-lite .input-group select:valid~label{
     top: -5px;
 }
 

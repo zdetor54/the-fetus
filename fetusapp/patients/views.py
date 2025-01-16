@@ -237,7 +237,12 @@ def patient():
         'first_name': {'label': 'Όνομα', 'type': 'text'},
         'last_name': {'label': 'Επώνυμο', 'type': 'text'},
         'father_name': {'label': 'Πατρώνυμο', 'type': 'text'},
-        'marital_status': {'label': 'Οικογενειακή Κατάσταση', 'type': 'text'},
+        'marital_status': {'label': 'Οικογενειακή Κατάσταση'
+                           , 'type': 'select'
+                           ,'options': [
+                                {'value': 'Έγγαμη', 'label': 'Έγγαμη'},
+                                {'value': 'Άγαμη', 'label': 'Άγαμη'}
+                            ]},
         'nationality': {'label': 'Εθνικότητα', 'type': 'text'},
         'occupation': {'label': 'Επάγγελμα', 'type': 'text'},
     }
@@ -305,10 +310,21 @@ def update_patient_api(id):
         data = request.get_json()
         patient = Patient.query.get_or_404(id)
 
+        date_fields = ['date_of_birth', 'spouse_date_of_birth']
+
         # Update fields
         for key, value in data.items():
             if hasattr(patient, key):
-                setattr(patient, key, value)
+                if key in date_fields:
+                    if not value or value.strip() == '':
+                        setattr(patient, key, None)
+                    else:
+                        try:
+                            setattr(patient, key, datetime.strptime(value, '%Y-%m-%d').date())
+                        except ValueError:
+                            return jsonify({'success': False, 'error': f'Invalid date format for {key}'}), 400
+                else:
+                    setattr(patient, key, value)
 
         # Update timestamps and user
         patient.last_updated_on = datetime.utcnow()

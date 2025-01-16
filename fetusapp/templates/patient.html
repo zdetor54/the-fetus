@@ -40,7 +40,7 @@
                                                 <span>Πατρώνυμο:</span> {{ patient.father_name }} <br>
                                             {% endif %}
                                             {% if patient.date_of_birth %}
-                                                <span>Ημερομηνία Γεννήσεως:</span> {{ patient.date_of_birth }} <br>
+                                                <span>Ημερομηνία Γεννήσεως / Ηλικία:</span> {{ patient.date_of_birth }} <br>
                                             {% endif %}
                                             {% if patient.marital_status %}
                                                 <span>Οικογενειακή Κατάσταση:</span> {{ patient.marital_status }} <br>
@@ -55,7 +55,7 @@
                                                 <span>Ασφάλιση:</span> {{ patient.insurance }} / {{ patient.insurance_comment }} <br>
                                             {% endif %}
                                             {% if patient.amka %}
-                                                <span>AMKA:</span> {{ patient.amka }} 
+                                                <span>AMKA:</span> {{ patient.amka }}
                                             {% endif %}
                                         </p>
 
@@ -72,7 +72,7 @@
                                             {% endif %}
                                         </p>
                                         
-                                        <button class="btn btn-outline-secondary" onclick="toggleEditModePersonalDetails()">Επεξεργασία</button>
+                                        <button class="btn btn-outline-secondary px-4" onclick="toggleEditModePersonalDetails()">Επεξεργασία</button>
                                     </div>
 
 
@@ -83,10 +83,20 @@
 
                                                     {% macro input_group(field_name, field_config, value) %}
                                                     <div class="input-group">
-                                                        <input type="{{ field_config.type }}" 
-                                                            id="{{ field_name }}Input"
-                                                            value="{{ value if value else '' }}"
-                                                            {% if field_config.type == 'email' %}placeholder="john.doe@example.com"{% endif %} required>
+                                                        {% if field_config.type == 'select' %}
+                                                            <select id="{{ field_name }}Input" {% if not value%}class="text-muted"{% endif %}>
+                                                                <option value="" class="text-muted">Επιλέξτε...</option>
+                                                                {% for option in field_config.options %}
+                                                                    <option value="{{ option.value }}" class="text-dark" {{ 'selected' if value == option.value else '' }}>
+                                                                        {{ option.label }}
+                                                                    </option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        {% else %}
+                                                            <input type="{{ field_config.type }}" 
+                                                                id="{{ field_name }}Input"
+                                                                value="{{ value if value else '' }}">
+                                                        {% endif %}
                                                         <label for="{{ field_name }}Input" class="form-label">{{ field_config.label }}:</label>
                                                     </div>
                                                     {% endmacro %}
@@ -96,14 +106,68 @@
                                                         {% for field_name, field_config in personal_data_fields.items() %}
                                                             {{ input_group(field_name, field_config, getattr(patient, field_name)) }}
                                                         {% endfor %}
+                                                        <!-- add date_of_birth -->
+                                                        <div class="input-group">
+                                                            <input type="date" 
+                                                                    id="dateOfBirthInput" 
+                                                                    value="{{ patient.date_of_birth if patient.date_of_birth else '' }}"
+                                                                    class="{{ 'text-muted' if not patient.date_of_birth }}"
+                                                                    placeholder="dd/mm/yyyy">
+                                                            <label for="dateOfBirthInput" class="form-label">Ημερομηνία Γέννησης:</label>
+                                                        </div>
+                                                        <div class="input-group">
+                                                            <select id="insuranceInput"
+                                                                    {% if not patient.insurance %}
+                                                                        class="text-muted"
+                                                                    {% endif %}>
+                                                                <option value="" class="text-muted">Επιλέξτε...</option>
+                                                                <option value="ΕΟΠΥΥ" class="text-dark" {{ 'selected' if patient.insurance == 'ΕΟΠΥΥ' else '' }}>ΕΟΠΥΥ</option>
+                                                                <option value="Ιδιωτική" class="text-dark" {{ 'selected' if patient.insurance == 'Ιδιωτική' else '' }}>Ιδιωτική</option>
+                                                            </select>
+                                                            <label for="insuranceInput" class="form-label">Ασφάλιση:</label>
+                                                        </div>
+                                                        <div class="input-group">
+                                                            <input type="text" id="insuranceCommentInput" value="{{ patient.insurance_comment if patient.insurance_comment else '' }}" required>
+                                                            <label for="insuranceCommentInput" class="form-label">Σχόλια:</label>
+                                                        </div>
+                                                        <div class="input-group">
+                                                            <input type="text" 
+                                                                   id="amkaInput" 
+                                                                   value="{{ patient.amka if patient.amka else '' }}"
+                                                                   placeholder="Αναζήτηση ΑΜΚΑ...">
+                                                            <label for="amkaInput" class="form-label d-flex align-items-center">
+                                                                AMKA:
+                                                                <a href="https://www.amka.gr/AMKAGR/Default.aspx" 
+                                                                   target="_blank" 
+                                                                   class="ms-2">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" 
+                                                                         width="16" 
+                                                                         height="16" 
+                                                                         fill="var(--vibrant-pink)" 
+                                                                         class="bi bi-search" 
+                                                                         viewBox="0 0 16 16">
+                                                                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                                                                    </svg>
+                                                                </a>
+                                                            </label>
+                                                        </div>
+
 
                                                         <h2 class="text-center mt-2">Στοιχεία Συντρόφου</h2>
                                                         {% for field_name, field_config in partner_data_fields.items() %}
                                                             {{ input_group(field_name, field_config, getattr(patient, field_name)) }}
                                                         {% endfor %}
+                                                        <div class="input-group">
+                                                            <input type="date" 
+                                                                    id="spouse_date_of_birthInput" 
+                                                                    value="{{ patient.spouse_date_of_birth if patient.spouse_date_of_birth else '' }}"
+                                                                    class="{{ 'text-muted' if not patient.spouse_date_of_birth }}"
+                                                                    placeholder="dd/mm/yyyy">
+                                                            <label for="spouse_date_of_birthInput" class="form-label">Ημερομηνία Γέννησης:</label>
+                                                        </div>
 
-                                                        <button type="button" class="btn login-btn mb-2" onclick="saveChangesPersonalDetails()">Αποθήκευση</button>
-                                                        <button type="button" class="btn btn-outline-light mb-2" onclick="cancelChanges()">Ακύρωση</button>
+                                                        <button type="button" class="btn login-btn m-2 px-4" onclick="saveChangesPersonalDetails()">Αποθήκευση</button>
+                                                        <button type="button" class="btn btn-outline-light m-2 px-4" onclick="cancelChanges()">Ακύρωση</button>
                                                     </form>
                                                 </div>
                                             </div>
@@ -144,7 +208,7 @@
                                             {% endfor %}
                                         </p>
 
-                                        <button class="btn btn-outline-secondary mb-2" onclick="toggleEditModeContactDetails()">Επεξεργασία</button>
+                                        <button class="btn btn-outline-secondary mb-2 px-4" onclick="toggleEditModeContactDetails()">Επεξεργασία</button>
                                     </div>
 
 
@@ -157,8 +221,8 @@
                                                         {% for field_name, field_config in contact_fields.items() %}
                                                             {{ input_group(field_name, field_config, getattr(patient, field_name)) }}
                                                         {% endfor %}
-                                                        <button type="button" class="btn login-btn mb-2" onclick="saveChangesContactDetails()">Αποθήκευση</button>
-                                                        <button type="button" class="btn btn-outline-light mb-2" onclick="cancelChanges()">Ακύρωση</button>
+                                                        <button type="button" class="btn login-btn m-2 px-4" onclick="saveChangesContactDetails()">Αποθήκευση</button>
+                                                        <button type="button" class="btn btn-outline-light m-2 px-4" onclick="cancelChanges()">Ακύρωση</button>
                                                     </form>
                                                 </div>
                                             </div>
@@ -273,40 +337,50 @@
 
 
     async function savePatientDetails(formContainerId) {
-        const form = document.querySelector(`#${formContainerId} form`);
-        const patientId = '{{ patient.id }}';  // Get ID directly from template
-        const formData = {};
-        
-        // Get all input fields
-        form.querySelectorAll('input').forEach(input => {
-            const fieldName = input.id.replace('Input', '');
-            const snakeCase = fieldName.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
-            formData[snakeCase] = input.value;
-        });
-
         try {
+            const form = document.querySelector(`#${formContainerId} form`);
+            if (!form) {
+                console.error('Form not found:', formContainerId);
+                throw new Error('Form not found');
+            }
+
+            const patientId = '{{ patient.id }}';
+            const formData = {};
+            
+            // Fix selector syntax - use multiple querySelectorAll calls
+            const elements = [...form.querySelectorAll('input'), ...form.querySelectorAll('select')];
+            elements.forEach(element => {
+                const fieldName = element.id.replace('Input', '');
+                const snakeCase = fieldName.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+                formData[snakeCase] = element.value;
+                console.log(`Field: ${snakeCase}, Value: ${element.value}`); // Debug
+            });
+
+            console.log('Sending data:', formData);
+            console.log('To URL:', `/api/patients/${patientId}`);
+
             const response = await fetch(`/api/patients/${patientId}`, {
                 method: 'PUT',
                 headers: { 
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
                 },
                 body: JSON.stringify(formData)
             });
 
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                throw new Error(`Server error: ${response.status}`);
             }
 
             const data = await response.json();
-            
             if (data.success) {
                 location.reload();
             } else {
                 throw new Error(data.error || 'Update failed');
             }
         } catch (error) {
-            console.error('Error:', error);
-            alert(`Failed to update contact details: ${error.message}`);
+            console.error('Save error:', error);
+            alert(`Failed to update details: ${error.message}`);
         }
     }
     
