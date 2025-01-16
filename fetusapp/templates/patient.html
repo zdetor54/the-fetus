@@ -103,7 +103,7 @@
                                                         {% endfor %}
 
                                                         <button type="button" class="btn login-btn mb-2" onclick="saveChangesPersonalDetails()">Αποθήκευση</button>
-                                                        <button type="button" class="btn btn-outline-light mb-2" onclick="cancelChangesContactDetails()">Ακύρωση</button>
+                                                        <button type="button" class="btn btn-outline-light mb-2" onclick="cancelChanges()">Ακύρωση</button>
                                                     </form>
                                                 </div>
                                             </div>
@@ -158,7 +158,7 @@
                                                             {{ input_group(field_name, field_config, getattr(patient, field_name)) }}
                                                         {% endfor %}
                                                         <button type="button" class="btn login-btn mb-2" onclick="saveChangesContactDetails()">Αποθήκευση</button>
-                                                        <button type="button" class="btn btn-outline-light mb-2" onclick="cancelChangesContactDetails()">Ακύρωση</button>
+                                                        <button type="button" class="btn btn-outline-light mb-2" onclick="cancelChanges()">Ακύρωση</button>
                                                     </form>
                                                 </div>
                                             </div>
@@ -319,7 +319,7 @@
         await savePatientDetails('editableContentCD');
     }
 
-    async function cancelChangesContactDetails() {
+    async function cancelChanges() {
         location.reload();
     }
 
