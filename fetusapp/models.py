@@ -110,7 +110,7 @@ class Patient(db.Model, UserMixin):
         self.last_updated_by = last_updated_by
 
     def __repr__(self):
-        return f"Patient: {self.first_name} {self.last_name} dob: {self.date_of_birth}"
+        return f"Patient [{self.id}]: {self.first_name} {self.last_name} dob: {self.date_of_birth}"
 
 
 # class Appointment(db.Model, UserMixin):
