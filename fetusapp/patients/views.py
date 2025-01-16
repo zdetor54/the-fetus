@@ -233,11 +233,32 @@ def patient():
         'email': {'label': 'Ε-mail', 'type': 'email'}
     }
 
+    personal_data_fields = {
+        'first_name': {'label': 'Όνομα', 'type': 'text'},
+        'last_name': {'label': 'Επώνυμο', 'type': 'text'},
+        'father_name': {'label': 'Πατρώνυμο', 'type': 'text'},
+        'marital_status': {'label': 'Οικογενειακή Κατάσταση', 'type': 'text'},
+        'nationality': {'label': 'Εθνικότητα', 'type': 'text'},
+        'occupation': {'label': 'Επάγγελμα', 'type': 'text'},
+    }
+
+    partner_data_fields = {
+        'spouse_name': {'label': 'Ονοματεπώνυμο', 'type': 'text'},
+        'spouse_occupation': {'label': 'Επάγγελμα', 'type': 'text'},
+    }
+
     if patient_id:
         patient = Patient.query.get(patient_id)
-        return render_template('patient.html', active_page='patient',query_term=patient_id, patient=patient, contact_fields=contact_fields)
+        return render_template('patient.html', active_page='patient',query_term=patient_id
+                               , patient=patient
+                               , contact_fields=contact_fields
+                               , personal_data_fields = personal_data_fields
+                               , partner_data_fields = partner_data_fields)
     
-    return render_template('patient.html', active_page='patient', contact_fields=contact_fields)
+    return render_template('patient.html', active_page='patient'
+                           , contact_fields=contact_fields
+                           , personal_data_fields = personal_data_fields
+                           , partner_data_fields = partner_data_fields)
 
 @patients.route('/api/patients', methods=['POST'])
 @login_required

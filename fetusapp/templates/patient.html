@@ -24,14 +24,14 @@
                 <!-- Section with personal details for patient and partner -->
                 <div class="col-12 col-lg-6 text-light">
                     <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg bg-dark">
-                        <div class="d-flex flex-column h-100 p-4 text-shadow-1">
+                        <div class="d-flex flex-column h-100 text-shadow-1">
 
                             <!-- New content with slider card -->
                             <div class="container px-0 ">
-                                <div class="form-container my-2" style="position: relative; transition: max-height 0.2s ease-in-out;" id="formContainerPersonalDetails">
+                                <div class="form-container" style="position: relative; transition: max-height 0.2s ease-in-out;" id="formContainerPersonalDetails">
 
-                                    <div class="read-only read-only-labels" id="readOnlyContentPD">
-                                        <h3 class="text-center">Προσωπικά Στοιχεία</h3>
+                                    <div class="read-only read-only-labels p-4" id="readOnlyContentPD">
+                                        <h3 class="text-center mt-2">Προσωπικά Στοιχεία</h3>
                                         <p class="zd mt-0 pt-2">
                                             {% if patient.first_name or patient.last_name %}
                                                 <span>Ονοματεπώνυμο:</span> {{ patient.first_name }} {{ patient.last_name }} <br>
@@ -72,14 +72,42 @@
                                             {% endif %}
                                         </p>
                                         
-                                        <button class="btn btn-outline-secondary" onclick="toggleEditModePersonalDetails()">Update</button>
+                                        <button class="btn btn-outline-secondary" onclick="toggleEditModePersonalDetails()">Επεξεργασία</button>
                                     </div>
 
 
-                                    <div class="editable" id="editableContentPD" style="display: none;">
-                                        <form>
-                                            <button type="button" class="btn login-btn" onclick="saveChangesPersonalDetails()">Save</button>
-                                        </form>
+                                    <div class="editable card card-cover overflow-hidden text-bg-dark rounded-4 shadow-lg" id="editableContentPD" style="display: none;">
+                                        <div class="d-flex flex-column h-100 p-3 text-shadow-1">  
+                                            <div class="wrapper">
+                                                <div class="form-wrapper patient-lite px-2">
+
+                                                    {% macro input_group(field_name, field_config, value) %}
+                                                    <div class="input-group">
+                                                        <input type="{{ field_config.type }}" 
+                                                            id="{{ field_name }}Input"
+                                                            value="{{ value if value else '' }}"
+                                                            {% if field_config.type == 'email' %}placeholder="john.doe@example.com"{% endif %} required>
+                                                        <label for="{{ field_name }}Input" class="form-label">{{ field_config.label }}:</label>
+                                                    </div>
+                                                    {% endmacro %}
+
+                                                    <form>
+                                                        <h2 class="text-center mt-2">Προσωπικά Στοιχεία</h2>
+                                                        {% for field_name, field_config in personal_data_fields.items() %}
+                                                            {{ input_group(field_name, field_config, getattr(patient, field_name)) }}
+                                                        {% endfor %}
+
+                                                        <h2 class="text-center mt-2">Στοιχεία Συντρόφου</h2>
+                                                        {% for field_name, field_config in partner_data_fields.items() %}
+                                                            {{ input_group(field_name, field_config, getattr(patient, field_name)) }}
+                                                        {% endfor %}
+
+                                                        <button type="button" class="btn login-btn mb-2" onclick="saveChangesPersonalDetails()">Αποθήκευση</button>
+                                                        <button type="button" class="btn btn-outline-light mb-2" onclick="cancelChanges()">Ακύρωση</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>  
                                     </div>
 
 
@@ -116,7 +144,7 @@
                                             {% endfor %}
                                         </p>
 
-                                        <button class="btn btn-outline-secondary mb-2" onclick="toggleEditModeContactDetails()">Update</button>
+                                        <button class="btn btn-outline-secondary mb-2" onclick="toggleEditModeContactDetails()">Επεξεργασία</button>
                                     </div>
 
 
@@ -124,24 +152,13 @@
                                         <div class="d-flex flex-column h-100 p-3 text-shadow-1">  
                                             <div class="wrapper">
                                                 <div class="form-wrapper patient-lite px-2">
-
-                                                    {% macro input_group(field_name, field_config, value) %}
-                                                    <div class="input-group">
-                                                        <input type="{{ field_config.type }}" 
-                                                            id="{{ field_name }}Input"
-                                                            value="{{ value if value else '' }}"
-                                                            {% if field_config.type == 'email' %}placeholder="john.doe@example.com"{% endif %}>
-                                                        <label for="{{ field_name }}Input" class="form-label">{{ field_config.label }}:</label>
-                                                    </div>
-                                                    {% endmacro %}
-
                                                     <form>
                                                         <h2 class="text-center mt-2">Στοιχεία Επικοινωνίας</h2>
                                                         {% for field_name, field_config in contact_fields.items() %}
                                                             {{ input_group(field_name, field_config, getattr(patient, field_name)) }}
                                                         {% endfor %}
-                                                        <button type="button" class="btn login-btn mb-2" onclick="saveChangesContactDetails()">Save</button>
-                                                        <button type="button" class="btn btn-outline-light mb-2" onclick="cancelChangesContactDetails()">Cancel</button>
+                                                        <button type="button" class="btn login-btn mb-2" onclick="saveChangesContactDetails()">Αποθήκευση</button>
+                                                        <button type="button" class="btn btn-outline-light mb-2" onclick="cancelChanges()">Ακύρωση</button>
                                                     </form>
                                                 </div>
                                             </div>
@@ -294,8 +311,7 @@
     }
     
     async function saveChangesPersonalDetails() {
-        // await savePatientDetails('editableContentPD');
-        toggleEditModePersonalDetails();
+        await savePatientDetails('editableContentPD');
     }
 
     // Section-specific handlers
@@ -303,7 +319,7 @@
         await savePatientDetails('editableContentCD');
     }
 
-    async function cancelChangesContactDetails() {
+    async function cancelChanges() {
         location.reload();
     }
 

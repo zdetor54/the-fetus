@@ -328,7 +328,8 @@ em {
 #pills-register,
 #pills-delete,
 #pills-update,
-#editableContentCD {
+#editableContentCD,
+#editableContentPD {
     background: var(--warm-beige);
     color: black;
     border: none;
