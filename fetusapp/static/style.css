@@ -423,3 +423,25 @@ em {
     gap: 10px;
     align-items: center;
 }
+
+input[type="date"],
+select{
+    /* -webkit-appearance: none; */
+    /* -moz-appearance: none; */
+    /* appearance: none; */
+    background-color: transparent;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    padding: 0.5rem;
+    border: none;
+    border-bottom: 1px solid #ced4da;
+    border-radius: 0;
+    text-align: left;
+    width: 100%;
+}
+
+
+input[type="date"]::-webkit-datetime-edit {
+    color: inherit;
+}
