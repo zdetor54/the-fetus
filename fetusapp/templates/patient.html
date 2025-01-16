@@ -72,7 +72,11 @@
                                             {% endif %}
                                         </p>
                                         
-                                        <button class="btn btn-outline-secondary mb-2 px-4" onclick="toggleEditModePersonalDetails()">Επεξεργασία</button>
+                                        <div class="d-flex flex-wrap justify-content-end gap-2 mt-3">
+                                            <button type="button" class="btn btn-outline-light px-4" onclick="toggleEditModePersonalDetails()">
+                                                Επεξεργασία
+                                            </button>
+                                        </div>
                                     </div>
 
 
@@ -166,8 +170,14 @@
                                                             <label for="spouse_date_of_birthInput" class="form-label">Ημερομηνία Γέννησης:</label>
                                                         </div>
 
-                                                        <button type="button" class="btn login-btn m-2 px-4" onclick="saveChangesPersonalDetails()">Αποθήκευση</button>
-                                                        <button type="button" class="btn btn-outline-light m-2 px-4" onclick="cancelChanges()">Ακύρωση</button>
+                                                        <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+                                                            <button type="button" class="btn login-btn px-4" onclick="saveChangesPersonalDetails()">
+                                                                Αποθήκευση
+                                                            </button>
+                                                            <button type="button" class="btn btn-outline-light px-4" onclick="cancelChanges()">
+                                                                Ακύρωση
+                                                            </button>
+                                                        </div>
                                                     </form>
                                                 </div>
                                             </div>
@@ -207,8 +217,11 @@
                                                 {{ display_field(field_name, field_config, getattr(patient, field_name)) }}
                                             {% endfor %}
                                         </p>
-
-                                        <button class="btn btn-outline-secondary mb-2 px-4" onclick="toggleEditModeContactDetails()">Επεξεργασία</button>
+                                        <div class="d-flex flex-wrap justify-content-end gap-2 mt-3">
+                                            <button type="button" class="btn btn-outline-light px-4" onclick="toggleEditModeContactDetails()">
+                                                Επεξεργασία
+                                            </button>
+                                        </div>
                                     </div>
 
 
@@ -221,8 +234,15 @@
                                                         {% for field_name, field_config in contact_fields.items() %}
                                                             {{ input_group(field_name, field_config, getattr(patient, field_name)) }}
                                                         {% endfor %}
-                                                        <button type="button" class="btn login-btn m-2 mb-2 px-4" onclick="saveChangesContactDetails()">Αποθήκευση</button>
-                                                        <button type="button" class="btn btn-outline-light m-2 mb-2 px-4" onclick="cancelChanges()">Ακύρωση</button>
+
+                                                        <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+                                                            <button type="button" class="btn login-btn px-4" onclick="saveChangesContactDetails()">
+                                                                Αποθήκευση
+                                                            </button>
+                                                            <button type="button" class="btn btn-outline-light px-4" onclick="cancelChanges()">
+                                                                Ακύρωση
+                                                            </button>
+                                                        </div>
                                                     </form>
                                                 </div>
                                             </div>
