@@ -6,7 +6,7 @@ from .forms import PatientContactForm
 import unicodedata
 import os
 from dotenv import load_dotenv
-from datetime import datetime
+from datetime import datetime, date
 
 
 import openai
@@ -256,11 +256,14 @@ def patient():
         patient = Patient.query.get(patient_id)
         return render_template('patient.html', active_page='patient',query_term=patient_id
                                , patient=patient
+                               , now=date.today()
                                , contact_fields=contact_fields
                                , personal_data_fields = personal_data_fields
                                , partner_data_fields = partner_data_fields)
     
-    return render_template('patient.html', active_page='patient'
+    return render_template('patient.html'
+                           , active_page='patient'
+                           , now=date.today()
                            , contact_fields=contact_fields
                            , personal_data_fields = personal_data_fields
                            , partner_data_fields = partner_data_fields)
@@ -311,6 +314,7 @@ def update_patient_api(id):
         patient = Patient.query.get_or_404(id)
 
         date_fields = ['date_of_birth', 'spouse_date_of_birth']
+        checkbox_fields = ['is_active']
 
         # Update fields
         for key, value in data.items():
@@ -323,6 +327,12 @@ def update_patient_api(id):
                             setattr(patient, key, datetime.strptime(value, '%Y-%m-%d').date())
                         except ValueError:
                             return jsonify({'success': False, 'error': f'Invalid date format for {key}'}), 400
+                elif key in checkbox_fields:
+                    print(value)
+                    if value:
+                        setattr(patient, key, True)
+                    else:
+                        setattr(patient, key, False)
                 else:
                     setattr(patient, key, value)
 
