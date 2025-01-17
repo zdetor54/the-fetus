@@ -88,9 +88,7 @@
                                             {% if patient.amka %}
                                                 <span>AMKA:</span> {{ patient.amka }} <br>
                                             {% endif %}
-                                            {% if patient.is_active %}
-                                                <span>Κατάσταση:</span> Ενεργός
-                                            {% else %}
+                                            {% if not patient.is_active %}
                                                 <span>Κατάσταση:</span> Ανενεργός
                                             {% endif %}
                                         </p>
@@ -110,7 +108,7 @@
                                         </p>
                                         
                                         <div class="d-flex flex-wrap justify-content-end gap-2 mt-3">
-                                            <button type="button" class="btn btn-outline-light px-4" onclick="toggleEditModePersonalDetails()">
+                                            <button type="button" class="btn btn-outline-light px-4" data-edit-button="true" onclick="toggleEditModePersonalDetails()">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="0 1 16 16">
                                                     <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                                                     <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
@@ -196,6 +194,16 @@
                                                                 </a>
                                                             </label>
                                                         </div>
+                                                        <!-- check box for active/inactive -->
+                                                        {% if not patient.is_active %}
+                                                        <div class="input-group">
+                                                            <input type="checkbox" 
+                                                                   id="isActiveInput" 
+                                                                   {% if patient.is_active %}checked{% endif %}
+                                                                   value='on'>
+                                                            <label for="isActiveInput" class="form-label">Επανενεργοποίηση</label>
+                                                        </div>
+                                                        {% endif %}
 
 
                                                         <h2 class="text-center mt-2">Στοιχεία Συντρόφου</h2>
@@ -267,7 +275,7 @@
                                             {% endfor %}
                                         </p>
                                         <div class="d-flex flex-wrap justify-content-end gap-2 mt-auto">
-                                            <button type="button" class="btn btn-outline-light px-4" onclick="toggleEditModeContactDetails()">
+                                            <button type="button" class="btn btn-outline-light px-4" data-edit-button="true" onclick="toggleEditModeContactDetails()">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="0 1 16 16">
                                                     <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                                                     <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
@@ -420,7 +428,19 @@
         }
     }
 
+    function disableAllEditButtons() {
+        document.querySelectorAll('[data-edit-button="true"]').forEach(button => {
+            button.disabled = true;
+            button.classList.add('opacity-50');
+        });
+    }
 
+    function enableAllEditButtons() {
+        document.querySelectorAll('[data-edit-button="true"]').forEach(button => {
+            button.disabled = false;
+            button.classList.remove('opacity-50');
+        });
+    }
     function toggleEditModePersonalDetails() {
         const formContainer = document.getElementById('formContainerPersonalDetails');
         const readOnlyContent = document.getElementById('readOnlyContentPD');
@@ -430,10 +450,12 @@
             editableContent.style.display = 'block';
             readOnlyContent.style.display = 'none';
             formContainer.style.maxHeight = editableContent.scrollHeight + 'px';
+            disableAllEditButtons();
         } else {
             editableContent.style.display = 'none';
             readOnlyContent.style.display = 'block';
             formContainer.style.maxHeight = readOnlyContent.scrollHeight + 'px';
+            enableAllEditButtons();
         }
     }
 
@@ -446,10 +468,12 @@
             editableContent.style.display = 'block';
             readOnlyContent.style.display = 'none';
             formContainer.style.maxHeight = editableContent.scrollHeight + 'px';
+            disableAllEditButtons();
         } else {
             editableContent.style.display = 'none';
             readOnlyContent.style.display = 'block';
             formContainer.style.maxHeight = readOnlyContent.scrollHeight + 'px';
+            enableAllEditButtons();
         }
     }
 
@@ -470,8 +494,14 @@
             elements.forEach(element => {
                 const fieldName = element.id.replace('Input', '');
                 const snakeCase = fieldName.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
-                formData[snakeCase] = element.value;
-                console.log(`Field: ${snakeCase}, Value: ${element.value}`); // Debug
+
+                // Handle checkbox values
+                if (element.type === 'checkbox') {
+                    formData[snakeCase] = element.checked;
+                } else {
+                    formData[snakeCase] = element.value;
+                }
+                console.log(`Field: ${snakeCase}, Value: ${element.type === 'checkbox' ? element.checked : element.value}`); // Debug
             });
 
             console.log('Sending data:', formData);
