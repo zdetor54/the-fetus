@@ -446,3 +446,8 @@ select{
 input[type="date"]::-webkit-datetime-edit {
     color: inherit;
 }
+
+.form-check-input:checked {
+    background-color: var(--vibrant-pink);
+    border-color: var(--vibrant-pink);
+}
