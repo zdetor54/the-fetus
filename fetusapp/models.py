@@ -109,6 +109,13 @@ class Patient(db.Model, UserMixin):
         self.created_by = created_by
         self.last_updated_by = last_updated_by
 
+    def deactivate(self, user_id):
+        """Soft delete the patient by marking as inactive"""
+        self.is_active = False
+        self.last_updated_by = user_id
+        self.last_updated_on = datetime.utcnow()
+        db.session.commit()
+
     def __repr__(self):
         return f"Patient [{self.id}]: {self.first_name} {self.last_name} dob: {self.date_of_birth}"
 
