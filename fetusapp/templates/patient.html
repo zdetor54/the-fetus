@@ -148,14 +148,14 @@
                                                         <h2 class="text-center mt-2">Προσωπικά Στοιχεία</h2>
                                                         <!-- check box for active/inactive -->
                                                         {% if not patient.is_active %}
-                                                        <div class="d-flex align-items-center gap-2 mb-3">
+                                                        <div class="d-flex align-items-center justify-content-center gap-2 mb-3">
                                                             <input type="checkbox" 
                                                                 id="isActiveInput" 
                                                                 class="form-check-input mt-0"
                                                                 {% if patient.is_active %}checked{% endif %}
                                                                 value='on'
                                                                 style="width: 1rem; height: 1rem;">
-                                                            <label for="isActiveInput">Επανενεργοποίηση</label>
+                                                            <label for="isActiveInput" style="color: red;">!Επανενεργοποίηση!</label>
                                                         </div>
                                                         {% endif %}
 
