@@ -70,7 +70,8 @@
                                                 <span>Πατρώνυμο:</span> {{ patient.father_name }} <br>
                                             {% endif %}
                                             {% if patient.date_of_birth %}
-                                                <span>Ημερομηνία Γεννήσεως / Ηλικία:</span> {{ patient.date_of_birth }} <br>
+                                                <span>Ημερομηνία Γεννήσεως / Ηλικία:</span> {{ patient.date_of_birth }} / 
+                                                {{ ((now - patient.date_of_birth).days / 365.25) | int if patient.date_of_birth else '' }} ετών<br>
                                             {% endif %}
                                             {% if patient.marital_status %}
                                                 <span>Οικογενειακή Κατάσταση:</span> {{ patient.marital_status }} <br>
@@ -85,7 +86,7 @@
                                                 <span>Ασφάλιση:</span> {{ patient.insurance }} / {{ patient.insurance_comment }} <br>
                                             {% endif %}
                                             {% if patient.amka %}
-                                                <span>AMKA:</span> {{ patient.amka }}
+                                                <span>AMKA:</span> {{ patient.amka }} <br>
                                             {% endif %}
                                             {% if patient.is_active %}
                                                 <span>Κατάσταση:</span> Ενεργός
@@ -100,7 +101,8 @@
                                                 <span>Ονοματεπώνυμο:</span> {{ patient.spouse_name }} <br>
                                             {% endif %}
                                             {% if patient.spouse_date_of_birth %}
-                                                <span>Ημερομηνία Γεννήσεως / Ηλικία:</span> {{ patient.spouse_date_of_birth }} <br>
+                                                <span>Ημερομηνία Γεννήσεως / Ηλικία:</span> {{ patient.spouse_date_of_birth }} /
+                                                {{ ((now - patient.spouse_date_of_birth).days / 365.25) | int if patient.spouse_date_of_birth else '' }} ετών<br>
                                             {% endif %}
                                             {% if patient.spouse_occupation %}
                                                 <span>Επάγγελμα:</span> {{ patient.spouse_occupation }}

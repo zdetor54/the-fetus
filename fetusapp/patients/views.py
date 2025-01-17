@@ -6,7 +6,7 @@ from .forms import PatientContactForm
 import unicodedata
 import os
 from dotenv import load_dotenv
-from datetime import datetime
+from datetime import datetime, date
 
 
 import openai
@@ -256,11 +256,14 @@ def patient():
         patient = Patient.query.get(patient_id)
         return render_template('patient.html', active_page='patient',query_term=patient_id
                                , patient=patient
+                               , now=date.today()
                                , contact_fields=contact_fields
                                , personal_data_fields = personal_data_fields
                                , partner_data_fields = partner_data_fields)
     
-    return render_template('patient.html', active_page='patient'
+    return render_template('patient.html'
+                           , active_page='patient'
+                           , now=date.today()
                            , contact_fields=contact_fields
                            , personal_data_fields = personal_data_fields
                            , partner_data_fields = partner_data_fields)
