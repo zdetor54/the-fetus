@@ -314,6 +314,7 @@ def update_patient_api(id):
         patient = Patient.query.get_or_404(id)
 
         date_fields = ['date_of_birth', 'spouse_date_of_birth']
+        checkbox_fields = ['is_active']
 
         # Update fields
         for key, value in data.items():
@@ -326,6 +327,12 @@ def update_patient_api(id):
                             setattr(patient, key, datetime.strptime(value, '%Y-%m-%d').date())
                         except ValueError:
                             return jsonify({'success': False, 'error': f'Invalid date format for {key}'}), 400
+                elif key in checkbox_fields:
+                    print(value)
+                    if value:
+                        setattr(patient, key, True)
+                    else:
+                        setattr(patient, key, False)
                 else:
                     setattr(patient, key, value)
 
