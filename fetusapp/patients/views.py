@@ -163,7 +163,7 @@ def search_patients_service(search_query: str) -> pd.DataFrame:
     # Normalize the search parameters
     norm_search_parameters = normalize_json(search_parameters)
 
-    all_patients = Patient.query.all()
+    all_patients = Patient.query.filter_by(is_active=True).all()
     patients_data = [
         {
             'id': p.id,
@@ -331,6 +331,17 @@ def update_patient_api(id):
         patient.last_updated_by = current_user.id
 
         db.session.commit()
+        return jsonify({'success': True}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'error': str(e)}), 400
+
+@patients.route('/api/patients/<int:id>', methods=['DELETE'])
+@login_required
+def delete_patient_api(id):
+    try:
+        patient = Patient.query.get_or_404(id)
+        patient.deactivate(user_id = current_user.id)
         return jsonify({'success': True}), 200
     except Exception as e:
         db.session.rollback()
