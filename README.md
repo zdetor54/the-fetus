@@ -11,6 +11,7 @@ To migrate the database
 1. flask db init #only the first time
 2. flask db migrate -m "Initial migration."
 3. flask db upgrade
+4. follow the scripts in the migration folder
 
 To include the keys to the APIs
 1. Create the keys.env in the root folder (same as this README.md)
