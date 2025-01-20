@@ -1,0 +1,32 @@
+{
+    "s_org_ext": [
+        {"source": "s_org_extID", "target": "id", "type": "int"},
+        {"source": "firstName", "target": "first_name", "type": "str"},
+        {"source": "lastName", "target": "last_name", "type": "str"},
+        {"source": "fatherName", "target": "father_name", "type": "str"},
+        {"source": "dateOfBirth", "target": "date_of_birth", "type": "date"},
+        {"source": "maritalStatus", "target": "marital_status", "type": "str"},
+        {"source": "nationality", "target": "nationality", "type": "str"},
+        {"source": "occupation", "target": "occupation", "type": "str"},
+        {"source": "streetName", "target": "street_name", "type": "str"},
+        {"source": "streetNumber", "target": "street_number", "type": "str"},
+        {"source": "city", "target": "city", "type": "str"},
+        {"source": "postalCode", "target": "postal_code", "type": "str"},
+        {"source": "county", "target": "county", "type": "str"},
+        {"source": "homePhone", "target": "home_phone", "type": "str"},
+        {"source": "mobilePhone", "target": "mobile_phone", "type": "str"},
+        {"source": "alternativePhone", "target": "alternative_phone", "type": "str"},
+        {"source": "email", "target": "email", "type": "str"},
+        {"source": "insurance", "target": "insurance", "type": "str"},
+        {"source": "insuranceComment", "target": "insurance_comment", "type": "str"},
+        {"source": "amka", "target": "amka", "type": "str"},
+        {"source": "spouseName", "target": "spouse_name", "type": "str"},
+        {"source": "spouseDateOfBirth", "target": "spouse_date_of_birth", "type": "date"},
+        {"source": "spouseOccupation", "target": "spouse_occupation", "type": "str"},
+        {"source": "Created", "target": "created_on", "type": "date"},
+        {"source": "CreatedBy", "target": "created_by", "type": "int", "default":2},
+        {"source": "LastUpdated", "target": "last_updated_on", "type": "date"},
+        {"source": "LastUpdatedBy", "target": "last_updated_by", "type": "int", "default":2},
+        {"source": "IsActive", "target": "is_active", "type": "bool"}
+    ]
+}
