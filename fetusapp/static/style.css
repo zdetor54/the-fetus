@@ -242,6 +242,7 @@ footer a:hover{
 .btn-outline-secondary:hover {
     background-color: var(--vibrant-pink);
     border-color: var(--vibrant-pink);
+    color: white;
 }
 
 
@@ -250,14 +251,6 @@ footer a:hover{
 }
 
 /* End of appointments table */
-
-
-
-
-
-
-
-
 .nav-pills .nav-link.active {
     background-color: var(--vibrant-pink);
     border-color: var(--vibrant-pink);
