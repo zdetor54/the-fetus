@@ -120,5 +120,107 @@ class Patient(db.Model, UserMixin):
         return f"Patient [{self.id}]: {self.first_name} {self.last_name} dob: {self.date_of_birth}"
 
 
-# class Appointment(db.Model, UserMixin):
-#     pass
+class HistoryMedical(db.Model):
+    __tablename__ = 'history_medical'
+
+    id = db.Column(db.Integer, primary_key=True)
+    patient_id = db.Column(db.Integer, db.ForeignKey('patients.id'), nullable=False)
+    created_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    last_updated_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    created_on = db.Column(db.DateTime, server_default=db.func.now())
+    last_updated_on = db.Column(db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
+
+    # Medical History
+    surgeries = db.Column(db.Text, nullable=True)
+    smoking_before = db.Column(db.String(64), nullable=True)
+    smoking_during = db.Column(db.String(64), nullable=True)
+    alcohol = db.Column(db.Text, nullable=True)
+    transfusions_yn = db.Column(db.Boolean, default=False)
+    transfusions_reactions = db.Column(db.Text, nullable=True)
+    allergies_yn = db.Column(db.Boolean, default=False)
+    allergies_to_med = db.Column(db.Text, nullable=True)
+    allergies_other = db.Column(db.Text, nullable=True)
+    family_history = db.Column(db.Text, nullable=True)
+    weight = db.Column(db.Numeric(5,2), nullable=True)
+    height = db.Column(db.Numeric(3,2), nullable=True)
+    bmi = db.Column(db.Numeric(5,3), nullable=True)
+    comments = db.Column(db.Text, nullable=True)
+
+    # Pathologies
+    heart_disease = db.Column(db.Text, nullable=True)
+    hypertension = db.Column(db.Text, nullable=True)
+    diabetes = db.Column(db.Text, nullable=True)
+    nephropathy = db.Column(db.Text, nullable=True)
+    liver_disease = db.Column(db.Text, nullable=True)
+    thyroeidopatheia = db.Column(db.Text, nullable=True)
+    other_diseases = db.Column(db.Text, nullable=True)
+    medication = db.Column(db.Text, nullable=True)
+
+    # Gynecological History
+    er_start = db.Column(db.String(64), nullable=True)
+    er_nominator = db.Column(db.Integer, nullable=True)
+    er_denominator = db.Column(db.Integer, nullable=True)
+    gynecological_surg = db.Column(db.Text, nullable=True)
+    test_pap = db.Column(db.Text, nullable=True)
+    da = db.Column(db.Text, nullable=True)
+    calt_vag_fluid = db.Column(db.String(32), nullable=True)
+    is_active = db.Column(db.Boolean, default=True)
+
+    # Relationships
+    patient = db.relationship('Patient', backref=db.backref('medical_history', lazy=True))
+    creator = db.relationship('User', foreign_keys=[created_by], backref='created_medical_histories')
+    updater = db.relationship('User', foreign_keys=[last_updated_by], backref='updated_medical_histories')
+
+    def __init__(self, patient_id, created_by, last_updated_by, 
+             surgeries=None, smoking_before=None, smoking_during=None,
+             alcohol=None, transfusions_yn=False, transfusions_reactions=None,
+             allergies_yn=False, allergies_to_med=None, allergies_other=None,
+             family_history=None, weight=None, height=None, bmi=None,
+             comments=None, heart_disease=None, hypertension=None,
+             diabetes=None, nephropathy=None, liver_disease=None,
+             thyroeidopatheia=None, other_diseases=None, medication=None,
+             er_start=None, er_nominator=None, er_denominator=None,
+             gynecological_surg=None, test_pap=None, da=None,
+             calt_vag_fluid=None):
+    
+        self.patient_id = patient_id
+        self.created_by = created_by
+        self.last_updated_by = last_updated_by
+        
+        # Medical History
+        self.surgeries = surgeries
+        self.smoking_before = smoking_before
+        self.smoking_during = smoking_during
+        self.alcohol = alcohol
+        self.transfusions_yn = transfusions_yn
+        self.transfusions_reactions = transfusions_reactions
+        self.allergies_yn = allergies_yn
+        self.allergies_to_med = allergies_to_med
+        self.allergies_other = allergies_other
+        self.family_history = family_history
+        self.weight = weight
+        self.height = height
+        self.bmi = bmi
+        self.comments = comments
+        
+        # Pathologies
+        self.heart_disease = heart_disease
+        self.hypertension = hypertension
+        self.diabetes = diabetes
+        self.nephropathy = nephropathy
+        self.liver_disease = liver_disease
+        self.thyroeidopatheia = thyroeidopatheia
+        self.other_diseases = other_diseases
+        self.medication = medication
+        
+        # Gynecological History
+        self.er_start = er_start
+        self.er_nominator = er_nominator
+        self.er_denominator = er_denominator
+        self.gynecological_surg = gynecological_surg
+        self.test_pap = test_pap
+        self.da = da
+        self.calt_vag_fluid = calt_vag_fluid
+
+    def __repr__(self):
+        return f"Medical History for Patient {self.patient_id}"

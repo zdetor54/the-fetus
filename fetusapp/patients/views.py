@@ -1,7 +1,7 @@
 from flask import render_template, request, Blueprint,flash,redirect,url_for, get_flashed_messages, jsonify
 from fetusapp import app,db
 from flask_login import login_user,login_required,logout_user, current_user
-from fetusapp.models import User,Patient
+from fetusapp.models import User,Patient, HistoryMedical
 from .forms import PatientContactForm
 import unicodedata
 import os
@@ -254,12 +254,18 @@ def patient():
 
     if patient_id:
         patient = Patient.query.get(patient_id)
+        #get the medical history of the patient
+
+        medical_history = HistoryMedical.query.filter_by(patient_id=2, is_active=True).first()
+
         return render_template('patient.html', active_page='patient',query_term=patient_id
                                , patient=patient
                                , now=date.today()
                                , contact_fields=contact_fields
+                               , medical_history = medical_history
                                , personal_data_fields = personal_data_fields
                                , partner_data_fields = partner_data_fields)
+                               
     
     return render_template('patient.html'
                            , active_page='patient'
@@ -387,3 +393,76 @@ def search_patients_view():
         return redirect(url_for('patients.patient', active_page='patient', id=response.iloc[0].id))
     else:
         return render_template('patients.html', active_page='patient', patients=response.to_dict('records'), has_searched=True)
+
+#########################################################################################
+################                 MEDICAL HISTORY SESSION                 ################
+#########################################################################################
+@patients.route('/api/patients/<int:patient_id>/medical-history', methods=['GET'])
+@login_required
+def get_patient_medical_history_api(patient_id):
+    try:
+        histories = HistoryMedical.query.filter_by(patient_id=patient_id, is_active=True).all()
+        return jsonify({'success': True, 'data': [history.to_dict() for history in histories]}), 200
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 400
+
+# @patients.route('/api/medical-history/<int:history_id>', methods=['GET'])
+# @login_required
+# def get_medical_history_api(history_id):
+#     try:
+#         history = HistoryMedical.query.get_or_404(history_id)
+#         return jsonify({'success': True, 'data': history.to_dict()}), 200
+#     except Exception as e:
+#         return jsonify({'success': False, 'error': str(e)}), 400
+
+# @patients.route('/api/patients/<int:patient_id>/medical-history', methods=['POST'])
+# @login_required
+# def create_medical_history_api(patient_id):
+#     try:
+#         data = request.get_json()
+#         history = HistoryMedical(
+#             patient_id=patient_id,
+#             created_by=current_user.id,
+#             last_updated_by=current_user.id,
+#             **data
+#         )
+#         db.session.add(history)
+#         db.session.commit()
+#         return jsonify({'success': True, 'history_id': history.id}), 201
+#     except Exception as e:
+#         db.session.rollback()
+#         return jsonify({'success': False, 'error': str(e)}), 400
+
+# @patients.route('/api/medical-history/<int:history_id>', methods=['PUT'])
+# @login_required
+# def update_medical_history_api(history_id):
+#     try:
+#         data = request.get_json()
+#         history = HistoryMedical.query.get_or_404(history_id)
+        
+#         for key, value in data.items():
+#             if hasattr(history, key):
+#                 setattr(history, key, value)
+        
+#         history.last_updated_by = current_user.id
+#         history.last_updated_on = datetime.utcnow()
+        
+#         db.session.commit()
+#         return jsonify({'success': True}), 200
+#     except Exception as e:
+#         db.session.rollback()
+#         return jsonify({'success': False, 'error': str(e)}), 400
+
+# @patients.route('/api/medical-history/<int:history_id>', methods=['DELETE'])
+# @login_required
+# def delete_medical_history_api(history_id):
+#     try:
+#         history = HistoryMedical.query.get_or_404(history_id)
+#         history.is_active = False
+#         history.last_updated_by = current_user.id
+#         history.last_updated_on = datetime.utcnow()
+#         db.session.commit()
+#         return jsonify({'success': True}), 200
+#     except Exception as e:
+#         db.session.rollback()
+#         return jsonify({'success': False, 'error': str(e)}), 400
