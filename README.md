@@ -47,3 +47,7 @@ IDEAS:
 - Have a visual indication of the age of the patient, how many pregnancies she has, etc
 - API for greek addresses
 - in no patients have infographics
+
+rebase from origin
+- git fetch origin
+- git rebase origin/main (while on the branch)
