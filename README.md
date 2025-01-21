@@ -52,3 +52,4 @@ IDEAS:
 rebase from origin
 - git fetch origin
 - git rebase origin/main (while on the branch)
+- git fetch --all
