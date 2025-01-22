@@ -18,14 +18,25 @@ def insert_records(table:str, db_path: str) -> None:
     # Create a cursor object using the cursor method
     cursor = conn.cursor()
     with open(sql_path, 'r', encoding = 'utf-8') as f:
-        sql = f.read()  
+        sql_content = f.read()  
 
-    # For example, to execute a query
-    cursor.execute(sql)
-    conn.commit()
+    # Split into individual statements
+    sql_statements = [stmt.strip() for stmt in sql_content.split(';') if stmt.strip()]
 
-    # Don't forget to close the connection
-    conn.close()
+    # Execute statements in transaction
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    
+    try:
+        for statement in sql_statements[:1]:
+            cursor.execute(statement)
+        conn.commit()
+        print(f"Successfully executed {len(sql_statements)} statements")
+    except Exception as e:
+        conn.rollback()
+        print(f"Error executing statements: {str(e)}")
+    finally:
+        conn.close()
 
 def fetch_records(table:str, db_path: str, limit: int = 5) -> None:
     # Establish a connection to the database

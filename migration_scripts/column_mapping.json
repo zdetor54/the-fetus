@@ -60,5 +60,19 @@
     {"source": "LastUpdated", "target": "last_updated_on", "type": "datetime"},
     {"source": "LastUpdatedBy", "target": "last_updated_by", "type": "int", "default": 1},
     {"source": "IsActive", "target": "is_active", "type": "bool"}
+  ],
+  "tblgynhistoryshort": [
+    {"source": "ErStart", "target": "er_start", "type": "str"},
+    {"source": "ErNominator", "target": "er_nominator", "type": "int"},
+    {"source": "ErDenominator", "target": "er_denominator", "type": "int"},
+    {"source": "GynecologicalSurg", "target": "gynecological_surg", "type": "str"},
+    {"source": "TestPap", "target": "test_pap", "type": "str"},
+    {"source": "Da", "target": "da", "type": "str"},
+    {"source": "CaltVagFluid", "target": "calt_vag_fluid", "type": "str"},
+    {"source": "Created", "target": "created_on", "type": "datetime"},
+    {"source": "CreatedBy", "target": "created_by", "type": "int", "default": 1},
+    {"source": "LastUpdated", "target": "last_updated_on", "type": "datetime"},
+    {"source": "LastUpdatedBy", "target": "last_updated_by", "type": "int", "default": 1},
+    {"source": "IsActive", "target": "is_active", "type": "bool"}
   ]
 }
