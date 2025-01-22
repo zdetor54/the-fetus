@@ -3,6 +3,7 @@ from flask import flash
 from werkzeug.security import generate_password_hash,check_password_hash
 from flask_login import UserMixin
 from datetime import datetime
+from decimal import Decimal
 
 
 
@@ -11,6 +12,25 @@ from datetime import datetime
 def load_user(user_id):
     return User.query.get(user_id)
 
+class BaseModel(db.Model):
+    """Base model class with common functionality"""
+    __abstract__ = True
+
+    def to_dict(self):
+        """Convert SQLAlchemy model to dictionary automatically."""
+        dictionary = {}
+        for column in self.__table__.columns:
+            value = getattr(self, column.name)
+            
+            # Handle special data types
+            if isinstance(value, datetime):
+                value = value.isoformat()
+            elif isinstance(value, Decimal):
+                value = float(value)
+                
+            dictionary[column.name] = value
+        
+        return dictionary
 
 class User(db.Model, UserMixin):
     
@@ -120,7 +140,7 @@ class Patient(db.Model, UserMixin):
         return f"Patient [{self.id}]: {self.first_name} {self.last_name} dob: {self.date_of_birth}"
 
 
-class HistoryMedical(db.Model):
+class HistoryMedical(BaseModel):
     __tablename__ = 'history_medical'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -221,6 +241,3 @@ class HistoryMedical(db.Model):
         self.test_pap = test_pap
         self.da = da
         self.calt_vag_fluid = calt_vag_fluid
-
-    def __repr__(self):
-        return f"Medical History for Patient {self.patient_id}"
