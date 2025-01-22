@@ -14,7 +14,7 @@ def format_date(date_str: str) -> str:
 
 def format_value(value: Any, value_type: str) -> str:
     """Format value based on its type."""
-    if value_type.lower() == 'date':
+    if value_type.lower() == 'date' or value_type.lower() == 'datetime':
         return format_date(value)
     elif value_type.lower() == 'str':
         return escape_string(value)
