@@ -28,5 +28,14 @@
         {"source": "LastUpdated", "target": "last_updated_on", "type": "date"},
         {"source": "LastUpdatedBy", "target": "last_updated_by", "type": "int", "default":2},
         {"source": "IsActive", "target": "is_active", "type": "bool"}
+    ],
+    "admin": [
+        {"source": "adminID", "target": "id", "type": "int"},
+        {"source": "Username", "target": "username", "type": "str"},
+        {"source": "Hash", "target": "password_hash", "type": "str"},
+        {"source": "FirstName", "target": "first_name", "type": "str"},
+        {"source": "LastName", "target": "last_name", "type": "str"},
+        {"source": "IsActive", "target": "is_active", "type": "bool"},
+        {"source": "isAdmin", "target": "is_admin", "type": "bool"}
     ]
 }
