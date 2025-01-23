@@ -178,8 +178,8 @@ class HistoryMedical(BaseModel):
 
     # Gynecological History
     er_start = db.Column(db.String(64), nullable=True)
-    er_nominator = db.Column(db.Integer, nullable=True)
-    er_denominator = db.Column(db.Integer, nullable=True)
+    er_nominator = db.Column(db.String(64), nullable=True)
+    er_denominator = db.Column(db.String(64), nullable=True)
     gynecological_surg = db.Column(db.Text, nullable=True)
     test_pap = db.Column(db.Text, nullable=True)
     da = db.Column(db.Text, nullable=True)

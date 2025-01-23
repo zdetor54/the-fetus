@@ -19,6 +19,8 @@ def format_value(value: Any, value_type: str) -> str:
     elif value_type.lower() == 'str':
         return escape_string(value)
     elif value_type.lower() in ['int', 'bool']:
-        return str(value) if value is not None else 'null'
+        if value is None or value == "":
+            return 'null'
+        return str(value)
     else:
         return escape_string(value)  # Default to string handling

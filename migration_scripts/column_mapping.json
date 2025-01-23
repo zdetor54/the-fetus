@@ -63,8 +63,8 @@
   ],
   "tblgynhistoryshort": [
     {"source": "ErStart", "target": "er_start", "type": "str"},
-    {"source": "ErNominator", "target": "er_nominator", "type": "int"},
-    {"source": "ErDenominator", "target": "er_denominator", "type": "int"},
+    {"source": "ErNominator", "target": "er_nominator", "type": "str"},
+    {"source": "ErDenominator", "target": "er_denominator", "type": "str"},
     {"source": "GynecologicalSurg", "target": "gynecological_surg", "type": "str"},
     {"source": "TestPap", "target": "test_pap", "type": "str"},
     {"source": "Da", "target": "da", "type": "str"},
