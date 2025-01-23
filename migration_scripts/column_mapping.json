@@ -74,5 +74,21 @@
     {"source": "LastUpdated", "target": "last_updated_on", "type": "datetime"},
     {"source": "LastUpdatedBy", "target": "last_updated_by", "type": "int", "default": 1},
     {"source": "IsActive", "target": "is_active", "type": "bool"}
+  ],
+  "tblpathologies": [
+    {"source": "HeartDesease", "target": "heart_disease", "type": "str"},
+    {"source": "Ηypertension", "target": "hypertension", "type": "str"},
+    {"source": "Diabetes", "target": "diabetes", "type": "str"},
+    {"source": "Nephropathy", "target": "nephropathy", "type": "str"},
+    {"source": "LiverDisease", "target": "liver_disease", "type": "str"},
+    {"source": "Thyroeidopatheia", "target": "thyroeidopatheia", "type": "str"},
+    {"source": "OtherDiseasies", "target": "other_diseases", "type": "str"},
+    {"source": "Medication", "target": "medication", "type": "str"},
+    {"source": "Created", "target": "created_on", "type": "datetime"},
+    {"source": "CreatedBy", "target": "created_by", "type": "int", "default": 1},
+    {"source": "LastUpdated", "target": "last_updated_on", "type": "datetime"},
+    {"source": "LastUpdatedBy", "target": "last_updated_by", "type": "int", "default": 1},
+    {"source": "IsActive", "target": "is_active", "type": "bool"}
   ]
+
 }
