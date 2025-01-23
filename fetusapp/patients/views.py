@@ -256,7 +256,8 @@ def patient():
         patient = Patient.query.get(patient_id)
         #get the medical history of the patient
 
-        medical_history = HistoryMedical.query.filter_by(patient_id=2, is_active=True).first()
+        medical_history = HistoryMedical.query.filter_by(patient_id=patient_id, is_active=True).first()
+        print(json.dumps(medical_history.to_dict(), indent=4, ensure_ascii=False))
 
         return render_template('patient.html', active_page='patient',query_term=patient_id
                                , patient=patient
@@ -397,14 +398,15 @@ def search_patients_view():
 #########################################################################################
 ################                 MEDICAL HISTORY SESSION                 ################
 #########################################################################################
-@patients.route('/api/patients/<int:patient_id>/medical-history', methods=['GET'])
-@login_required
-def get_patient_medical_history_api(patient_id):
-    try:
-        histories = HistoryMedical.query.filter_by(patient_id=patient_id, is_active=True).all()
-        return jsonify({'success': True, 'data': [history.to_dict() for history in histories]}), 200
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)}), 400
+# @patients.route('/api/patients/<int:patient_id>/medical-history', methods=['GET'])
+# @login_required
+# def get_patient_medical_history_api(patient_id):
+#     try:
+#         histories = HistoryMedical.query.filter_by(patient_id=patient_id, is_active=True).all()
+#         print(histories)
+#         return jsonify({'success': True, 'data': [history.to_dict() for history in histories]}), 200
+#     except Exception as e:
+#         return jsonify({'success': False, 'error': str(e)}), 400
 
 # @patients.route('/api/medical-history/<int:history_id>', methods=['GET'])
 # @login_required

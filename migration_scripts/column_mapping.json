@@ -37,5 +37,58 @@
         {"source": "LastName", "target": "last_name", "type": "str"},
         {"source": "IsActive", "target": "is_active", "type": "bool"},
         {"source": "isAdmin", "target": "is_admin", "type": "bool"}
-    ]
+    ],
+    "tblmedhistory": [
+    {"source": "MedHistoryID", "target": "id", "type": "int"},
+    {"source": "s_org_extID", "target": "patient_id", "type": "int"},
+    {"source": "Surgeries", "target": "surgeries", "type": "str"},
+    {"source": "SmokingBefore", "target": "smoking_before", "type": "str"},
+    {"source": "SmokingDuring", "target": "smoking_during", "type": "str"},
+    {"source": "Alcochol", "target": "alcohol", "type": "str"},
+    {"source": "TrasfusionsYN", "target": "transfusions_yn", "type": "bool"},
+    {"source": "TrasfusionsReactions", "target": "transfusions_reactions", "type": "str"},
+    {"source": "AllergiesYN", "target": "allergies_yn", "type": "bool"},
+    {"source": "AllergiesToMed", "target": "allergies_to_med", "type": "str"},
+    {"source": "AllergiesOther", "target": "allergies_other", "type": "str"},
+    {"source": "FamilyHistory", "target": "family_history", "type": "str"},
+    {"source": "Weight", "target": "weight", "type": "decimal"},
+    {"source": "Height", "target": "height", "type": "decimal"},
+    {"source": "BMI", "target": "bmi", "type": "decimal"},
+    {"source": "Comments", "target": "comments", "type": "str"},
+    {"source": "Created", "target": "created_on", "type": "datetime"},
+    {"source": "CreatedBy", "target": "created_by", "type": "int", "default": 1},
+    {"source": "LastUpdated", "target": "last_updated_on", "type": "datetime"},
+    {"source": "LastUpdatedBy", "target": "last_updated_by", "type": "int", "default": 1},
+    {"source": "IsActive", "target": "is_active", "type": "bool"}
+  ],
+  "tblgynhistoryshort": [
+    {"source": "ErStart", "target": "er_start", "type": "str"},
+    {"source": "ErNominator", "target": "er_nominator", "type": "str"},
+    {"source": "ErDenominator", "target": "er_denominator", "type": "str"},
+    {"source": "GynecologicalSurg", "target": "gynecological_surg", "type": "str"},
+    {"source": "TestPap", "target": "test_pap", "type": "str"},
+    {"source": "Da", "target": "da", "type": "str"},
+    {"source": "CaltVagFluid", "target": "calt_vag_fluid", "type": "str"},
+    {"source": "Created", "target": "created_on", "type": "datetime"},
+    {"source": "CreatedBy", "target": "created_by", "type": "int", "default": 1},
+    {"source": "LastUpdated", "target": "last_updated_on", "type": "datetime"},
+    {"source": "LastUpdatedBy", "target": "last_updated_by", "type": "int", "default": 1},
+    {"source": "IsActive", "target": "is_active", "type": "bool"}
+  ],
+  "tblpathologies": [
+    {"source": "HeartDesease", "target": "heart_disease", "type": "str"},
+    {"source": "Ηypertension", "target": "hypertension", "type": "str"},
+    {"source": "Diabetes", "target": "diabetes", "type": "str"},
+    {"source": "Nephropathy", "target": "nephropathy", "type": "str"},
+    {"source": "LiverDisease", "target": "liver_disease", "type": "str"},
+    {"source": "Thyroeidopatheia", "target": "thyroeidopatheia", "type": "str"},
+    {"source": "OtherDiseasies", "target": "other_diseases", "type": "str"},
+    {"source": "Medication", "target": "medication", "type": "str"},
+    {"source": "Created", "target": "created_on", "type": "datetime"},
+    {"source": "CreatedBy", "target": "created_by", "type": "int", "default": 1},
+    {"source": "LastUpdated", "target": "last_updated_on", "type": "datetime"},
+    {"source": "LastUpdatedBy", "target": "last_updated_by", "type": "int", "default": 1},
+    {"source": "IsActive", "target": "is_active", "type": "bool"}
+  ]
+
 }
