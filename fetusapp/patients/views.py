@@ -257,7 +257,12 @@ def patient():
         #get the medical history of the patient
 
         medical_history = HistoryMedical.query.filter_by(patient_id=patient_id, is_active=True).first()
-        print(json.dumps(medical_history.to_dict(), indent=4, ensure_ascii=False))
+
+        ## TODO: Remove the print statement after we are done with the development
+        try:
+            print(json.dumps(medical_history.to_dict(), indent=4, ensure_ascii=False))
+        except AttributeError:
+            print("No medical history found")
 
         return render_template('patient.html', active_page='patient',query_term=patient_id
                                , patient=patient
