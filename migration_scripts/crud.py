@@ -28,7 +28,8 @@ def insert_records(table:str, db_path: str) -> None:
     cursor = conn.cursor()
     
     try:
-        for statement in sql_statements[:1]:
+        for statement in sql_statements:
+            print(f"Executing statement: {statement}")
             cursor.execute(statement)
         conn.commit()
         print(f"Successfully executed {len(sql_statements)} statements")
