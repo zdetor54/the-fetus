@@ -4,7 +4,7 @@ def escape_string(value: Any) -> str:
     """Escape single quotes and handle null values for SQL strings."""
     if value is None or value == "":
         return 'null'
-    return f"'{str(value).replace("'", "''")}'"
+    return "'" + str(value).replace("'", "''") + "'"
 
 def format_date(date_str: str) -> str:
     """Format date strings, returning 'null' for empty or zero dates."""
