@@ -444,3 +444,13 @@ input[type="date"]::-webkit-datetime-edit {
     background-color: var(--vibrant-pink);
     border-color: var(--vibrant-pink);
 }
+
+.formatted-text {
+    white-space: pre-wrap;
+    font-family: inherit;
+    background: none;
+    border: none;
+    padding: 1rem;
+    margin: 1rem 0;
+    width: 100%;
+}
