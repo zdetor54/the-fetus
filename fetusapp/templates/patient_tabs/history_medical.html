@@ -1,0 +1,43 @@
+{% if medical_history %}
+    <div class="comments-display">
+        <pre class="formatted-text">{{ medical_history.comments|safe }}</pre>
+    </div>
+    <div class="comments-display">
+        {% for key, value in medical_history_dict.items() %}
+            <span>{{ key }}:</span> {{ value }} <br>
+        {% endfor %}
+    </div>
+    
+{% else %}
+    <div class="pb-3">
+        <form method="POST">
+            <div id="editor">{{ medical_history.comments if medical_history else '' }}</div>
+            <input type="hidden" name="comments" id="hidden-content">
+        </form>
+    </div>
+{% endif %}
+
+{% block tab_javascript %}
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+<script>
+    var quill = new Quill('#editor', {
+        theme: 'snow',
+        modules: {
+            toolbar: [
+                ['bold', 'italic', 'underline', 'strike'],
+                ['blockquote', 'code-block'],
+                [{ 'header': 1 }, { 'header': 2 }],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                [{ 'color': [] }, { 'background': [] }],
+                ['clean']
+            ]
+        }
+    });
+
+    // When form submits, copy HTML content to hidden input
+    document.querySelector('form').onsubmit = function() {
+        document.querySelector('#hidden-content').value = quill.root.innerHTML;
+    };
+</script>
+{% endblock %}
