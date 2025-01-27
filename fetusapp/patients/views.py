@@ -155,11 +155,16 @@ def search_patients_service(search_query: str) -> pd.DataFrame:
     """Service function for patient search logic"""
     if not search_query:
         return pd.DataFrame()
-        
-    search_parameters = extract_patient_details(search_query)
-    # if the surname is found, and has the value "no quota", return an empty list
-    if 'surname' in search_parameters and search_parameters['surname'] == "no quota":
-        search_parameters = extract_patient_details_regex(search_query)
+    
+
+    ### REMOVING SEARCH USING OPENAI API ###    
+    # search_parameters = extract_patient_details(search_query)
+    # # if the surname is found, and has the value "no quota", return an empty list
+    # if 'surname' in search_parameters and search_parameters['surname'] == "no quota":
+    #     search_parameters = extract_patient_details_regex(search_query)
+    ### -------------------------------- ###
+
+    search_parameters = extract_patient_details_regex(search_query)
     # Normalize the search parameters
     norm_search_parameters = normalize_json(search_parameters)
 
