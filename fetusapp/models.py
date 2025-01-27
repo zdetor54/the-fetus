@@ -100,8 +100,8 @@ class Patient(db.Model, UserMixin):
     spouse_occupation = db.Column(db.String(64))
     is_active = db.Column(db.Boolean, default=True)
 
-    def __init__(self, first_name, last_name, father_name, date_of_birth, marital_status, nationality, occupation,
-                 street_name, street_number, city, postal_code, county, home_phone=None, mobile_phone=None, alternative_phone=None,
+    def __init__(self, first_name, last_name, father_name=None, date_of_birth=None, marital_status=None, nationality=None, occupation=None,
+                 street_name=None, street_number=None, city=None, postal_code=None, county=None, home_phone=None, mobile_phone=None, alternative_phone=None,
                  email=None, insurance=None, insurance_comment=None, amka = None, spouse_name=None, spouse_date_of_birth=None, spouse_occupation=None,
                  created_by=None, last_updated_by=None):
         self.first_name = first_name
