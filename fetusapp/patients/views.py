@@ -2,7 +2,7 @@ from flask import render_template, request, Blueprint,flash,redirect,url_for, ge
 from fetusapp import app,db
 from flask_login import login_user,login_required,logout_user, current_user
 from fetusapp.models import User,Patient, HistoryMedical
-from .forms import PatientContactForm
+from .forms import HistoryMedicalForm
 import unicodedata
 import os
 from dotenv import load_dotenv
@@ -259,9 +259,13 @@ def patient():
 
     if patient_id:
         patient = Patient.query.get(patient_id)
+        history_medical_form = HistoryMedicalForm()
         #get the medical history of the patient
 
         medical_history = HistoryMedical.query.filter_by(patient_id=patient_id, is_active=True).first()
+
+        if medical_history:
+            history_medical_form = HistoryMedicalForm(obj=medical_history)
 
         ## TODO: Remove the print statement after we are done with the development
         try:
@@ -274,6 +278,7 @@ def patient():
                                , now=date.today()
                                , contact_fields=contact_fields
                                , medical_history = medical_history
+                               , medical_history_form = history_medical_form 
                                , medical_history_dict = medical_history_dict
                                , personal_data_fields = personal_data_fields
                                , partner_data_fields = partner_data_fields)
@@ -284,7 +289,9 @@ def patient():
                            , now=date.today()
                            , contact_fields=contact_fields
                            , personal_data_fields = personal_data_fields
-                           , partner_data_fields = partner_data_fields)
+                           , partner_data_fields = partner_data_fields
+                           , medical_history_form = history_medical_form 
+                           )
 
 @patients.route('/api/patients', methods=['POST'])
 @login_required
