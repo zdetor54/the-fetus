@@ -23,12 +23,12 @@
                             <h3 class="text-center mt-2">Γενικά Σχόλια</h3>
 
                             <pre class="formatted-text zd">{{ medical_history_form.comments.data }}</pre>
+                            <h3 class="text-center mt-2 zd-bottom">Ιατρικό Ιστορικό</h3>
                             <div class="row">
                                 <div class="col-12 col-lg-6">
-                                    <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg bg-dark">
+                                    <!-- <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg bg-dark"> -->
                                         <div class="d-flex flex-column h-100 text-shadow-1">
                                             <div class="container p-2">
-                                                <h3 class="text-center mt-2 zd-bottom">Ιατρικό Ιστορικό</h3>
 
                                                 {% set form_elements = [
                                                     'weight', 
@@ -59,10 +59,10 @@
                                             </div>
                                             
                                         </div>
-                                    </div>
+                                    <!-- </div> -->
                                 </div>
                                 <div class="col-12 col-lg-6">
-                                    <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg bg-dark">
+                                    <!-- <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg bg-dark"> -->
                                         <div class="d-flex flex-column h-100 text-shadow-1">
                                             <div class="container p-2">
                                                 {% set form_elements = [
@@ -99,11 +99,11 @@
 
                                             </div>
                                         </div>
-                                    </div>
+                                    <!-- </div> -->
                                 </div>
 
                                 <div class="col-12">
-                                    <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg bg-dark">
+                                    <!-- <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg bg-dark"> -->
                                         <div class="d-flex flex-column h-100 text-shadow-1">
                                             <div class="container p-2">
 
@@ -128,7 +128,7 @@
 
                                             </div>
                                         </div>
-                                    </div>
+                                    <!-- </div> -->
                                 </div>
                             </div>
 
@@ -185,21 +185,8 @@
             </div>
         </div>  
     </div>
-
-
-    <div class="comments-display">
-        {% for key, value in medical_history_dict.items() %}
-            <span>{{ key }}:</span> {{ value }} <br>
-        {% endfor %}
-    </div>
-    
 {% else %}
-    <div class="pb-3">
-        <form method="POST">
-            <div id="editor">{{ medical_history.comments if medical_history else '' }}</div>
-            <input type="hidden" name="comments" id="hidden-content">
-        </form>
-    </div>
+    <p>create new</p>
 {% endif %}
 
 {% block tab_javascript %}
