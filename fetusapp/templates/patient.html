@@ -549,15 +549,19 @@
     
 
     document.addEventListener('DOMContentLoaded', () => {
-        const formContainer = document.getElementById('formContainerPersonalDetails');
-        const readOnlyContent = document.getElementById('readOnlyContentPD');
-        formContainer.style.maxHeight = readOnlyContent.scrollHeight + 'px';
-    });
+    // Setup function for form containers
+    const setupFormContainer = (formId, contentId) => {
+        const formContainer = document.getElementById(formId);
+        const readOnlyContent = document.getElementById(contentId);
+        if (formContainer && readOnlyContent) {
+            formContainer.style.maxHeight = readOnlyContent.scrollHeight + 'px';
+        }
+    };
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const formContainer = document.getElementById('formContainerContactDetails');
-        const readOnlyContent = document.getElementById('readOnlyContentCD');
-        formContainer.style.maxHeight = readOnlyContent.scrollHeight + 'px';
+    // Setup both containers
+    setupFormContainer('formContainerPersonalDetails', 'readOnlyContentPD');
+    setupFormContainer('formContainerContactDetails', 'readOnlyContentCD');
+    setupFormContainer('formContainerHistoryMedical', 'readOnlyContentHistoryMedical');
     });
 </script>
 

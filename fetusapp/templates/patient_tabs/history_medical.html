@@ -1,7 +1,192 @@
 {% if medical_history %}
-    <div class="comments-display">
+
+{% macro render_field(label, value) %}
+    <span>{{ label }}</span> 
+    {% if value is not none %}
+        {{ value }} <br>
+    {% else %}
+        No <br>
+    {% endif %}
+{% endmacro %}
+    <!-- <div class="comments-display">
         <pre class="formatted-text">{{ medical_history.comments|safe }}</pre>
+    </div> -->
+    <div class="col-12 text-light">
+        <div class="card card-cover text-bg-dark rounded-4 shadow-lg bg-dark">
+            <div class="d-flex flex-column h-100 text-shadow-1">
+
+                <!-- New content with slider card -->
+                <div class="container px-0 ">
+                    <div class="form-container" style="position: relative; transition: max-height 0.2s ease-in-out;" id="formContainerHistoryMedical">
+
+                        <div class="read-only read-only-labels p-4" id="readOnlyContentHistoryMedical">
+                            <h3 class="text-center mt-2">Γενικά Σχόλια</h3>
+
+                            <pre class="formatted-text zd">{{ medical_history_form.comments.data }}</pre>
+                            <div class="row">
+                                <div class="col-12 col-lg-6">
+                                    <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg bg-dark">
+                                        <div class="d-flex flex-column h-100 text-shadow-1">
+                                            <div class="container p-2">
+                                                <h3 class="text-center mt-2 zd-bottom">Ιατρικό Ιστορικό</h3>
+
+                                                {% set form_elements = [
+                                                    'weight', 
+                                                    'height', 
+                                                    'bmi'
+                                                ] %}
+                                                
+                                                {% for element in form_elements %}
+                                                    {{ render_field(getattr(medical_history_form, element).label, getattr(medical_history_form, element).data) }}
+                                                {% endfor %}
+                                                
+                                                <h3 class="text-center mt-2 zd-bottom">Παθολογικές Καταστάσεις</h3>
+
+                                                {% set form_elements = [
+                                                    'heart_disease', 
+                                                    'hypertension', 
+                                                    'diabetes', 
+                                                    'nephropathy', 
+                                                    'liver_disease', 
+                                                    'thyroeidopatheia', 
+                                                    'other_diseases', 
+                                                    'medication'
+                                                ] %}
+                                                
+                                                {% for element in form_elements %}
+                                                    {{ render_field(getattr(medical_history_form, element).label, getattr(medical_history_form, element).data) }}
+                                                {% endfor %}
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg bg-dark">
+                                        <div class="d-flex flex-column h-100 text-shadow-1">
+                                            <div class="container p-2">
+                                                {% set form_elements = [
+                                                    'surgeries', 
+                                                    'alcohol', 
+                                                    'transfusions_yn', 
+                                                    'transfusions_reactions'
+                                                ] %}
+                                                
+                                                {% for element in form_elements %}
+                                                    {{ render_field(getattr(medical_history_form, element).label, getattr(medical_history_form, element).data) }}
+                                                {% endfor %}
+
+                                                <h3 class="text-center mt-2 zd-bottom">Κάπνισμα</h3>
+                                                {% set form_elements = [
+                                                    'smoking_before', 
+                                                    'smoking_during'
+                                                ] %}
+                                                
+                                                {% for element in form_elements %}
+                                                    {{ render_field(getattr(medical_history_form, element).label, getattr(medical_history_form, element).data) }}
+                                                {% endfor %}
+
+                                                <h3 class="text-center mt-2 zd-bottom">Αλλεργίες</h3>
+                                                {% set form_elements = [
+                                                    'allergies_yn', 
+                                                    'allergies_to_med',
+                                                    'allergies_other'
+                                                ] %}
+                                                
+                                                {% for element in form_elements %}
+                                                    {{ render_field(getattr(medical_history_form, element).label, getattr(medical_history_form, element).data) }}
+                                                {% endfor %}
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg bg-dark">
+                                        <div class="d-flex flex-column h-100 text-shadow-1">
+                                            <div class="container p-2">
+
+                                                <h3 class="text-center mt-2 zd-bottom">Σύντομο Γυναικολογικό Ιστορικό</h3>
+                                                {% set form_elements = [
+                                                    'test_pap', 
+                                                    'da',
+                                                    'calt_vag_fluid'
+                                                ] %}
+
+                                                {% if medical_history_form.er_start.data %}
+                                                    <span>{{ medical_history_form.er_start.label }}</span>
+                                                    {{ medical_history_form.er_start.data }}
+                                                    ({{ medical_history_form.er_nominator.data }}/{{ medical_history_form.er_denominator.data }})
+                                                    <br>
+
+                                                {% endif%}
+                                                
+                                                {% for element in form_elements %}
+                                                    {{ render_field(getattr(medical_history_form, element).label, getattr(medical_history_form, element).data) }}
+                                                {% endfor %}
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            
+                            <div class="d-flex flex-wrap justify-content-end gap-2 mt-3">
+                                <button type="button" class="btn btn-outline-secondary px-4" data-edit-button="true" onclick="toggleEditMode('HistoryMedical')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="0 1 16 16">
+                                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                                    </svg>
+                                    Επεξεργασία
+                                </button>
+                            </div>
+                        </div>
+
+
+                        <div class="editable card card-cover text-bg-dark rounded-4 shadow-lg" id="editableContentHistoryMedical" style="display: none;">
+                            <div class="d-flex flex-column p-3 text-shadow-1">  
+                                <div class="wrapper">
+                                    <div class="form-wrapper patient-lite px-2">
+                                        <form method="POST" id="medicalHistoryForm" data-history-id="{{ medical_history_form.id.data if medical_history_form else '' }}">
+
+                                            {{ medical_history_form.hidden_tag() }}
+                                            {{ medical_history_form.id(type="hidden") }}
+                                            <h2 class="text-center mt-2">Γενικά Σχόλια</h2>
+                                            {{ medical_history_form.comments(class="form-control", placeholder="Γενικά Σχόλια", rows = 5) }}
+                                            <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+                                                <button type="button" class="btn login-btn px-4" onclick="saveChangesHistoryMedical()">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-floppy" viewBox="0 1 16 16">
+                                                        <path d="M11 2H9v3h2z"/>
+                                                        <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
+                                                    </svg>
+                                                    Αποθήκευση
+                                                </button>
+                                                <button type="button" class="btn btn-outline-secondary px-4" onclick="cancelChanges()">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-x-square" viewBox="0 1 16 16">
+                                                        <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                                                    </svg>
+                                                    Ακύρωση
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>  
+                        </div>
+
+
+                    </div>
+                </div>
+                <!-- end of new content with slider card -->
+
+            </div>
+        </div>  
     </div>
+
+
     <div class="comments-display">
         {% for key, value in medical_history_dict.items() %}
             <span>{{ key }}:</span> {{ value }} <br>
@@ -21,8 +206,16 @@
 <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
 <script>
+
+    const editorDiv = document.querySelector('#editor');
+    const initialContent = editorDiv.dataset.content;
     var quill = new Quill('#editor', {
+        formats: {
+            'pre': true,  // Allow pre tags
+            'code-block': true  // Allow code blocks
+        },
         theme: 'snow',
+        preserveWhitespace: true,
         modules: {
             toolbar: [
                 ['bold', 'italic', 'underline', 'strike'],
@@ -31,13 +224,87 @@
                 [{ 'list': 'ordered'}, { 'list': 'bullet' }],
                 [{ 'color': [] }, { 'background': [] }],
                 ['clean']
-            ]
+            ],
+            clipboard: {
+                matchVisual: false // Prevent Quill from creating extra paragraphs
+            }
         }
     });
+
+
+    if (initialContent) {
+        quill.clipboard.dangerouslyPasteHTML(`<pre>${initialContent}</pre>`);
+    }
 
     // When form submits, copy HTML content to hidden input
     document.querySelector('form').onsubmit = function() {
         document.querySelector('#hidden-content').value = quill.root.innerHTML;
     };
+    
+    function toggleEditMode(sectionType) {
+        const formContainer = document.getElementById(`formContainer${sectionType}`);
+        const readOnlyContent = document.getElementById(`readOnlyContent${sectionType}`);
+        const editableContent = document.getElementById(`editableContent${sectionType}`);
+
+        if (editableContent.style.display === 'none') {
+            editableContent.style.display = 'block';
+            readOnlyContent.style.display = 'none';
+            formContainer.style.maxHeight = editableContent.scrollHeight + 'px';
+            disableAllEditButtons();
+        } else {
+            editableContent.style.display = 'none';
+            readOnlyContent.style.display = 'block';
+            formContainer.style.maxHeight = readOnlyContent.scrollHeight + 'px';
+            enableAllEditButtons();
+        }
+    }
+
+    async function saveChangesHistoryMedical() {
+        try {
+            // Get form and mandatory fields
+            const form = document.getElementById('medicalHistoryForm');
+            const historyId = form.querySelector('input[name="id"]').value;
+            const csrfToken = form.querySelector('input[name="csrf_token"]').value;
+            
+            // Get form data
+            const formData = new FormData(form);
+
+            // Convert FormData to JSON
+            const formDataJson = {};
+            formData.forEach((value, key) => {
+                formDataJson[key] = value;
+            });
+
+            console.log('formDataJson:', formDataJson);
+
+            // Send PUT request
+            const response = await fetch(`/api/medical-history/${historyId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify(formDataJson)
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            
+            if (result.success) {
+                // refresh the page
+                location.reload();
+                toggleEditMode('HistoryMedical');
+            } else {
+                throw new Error(result.error || 'Failed to save changes');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error saving changes: ' + error.message);
+        }
+    }
+    
 </script>
 {% endblock %}

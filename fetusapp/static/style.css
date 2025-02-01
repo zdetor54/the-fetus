@@ -49,6 +49,11 @@ h2, h5 {
     border: none;
     box-shadow: 0 0 8px 0.1rem var(--vibrant-pink);
 }
+.form-control {
+    resize: vertical;
+    overflow: auto;
+}
+
 
 .btn-outline-light{
     color: var(--vibrant-pink);
@@ -118,6 +123,18 @@ footer a:hover{
     color: white;
 }
 
+.zd-bottom {
+    background-image: linear-gradient(
+        90deg, 
+        rgba(var(--gradient-color), 0) 0%, 
+        rgba(var(--gradient-color), 0.8) 50%, 
+        rgba(var(--gradient-color), 0) 100%
+    );
+    background-size: 100% 1px;
+    background-repeat: no-repeat;
+    background-position: bottom;
+    padding-bottom: 1rem;
+}
 
 .zd {
     background-image: linear-gradient(
@@ -323,6 +340,7 @@ em {
 #pills-update,
 #editableContentCD,
 #editableContentPD,
+#editableContentHistoryMedical,
 .modal-content {
     background: var(--warm-beige);
     color: black;
@@ -334,6 +352,10 @@ em {
 
 }
 
+.editable.card {
+    height: auto !important;
+    min-height: fit-content;
+}
 
 .rounded-4 {
     border-radius: 1rem !important;
@@ -448,9 +470,22 @@ input[type="date"]::-webkit-datetime-edit {
 .formatted-text {
     white-space: pre-wrap;
     font-family: inherit;
-    background: none;
     border: none;
     padding: 1rem;
-    margin: 1rem 0;
     width: 100%;
+    font-size: 1rem;
+}
+
+.ql-editor pre {
+    white-space: pre-wrap;
+    margin: 0;
+    font-family: inherit;
+    font-size: 1rem;
+    color: inherit;
+    background-color: none;
+}
+
+.ql-snow .ql-editor pre.ql-syntax {
+    background-color: white !important;
+    color: black !important;
 }
