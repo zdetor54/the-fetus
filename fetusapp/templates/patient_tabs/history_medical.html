@@ -1,8 +1,8 @@
 {% if medical_history %}
 {% import 'macros.html' as macros %}
 
-    <div class="col-12 text-light">
-        <div class="card card-cover text-bg-dark rounded-4 shadow-lg bg-dark">
+    <div class="col-12">
+        <div class="card card-cover inherit-text-color bg-transparent rounded-4 shadow-lg">
             <div class="d-flex flex-column h-100 text-shadow-1">
 
                 <!-- New content with slider card -->
@@ -16,8 +16,6 @@
                             <h3 class="text-center mt-2 zd-bottom">Ιατρικό Ιστορικό</h3>
                             <div class="row py-2">
                                 <div class="col-12 col-lg-6 px-4">
-                                    <!-- <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg bg-dark"> -->
-                                        <!-- <div class="d-flex flex-column h-100 text-shadow-1"> -->
                                                 {% set form_elements = ['weight', 'height', 'bmi'] %}
                                                 
                                                 {% for element in form_elements %}
@@ -31,12 +29,8 @@
                                                 {% for element in form_elements %}
                                                     {{ macros.render_field(getattr(medical_history_form, element).label, getattr(medical_history_form, element).data) }}
                                                 {% endfor %}
-                                        <!-- </div> -->
-                                    <!-- </div> -->
                                 </div>
                                 <div class="col-12 col-lg-6 px-4">
-                                    <!-- <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg bg-dark"> -->
-                                        <!-- <div class="d-flex flex-column h-100 text-shadow-1"> -->
                                                 {% set form_elements = ['surgeries', 'alcohol', 'transfusions_yn', 'transfusions_reactions'] %}
                                                 
                                                 {% for element in form_elements %}
@@ -56,14 +50,10 @@
                                                 {% for element in form_elements %}
                                                     {{ macros.render_field(getattr(medical_history_form, element).label, getattr(medical_history_form, element).data) }}
                                                 {% endfor %}
-                                        <!-- </div> -->
-                                    <!-- </div> -->
                                 </div>
                             </div>
                             <div class="row py-2">
                                 <div class="col-12 px-4">
-                                    <!-- <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg bg-dark"> -->
-                                        <!-- <div class="d-flex flex-column h-100 text-shadow-1"> -->
                                                 <h3 class="text-center mt-2 zd-bottom">Σύντομο Γυναικολογικό Ιστορικό</h3>
                                                 {% set form_elements = ['test_pap', 'da', 'calt_vag_fluid'] %}
 
@@ -77,8 +67,6 @@
                                                 {% for element in form_elements %}
                                                     {{ macros.render_field(getattr(medical_history_form, element).label, getattr(medical_history_form, element).data) }}
                                                 {% endfor %}
-                                        <!-- </div> -->
-                                    <!-- </div> -->
                                 </div>
                             </div>
 
@@ -95,7 +83,7 @@
                         </div>
 
 
-                        <div class="editable card card-cover text-bg-dark rounded-4 shadow-lg" id="editableContentHistoryMedical" style="display: none;">
+                        <div class="editable card card-cover rounded-4 shadow-lg" id="editableContentHistoryMedical" style="display: none;">
                             <div class="d-flex flex-column p-3 text-shadow-1">  
                                 <div class="wrapper">
                                     <div class="form-wrapper patient-lite px-2">
