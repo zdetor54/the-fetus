@@ -1,16 +1,6 @@
 {% if medical_history %}
+{% import 'macros.html' as macros %}
 
-{% macro render_field(label, value) %}
-    <span>{{ label }}</span> 
-    {% if value is not none %}
-        {{ value }} <br>
-    {% else %}
-        No <br>
-    {% endif %}
-{% endmacro %}
-    <!-- <div class="comments-display">
-        <pre class="formatted-text">{{ medical_history.comments|safe }}</pre>
-    </div> -->
     <div class="col-12 text-light">
         <div class="card card-cover text-bg-dark rounded-4 shadow-lg bg-dark">
             <div class="d-flex flex-column h-100 text-shadow-1">
@@ -24,110 +14,70 @@
 
                             <pre class="formatted-text zd">{{ medical_history_form.comments.data }}</pre>
                             <h3 class="text-center mt-2 zd-bottom">Ιατρικό Ιστορικό</h3>
-                            <div class="row">
-                                <div class="col-12 col-lg-6">
+                            <div class="row py-2">
+                                <div class="col-12 col-lg-6 px-4">
                                     <!-- <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg bg-dark"> -->
-                                        <div class="d-flex flex-column h-100 text-shadow-1">
-                                            <div class="container p-2">
-
-                                                {% set form_elements = [
-                                                    'weight', 
-                                                    'height', 
-                                                    'bmi'
-                                                ] %}
+                                        <!-- <div class="d-flex flex-column h-100 text-shadow-1"> -->
+                                                {% set form_elements = ['weight', 'height', 'bmi'] %}
                                                 
                                                 {% for element in form_elements %}
-                                                    {{ render_field(getattr(medical_history_form, element).label, getattr(medical_history_form, element).data) }}
+                                                    {{ macros.render_field(getattr(medical_history_form, element).label, getattr(medical_history_form, element).data) }}
                                                 {% endfor %}
                                                 
                                                 <h3 class="text-center mt-2 zd-bottom">Παθολογικές Καταστάσεις</h3>
 
-                                                {% set form_elements = [
-                                                    'heart_disease', 
-                                                    'hypertension', 
-                                                    'diabetes', 
-                                                    'nephropathy', 
-                                                    'liver_disease', 
-                                                    'thyroeidopatheia', 
-                                                    'other_diseases', 
-                                                    'medication'
-                                                ] %}
+                                                {% set form_elements = ['heart_disease', 'hypertension', 'diabetes', 'nephropathy', 'liver_disease', 'thyroeidopatheia', 'other_diseases', 'medication'] %}
                                                 
                                                 {% for element in form_elements %}
-                                                    {{ render_field(getattr(medical_history_form, element).label, getattr(medical_history_form, element).data) }}
+                                                    {{ macros.render_field(getattr(medical_history_form, element).label, getattr(medical_history_form, element).data) }}
                                                 {% endfor %}
-                                            </div>
-                                            
-                                        </div>
+                                        <!-- </div> -->
                                     <!-- </div> -->
                                 </div>
-                                <div class="col-12 col-lg-6">
+                                <div class="col-12 col-lg-6 px-4">
                                     <!-- <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg bg-dark"> -->
-                                        <div class="d-flex flex-column h-100 text-shadow-1">
-                                            <div class="container p-2">
-                                                {% set form_elements = [
-                                                    'surgeries', 
-                                                    'alcohol', 
-                                                    'transfusions_yn', 
-                                                    'transfusions_reactions'
-                                                ] %}
+                                        <!-- <div class="d-flex flex-column h-100 text-shadow-1"> -->
+                                                {% set form_elements = ['surgeries', 'alcohol', 'transfusions_yn', 'transfusions_reactions'] %}
                                                 
                                                 {% for element in form_elements %}
-                                                    {{ render_field(getattr(medical_history_form, element).label, getattr(medical_history_form, element).data) }}
+                                                    {{ macros.render_field(getattr(medical_history_form, element).label, getattr(medical_history_form, element).data) }}
                                                 {% endfor %}
 
                                                 <h3 class="text-center mt-2 zd-bottom">Κάπνισμα</h3>
-                                                {% set form_elements = [
-                                                    'smoking_before', 
-                                                    'smoking_during'
-                                                ] %}
+                                                {% set form_elements = ['smoking_before', 'smoking_during'] %}
                                                 
                                                 {% for element in form_elements %}
-                                                    {{ render_field(getattr(medical_history_form, element).label, getattr(medical_history_form, element).data) }}
+                                                    {{ macros.render_field(getattr(medical_history_form, element).label, getattr(medical_history_form, element).data) }}
                                                 {% endfor %}
 
                                                 <h3 class="text-center mt-2 zd-bottom">Αλλεργίες</h3>
-                                                {% set form_elements = [
-                                                    'allergies_yn', 
-                                                    'allergies_to_med',
-                                                    'allergies_other'
-                                                ] %}
+                                                {% set form_elements = ['allergies_yn', 'allergies_to_med', 'allergies_other'] %}
                                                 
                                                 {% for element in form_elements %}
-                                                    {{ render_field(getattr(medical_history_form, element).label, getattr(medical_history_form, element).data) }}
+                                                    {{ macros.render_field(getattr(medical_history_form, element).label, getattr(medical_history_form, element).data) }}
                                                 {% endfor %}
-
-                                            </div>
-                                        </div>
+                                        <!-- </div> -->
                                     <!-- </div> -->
                                 </div>
-
-                                <div class="col-12">
+                            </div>
+                            <div class="row py-2">
+                                <div class="col-12 px-4">
                                     <!-- <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg bg-dark"> -->
-                                        <div class="d-flex flex-column h-100 text-shadow-1">
-                                            <div class="container p-2">
-
+                                        <!-- <div class="d-flex flex-column h-100 text-shadow-1"> -->
                                                 <h3 class="text-center mt-2 zd-bottom">Σύντομο Γυναικολογικό Ιστορικό</h3>
-                                                {% set form_elements = [
-                                                    'test_pap', 
-                                                    'da',
-                                                    'calt_vag_fluid'
-                                                ] %}
+                                                {% set form_elements = ['test_pap', 'da', 'calt_vag_fluid'] %}
 
                                                 {% if medical_history_form.er_start.data %}
                                                     <span>{{ medical_history_form.er_start.label }}</span>
                                                     {{ medical_history_form.er_start.data }}
                                                     ({{ medical_history_form.er_nominator.data }}/{{ medical_history_form.er_denominator.data }})
                                                     <br>
-
                                                 {% endif%}
                                                 
                                                 {% for element in form_elements %}
-                                                    {{ render_field(getattr(medical_history_form, element).label, getattr(medical_history_form, element).data) }}
+                                                    {{ macros.render_field(getattr(medical_history_form, element).label, getattr(medical_history_form, element).data) }}
                                                 {% endfor %}
-
-                                            </div>
-                                        </div>
+                                        <!-- </div> -->
                                     <!-- </div> -->
                                 </div>
                             </div>

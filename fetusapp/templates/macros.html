@@ -1,0 +1,8 @@
+{% macro render_field(label, value) %}
+    <span>{{ label }}</span> 
+    {% if value is not none %}
+        {{ value }} <br>
+    {% else %}
+        No <br>
+    {% endif %}
+{% endmacro %}
