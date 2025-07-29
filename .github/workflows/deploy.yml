@@ -17,10 +17,14 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Deploy using az webapp deploy (non-ZIP)
+    - name: Zip app contents
+      run: |
+        zip -r app.zip .
+
+    - name: Deploy zip package to Azure App Service
       run: |
         az webapp deploy \
           --name FetusApp-Dev \
           --resource-group fetusapp-development \
-          --src-path . \
-          --type static
+          --src-path app.zip \
+          --type zip
