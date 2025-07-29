@@ -7,7 +7,5 @@ openai_test.py
 **/__pycache__/
 *.pyc
 *.pyo
-
-# Sensitive files - use .template files and copy to actual files
 keys.env
 deployment.json
