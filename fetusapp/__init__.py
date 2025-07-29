@@ -16,7 +16,15 @@ app.jinja_env.globals.update(getattr=getattr)
 ### DATABASE SETUP ####
 #######################
 basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'data.sqlite')
+# Check if running on Azure (Azure sets this environment variable)
+if os.environ.get('WEBSITE_HOSTNAME'):
+    # Running on Azure - use persistent storage
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///home/data/data.sqlite'
+else:
+    # Running locally - use your existing path
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'data.sqlite')
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['WTF_CSRF_ENABLED'] = True  # Enable CSRF protection
 app.config['WTF_CSRF_TIME_LIMIT'] = 3600  # Token timeout in seconds
