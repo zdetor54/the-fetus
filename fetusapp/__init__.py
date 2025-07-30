@@ -18,7 +18,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 # Check if running on Azure (Azure sets this environment variable)
 if os.environ.get('WEBSITE_HOSTNAME'):
     # Running on Azure - use persistent storage
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///home/data/data.sqlite'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////home/data/data.sqlite'
 else:
     # Running locally - use your existing path
     basedir = os.path.abspath(os.path.dirname(__file__))
