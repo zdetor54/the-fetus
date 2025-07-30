@@ -34,7 +34,15 @@ jobs:
     - name: Deploy to Azure Web App
       run: |
         az webapp deploy \
-          --resource-group fetusapp-development \
-          --name FetusApp-Dev \
+          --resource-group groupname-development \
+          --name NameApp-Dev \
           --src-path app.zip \
           --type zip
+
+    # - name: Deploy to Azure Web App
+    #   run: |
+    #     az webapp deploy \
+    #       --resource-group fetusapp-development \
+    #       --name FetusApp-Dev \
+    #       --src-path app.zip \
+    #       --type zip
