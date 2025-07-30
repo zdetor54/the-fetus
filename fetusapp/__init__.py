@@ -31,13 +31,6 @@ app.config['WTF_CSRF_TIME_LIMIT'] = 3600  # Token timeout in seconds
 db = SQLAlchemy(app)
 Migrate(app, db)
 
-# If running on Azure and DB doesn't exist, create it and schema
-db_path = app.config['SQLALCHEMY_DATABASE_URI'].replace('sqlite:///', '')
-if os.environ.get('WEBSITE_HOSTNAME') and not os.path.exists(db_path):
-    os.makedirs(os.path.dirname(db_path), exist_ok=True)
-    with app.app_context():
-        db.create_all()
-
 csrf = CSRFProtect()
 csrf.init_app(app)
 
