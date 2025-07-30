@@ -34,7 +34,7 @@ jobs:
     - name: Deploy to Azure Web App
       run: |
         az webapp deploy \
-          --resource-group groupname-development \
+          --resource-group groupname-dev \
           --name NameApp-Dev \
           --src-path app.zip \
           --type zip
