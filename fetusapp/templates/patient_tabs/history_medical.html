@@ -17,36 +17,36 @@
                             <div class="row py-2">
                                 <div class="col-12 col-lg-6 px-4">
                                                 {% set form_elements = ['weight', 'height', 'bmi'] %}
-                                                
+
                                                 {% for element in form_elements %}
                                                     {{ macros.render_field(getattr(medical_history_form, element).label, getattr(medical_history_form, element).data) }}
                                                 {% endfor %}
-                                                
+
                                                 <h3 class="text-center mt-2 zd-bottom">Παθολογικές Καταστάσεις</h3>
 
                                                 {% set form_elements = ['heart_disease', 'hypertension', 'diabetes', 'nephropathy', 'liver_disease', 'thyroeidopatheia', 'other_diseases', 'medication'] %}
-                                                
+
                                                 {% for element in form_elements %}
                                                     {{ macros.render_field(getattr(medical_history_form, element).label, getattr(medical_history_form, element).data) }}
                                                 {% endfor %}
                                 </div>
                                 <div class="col-12 col-lg-6 px-4">
                                                 {% set form_elements = ['surgeries', 'alcohol', 'transfusions_yn', 'transfusions_reactions'] %}
-                                                
+
                                                 {% for element in form_elements %}
                                                     {{ macros.render_field(getattr(medical_history_form, element).label, getattr(medical_history_form, element).data) }}
                                                 {% endfor %}
 
                                                 <h3 class="text-center mt-2 zd-bottom">Κάπνισμα</h3>
                                                 {% set form_elements = ['smoking_before', 'smoking_during'] %}
-                                                
+
                                                 {% for element in form_elements %}
                                                     {{ macros.render_field(getattr(medical_history_form, element).label, getattr(medical_history_form, element).data) }}
                                                 {% endfor %}
 
                                                 <h3 class="text-center mt-2 zd-bottom">Αλλεργίες</h3>
                                                 {% set form_elements = ['allergies_yn', 'allergies_to_med', 'allergies_other'] %}
-                                                
+
                                                 {% for element in form_elements %}
                                                     {{ macros.render_field(getattr(medical_history_form, element).label, getattr(medical_history_form, element).data) }}
                                                 {% endfor %}
@@ -63,14 +63,14 @@
                                                     ({{ medical_history_form.er_nominator.data }}/{{ medical_history_form.er_denominator.data }})
                                                     <br>
                                                 {% endif%}
-                                                
+
                                                 {% for element in form_elements %}
                                                     {{ macros.render_field(getattr(medical_history_form, element).label, getattr(medical_history_form, element).data) }}
                                                 {% endfor %}
                                 </div>
                             </div>
 
-                            
+
                             <div class="d-flex flex-wrap justify-content-end gap-2 mt-3">
                                 <button type="button" class="btn btn-outline-secondary px-4" data-edit-button="true" onclick="toggleEditMode('HistoryMedical')">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="0 1 16 16">
@@ -84,7 +84,7 @@
 
 
                         <div class="editable card card-cover rounded-4 shadow-lg" id="editableContentHistoryMedical" style="display: none;">
-                            <div class="d-flex flex-column p-3 text-shadow-1">  
+                            <div class="d-flex flex-column p-3 text-shadow-1">
                                 <div class="wrapper">
                                     <div class="form-wrapper patient-lite px-2">
                                         <form method="POST" id="medicalHistoryForm" data-history-id="{{ medical_history_form.id.data if medical_history_form else '' }}">
@@ -112,7 +112,7 @@
                                         </form>
                                     </div>
                                 </div>
-                            </div>  
+                            </div>
                         </div>
 
 
@@ -121,7 +121,7 @@
                 <!-- end of new content with slider card -->
 
             </div>
-        </div>  
+        </div>
     </div>
 {% else %}
     <p>create new</p>
@@ -165,7 +165,7 @@
     document.querySelector('form').onsubmit = function() {
         document.querySelector('#hidden-content').value = quill.root.innerHTML;
     };
-    
+
     function toggleEditMode(sectionType) {
         const formContainer = document.getElementById(`formContainer${sectionType}`);
         const readOnlyContent = document.getElementById(`readOnlyContent${sectionType}`);
@@ -190,7 +190,7 @@
             const form = document.getElementById('medicalHistoryForm');
             const historyId = form.querySelector('input[name="id"]').value;
             const csrfToken = form.querySelector('input[name="csrf_token"]').value;
-            
+
             // Get form data
             const formData = new FormData(form);
 
@@ -217,7 +217,7 @@
             }
 
             const result = await response.json();
-            
+
             if (result.success) {
                 // refresh the page
                 location.reload();
@@ -230,6 +230,6 @@
             alert('Error saving changes: ' + error.message);
         }
     }
-    
+
 </script>
 {% endblock %}
