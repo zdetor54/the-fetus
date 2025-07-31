@@ -83,9 +83,9 @@ h2, h5 {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28239, 83, 158, 0.99' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }
 
-.navbar-dark .navbar-nav .nav-link.active, 
+.navbar-dark .navbar-nav .nav-link.active,
 .navbar-dark .navbar-nav .show>.nav-link,
-.navbar-light .navbar-nav .nav-link.active, 
+.navbar-light .navbar-nav .nav-link.active,
 .navbar-light .navbar-nav .show>.nav-link
  {
     color: var(--vibrant-pink);
@@ -137,9 +137,9 @@ footer a:hover{
 
 .zd-bottom {
     background-image: linear-gradient(
-        90deg, 
-        rgba(var(--gradient-color), 0) 0%, 
-        rgba(var(--gradient-color), 0.8) 50%, 
+        90deg,
+        rgba(var(--gradient-color), 0) 0%,
+        rgba(var(--gradient-color), 0.8) 50%,
         rgba(var(--gradient-color), 0) 100%
     );
     background-size: 100% 1px;
@@ -150,9 +150,9 @@ footer a:hover{
 
 .zd {
     background-image: linear-gradient(
-        90deg, 
-        rgba(var(--gradient-color), 0) 0%, 
-        rgba(var(--gradient-color), 0.8) 50%, 
+        90deg,
+        rgba(var(--gradient-color), 0) 0%,
+        rgba(var(--gradient-color), 0.8) 50%,
         rgba(var(--gradient-color), 0) 100%
     );
     background-size: 100% 1px;
@@ -255,7 +255,7 @@ footer a:hover{
 /* Appointments table */
 
 .index-app {
-    font-weight: 100; 
+    font-weight: 100;
     color: var(--vibrant-pink);
 }
 
@@ -346,7 +346,7 @@ em {
     text-align: center;
 }
 
-#weather-bubble, 
+#weather-bubble,
 #pills-register,
 #pills-delete,
 #pills-update,
@@ -382,9 +382,9 @@ em {
 .modal-footer {
     border-top: none;
     background-image: linear-gradient(
-        90deg, 
-        rgba(var(--gradient-color), 0) 0%, 
-        rgba(var(--gradient-color), 0.8) 50%, 
+        90deg,
+        rgba(var(--gradient-color), 0) 0%,
+        rgba(var(--gradient-color), 0.8) 50%,
         rgba(var(--gradient-color), 0) 100%
     );
     background-size: 100% 1px;

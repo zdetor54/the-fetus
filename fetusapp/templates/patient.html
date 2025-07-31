@@ -1,4 +1,4 @@
-{% extends "base.html" %} 
+{% extends "base.html" %}
 
 {% block page_title %} Καρτέλα Ασθενή {% endblock %}
 {% block content %}
@@ -46,12 +46,12 @@
     <div class="container zd">
 
         <!-- Row with the general history -->
-        <div class=" container px-4" id="custom-cards"> 
+        <div class=" container px-4" id="custom-cards">
 
             <!-- Row with the general history -->
             <div class="row row-cols-1 row-cols-lg-2 align-items-stretch g-4 py-3">
-                
-                
+
+
                 <!-- Section with personal details for patient and partner -->
                 <div class="col-12 col-lg-6">
                     <div class="card card-cover h-100 overflow-hidden rounded-4 shadow-lg bg-transparent">
@@ -71,7 +71,7 @@
                                                 <span>Πατρώνυμο:</span> {{ patient.father_name }} <br>
                                             {% endif %}
                                             {% if patient.date_of_birth %}
-                                                <span>Ημερομηνία Γεννήσεως / Ηλικία:</span> {{ patient.date_of_birth }} / 
+                                                <span>Ημερομηνία Γεννήσεως / Ηλικία:</span> {{ patient.date_of_birth }} /
                                                 {{ ((now - patient.date_of_birth).days / 365.25) | int if patient.date_of_birth else '' }} ετών<br>
                                             {% endif %}
                                             {% if patient.marital_status %}
@@ -107,7 +107,7 @@
                                                 <span>Επάγγελμα:</span> {{ patient.spouse_occupation }}
                                             {% endif %}
                                         </p>
-                                        
+
                                         <div class="d-flex flex-wrap justify-content-end gap-2 mt-3">
                                             <button type="button" class="btn btn-outline-secondary px-4" data-edit-button="true" onclick="toggleEditModePersonalDetails()">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="0 1 16 16">
@@ -121,7 +121,7 @@
 
 
                                     <div class="editable card card-cover overflow-hidden text-bg-dark rounded-4 shadow-lg" id="editableContentPD" style="display: none;">
-                                        <div class="d-flex flex-column h-100 p-3 text-shadow-1">  
+                                        <div class="d-flex flex-column h-100 p-3 text-shadow-1">
                                             <div class="wrapper">
                                                 <div class="form-wrapper patient-lite px-2">
 
@@ -137,7 +137,7 @@
                                                                 {% endfor %}
                                                             </select>
                                                         {% else %}
-                                                            <input type="{{ field_config.type }}" 
+                                                            <input type="{{ field_config.type }}"
                                                                 id="{{ field_name }}Input"
                                                                 value="{{ value if value else '' }}">
                                                         {% endif %}
@@ -150,8 +150,8 @@
                                                         <!-- check box for active/inactive -->
                                                         {% if not patient.is_active %}
                                                         <div class="d-flex align-items-center justify-content-center gap-2 mb-3">
-                                                            <input type="checkbox" 
-                                                                id="isActiveInput" 
+                                                            <input type="checkbox"
+                                                                id="isActiveInput"
                                                                 class="form-check-input mt-0"
                                                                 {% if patient.is_active %}checked{% endif %}
                                                                 value='on'
@@ -165,8 +165,8 @@
                                                         {% endfor %}
                                                         <!-- add date_of_birth -->
                                                         <div class="input-group">
-                                                            <input type="date" 
-                                                                    id="dateOfBirthInput" 
+                                                            <input type="date"
+                                                                    id="dateOfBirthInput"
                                                                     value="{{ patient.date_of_birth if patient.date_of_birth else '' }}"
                                                                     class="{{ 'text-muted' if not patient.date_of_birth }}"
                                                                     placeholder="dd/mm/yyyy">
@@ -188,20 +188,20 @@
                                                             <label for="insuranceCommentInput" class="form-label">Σχόλια:</label>
                                                         </div>
                                                         <div class="input-group">
-                                                            <input type="text" 
-                                                                   id="amkaInput" 
+                                                            <input type="text"
+                                                                   id="amkaInput"
                                                                    value="{{ patient.amka if patient.amka else '' }}"
                                                                    placeholder="Αναζήτηση ΑΜΚΑ...">
                                                             <label for="amkaInput" class="form-label d-flex align-items-center">
                                                                 AMKA:
-                                                                <a href="https://www.amka.gr/AMKAGR/Default.aspx" 
-                                                                   target="_blank" 
+                                                                <a href="https://www.amka.gr/AMKAGR/Default.aspx"
+                                                                   target="_blank"
                                                                    class="ms-2">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" 
-                                                                         width="16" 
-                                                                         height="20" 
-                                                                         fill="currentColor" 
-                                                                         class="bi bi-search" 
+                                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                                         width="16"
+                                                                         height="20"
+                                                                         fill="currentColor"
+                                                                         class="bi bi-search"
                                                                          viewBox="0 1 16 16">
                                                                         <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
                                                                     </svg>
@@ -214,8 +214,8 @@
                                                             {{ input_group(field_name, field_config, getattr(patient, field_name)) }}
                                                         {% endfor %}
                                                         <div class="input-group">
-                                                            <input type="date" 
-                                                                    id="spouse_date_of_birthInput" 
+                                                            <input type="date"
+                                                                    id="spouse_date_of_birthInput"
                                                                     value="{{ patient.spouse_date_of_birth if patient.spouse_date_of_birth else '' }}"
                                                                     class="{{ 'text-muted' if not patient.spouse_date_of_birth }}"
                                                                     placeholder="dd/mm/yyyy">
@@ -241,7 +241,7 @@
                                                     </form>
                                                 </div>
                                             </div>
-                                        </div>  
+                                        </div>
                                     </div>
 
 
@@ -250,7 +250,7 @@
                             <!-- end of new content with slider card -->
 
                         </div>
-                    </div>  
+                    </div>
                 </div>
                 <!-- end of section with personal details for patient and partner -->
 
@@ -290,7 +290,7 @@
 
 
                                     <div class="editable card card-cover overflow-hidden text-bg-dark rounded-4 shadow-lg" id="editableContentCD" style="display: none;">
-                                        <div class="d-flex flex-column h-100 p-3 text-shadow-1">  
+                                        <div class="d-flex flex-column h-100 p-3 text-shadow-1">
                                             <div class="wrapper">
                                                 <div class="form-wrapper patient-lite px-2">
                                                     <form>
@@ -318,7 +318,7 @@
                                                     </form>
                                                 </div>
                                             </div>
-                                        </div>  
+                                        </div>
                                     </div>
 
 
@@ -327,11 +327,11 @@
                             <!-- end of new content with slider card -->
 
                         </div>
-                    </div>  
+                    </div>
                 </div>
                 <!-- end of section with contact details -->
 
-                
+
 
             </div>
             <!-- end of row with the general history -->
@@ -390,7 +390,7 @@
         </button>
     </div>
 
-    
+
 </main>
 {% else %}
     <div class="container mt-5 pt-5">
@@ -490,7 +490,7 @@
 
             const patientId = '{{ patient.id }}';
             const formData = {};
-            
+
             // Fix selector syntax - use multiple querySelectorAll calls
             const elements = [...form.querySelectorAll('input'), ...form.querySelectorAll('select')];
             elements.forEach(element => {
@@ -511,7 +511,7 @@
 
             const response = await fetch(`/api/patients/${patientId}`, {
                 method: 'PUT',
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
@@ -533,7 +533,7 @@
             alert(`Failed to update details: ${error.message}`);
         }
     }
-    
+
     async function saveChangesPersonalDetails() {
         await savePatientDetails('editableContentPD');
     }
@@ -547,7 +547,7 @@
         location.reload();
     }
 
-    
+
 
     document.addEventListener('DOMContentLoaded', () => {
     // Setup function for form containers

@@ -4,7 +4,7 @@
 
 This project uses template files for sensitive configuration. To set up your environment:
 
-1. **Environment Variables**: 
+1. **Environment Variables**:
    - Copy `keys.env.template` to `keys.env`
    - Fill in your actual API keys and secrets
    - `keys.env` is ignored by Git and will not be committed

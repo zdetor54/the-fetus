@@ -24,11 +24,11 @@
             {{form.hidden_tag()}}
               <div class="form-group">
                 <div class="input-group">
-                  {{ form.username(class="", id="username", aria_describedby="usernameHelp", placeholder=" ") }} 
+                  {{ form.username(class="", id="username", aria_describedby="usernameHelp", placeholder=" ") }}
                   <label for="username">Username</label>
                 </div>
-              
-              
+
+
               {% if form.username.errors %}
               <div class="errors">
                 {% for error in form.username.errors %}
@@ -44,7 +44,7 @@
                   {{ form.password(id="password",aria_describedby="passwordHelp", type="password", placeholder=" ") }}
                   <label for="password">Password</label>
                 </div>
-                
+
                 {% if form.password.errors %}
                 <div class="errors">
                   {% for error in form.password.errors %}
@@ -69,14 +69,14 @@
               </div>
               <div class="col-12">
                 <div class="input-group">
-                  {{ form.last_name(id="last_name", type="text", placeholder=" ") }} 
+                  {{ form.last_name(id="last_name", type="text", placeholder=" ") }}
                   <label for="last_name">Επώνυμο</label>
                 </div>
               </div>
             </div>
             <div class="row mb-3 ">
               <div class="form-check col mx-3">
-                {{ form.is_admin(class="form-check-input", id="is_admin",type="checkbox") }} 
+                {{ form.is_admin(class="form-check-input", id="is_admin",type="checkbox") }}
                 {{ form.is_admin.label(class="form-label") }}
               </div>
               {% with messages = get_flashed_messages() %}
@@ -196,9 +196,9 @@
               <div class="input-group">
                   {{ deleteform.username( list="datalistOptions", id="userlist", autocomplete="off",  onclick="this.value='';", placeholder=" ") }}
                   <label for="username">Username</label>
-                
-                
-                
+
+
+
                 <datalist id="datalistOptions">
                   <option value="dummy"></option>
                   {%for user in users%}
@@ -251,7 +251,7 @@
 
 
 </main>
-{% endblock %} 
+{% endblock %}
 {% block javascript %}
 
 <script>

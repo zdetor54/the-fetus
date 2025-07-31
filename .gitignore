@@ -9,3 +9,23 @@ openai_test.py
 *.pyo
 keys.env
 deployment.json
+
+# Development tools
+.mypy_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.venv/
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db

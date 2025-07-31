@@ -22,7 +22,7 @@
 {% endblock %}
 <body class="d-flex flex-column min-vh-100 pt-4 bg-dark" >
   <header>
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark" > 
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark" >
       <div class="container-fluid">
         <a class="navbar-brand" href="{{url_for('core.index')}}">
           <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" class="d-block my-1" viewBox="0 0 60 60" role="img" fill="currentColor">
@@ -36,7 +36,7 @@
             C45.365,16.91,50.745,25.398,46.23,34.977z"/>
           <circle cx="41.12" cy="31.995" r="3.622"/>
           <path d="M41.12,35.617c-2.001,0-3.622-1.621-3.622-3.621c0-2.002,1.621-3.623,3.622-3.623s3.623,1.621,3.623,3.623
-            C44.743,33.996,43.121,35.617,41.12,35.617z"/>  
+            C44.743,33.996,43.121,35.617,41.12,35.617z"/>
           </svg>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,7 +44,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
           <ul class="navbar-nav me-auto mb-2 mb-md-0">
-            
+
             {% if current_user.is_authenticated %}
             <li class="nav-item">
               <a class="nav-link {% if active_page == 'index' %}active{% endif %}" aria-current="page" href="{{url_for('core.index')}}">Αρχική</a>
@@ -66,19 +66,19 @@
               {% endif %}
             {% endif %}
           </ul>
-          
-          
+
+
           {% if current_user.is_authenticated %}
           <form action="" method="post" id="findPatient" onsubmit="event.preventDefault(); performNavSearch();">
             <div class="input-group">
                 <input type="text" class="form-control" name="nav_search_query" placeholder="Ονοματεπώνυμο/Τηλ" aria-label="Search for a patient" aria-describedby="button-search" style="border-start-start-radius: 5rem ; border-end-start-radius: 5rem ;">
                 <button class="btn btn-outline-secondary" type="submit" id="button-search" onclick="performNavSearch()">
-                  Αναζήτηση 
-                  <svg xmlns="http://www.w3.org/2000/svg" 
-                        width="16" 
-                        height="20" 
-                        fill="currentColor" 
-                        class="bi bi-search" 
+                  Αναζήτηση
+                  <svg xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="20"
+                        fill="currentColor"
+                        class="bi bi-search"
                         viewBox="0 1 16 16">
                       <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
                   </svg>
@@ -108,8 +108,8 @@
 
 
   {% block content %}
-  
-  
+
+
   {% endblock %}
 
 
@@ -119,7 +119,7 @@
       {% if current_user.is_authenticated %}
       <!-- User display, visible only on large screens -->
       <small class="mx-3">
-        Είστε συνδεδεμένοι ως χρήστης <em>{{ current_user.username }}</em> (powered by pdgr54). 
+        Είστε συνδεδεμένοι ως χρήστης <em>{{ current_user.username }}</em> (powered by pdgr54).
         <a href="{{url_for('users.logout')}}">
           Αποσύνδεση
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-door-open" viewBox="0 0 16 16">
@@ -129,7 +129,7 @@
         </a>
         <!-- <button id="mode-toggle" class="btn btn-outline-light">wise</button> -->
       </small>
-      
+
       {% else %}
       <small class="mx-3">
         Είστε αποσυνδεμένοι! (powered by pdgr54)
@@ -146,7 +146,7 @@
       try {
           const response = await fetch(`/api/patients/search?query=${encodeURIComponent(query)}`);
           const data = await response.json();
-          
+
           if (data.success) {
               if (data.count === 1) {
                   window.location.href = `/patient?id=${data.data[0].id}`;
@@ -158,7 +158,7 @@
           console.error('Search failed:', error);
       }
     }
-    
+
     function performNavSearch() {
       const query = document.querySelector('input[name="nav_search_query"]').value;
       if (query) {
