@@ -65,9 +65,9 @@ from fetusapp.users.views import users  # noqa: E402
 
 from . import models  # noqa: E402, F401
 
-app.register_blueprint(core)
+app.register_blueprint(core)  # type: ignore[has-type]
 app.register_blueprint(error_pages)
 app.register_blueprint(users)
-app.register_blueprint(patients)
+app.register_blueprint(patients)  # type: ignore[has-type]
 app.register_blueprint(medical_history)
 app.register_blueprint(chatai)

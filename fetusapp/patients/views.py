@@ -6,7 +6,6 @@ from typing import Any, cast
 
 import openai
 import pandas as pd
-from dotenv import load_dotenv
 from flask import (
     Blueprint,
     Response,
@@ -45,12 +44,11 @@ app.jinja_env.filters["zfill"] = zfill  # type: ignore
 
 
 def extract_patient_details(text: str) -> dict[str, str]:
-    dotenv_path = os.path.join(
-        os.path.abspath(os.path.dirname(__file__)), "..", "..", "keys.env"
-    )
-    load_dotenv(dotenv_path)
-
     openai.api_key = os.getenv("OPENAI_API_KEY")
+
+    if not openai.api_key:
+        # If no key configured, skip API and fall back to regex behavior
+        return extract_patient_details_regex(text)
 
     # Define the prompt
     prompt = f"Extract the following types of PII from the following text: {text}"

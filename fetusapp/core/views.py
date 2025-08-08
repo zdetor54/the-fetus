@@ -4,7 +4,6 @@ from typing import Any, cast
 
 import requests
 from caldav import Calendar, DAVClient
-from dotenv import load_dotenv
 from flask import (
     Blueprint,
     Response,
@@ -38,15 +37,11 @@ def get_quote() -> list[dict[str, Any]]:
         if response.status_code == 200:
             return [response.json()[0]]
         return default_quote
-    except (requests.RequestException, KeyError, IndexError):
+    except (requests.RequestException, KeyError, IndexError, ValueError):
         return default_quote
 
 
 def get_weather() -> dict[str, Any]:
-    dotenv_path = os.path.join(
-        os.path.abspath(os.path.dirname(__file__)), "..", "..", "keys.env"
-    )
-    load_dotenv(dotenv_path)
     meteo_api_key = os.getenv("METEO_API_KEY")
 
     default_weather = {
@@ -56,6 +51,10 @@ def get_weather() -> dict[str, Any]:
         },
         "daily": {"data": [{"summary": "Could not fetch weather data."}]},
     }
+
+    # If no API key configured, return default immediately
+    if not meteo_api_key:
+        return default_weather
 
     parameters = {
         "place_id": "athens",
@@ -67,7 +66,8 @@ def get_weather() -> dict[str, Any]:
 
     try:
         weather_response = requests.get(
-            f'https://www.meteosource.com/api/v1/free/point?place_id={parameters["place_id"]}&sections=current%2C%20daily&language=en&units=metric&key={parameters["key"]}'
+            f'https://www.meteosource.com/api/v1/free/point?place_id={parameters["place_id"]}&sections=current%2C%20daily&language=en&units=metric&key={parameters["key"]}',
+            timeout=5,
         )
         if weather_response.status_code == 200:
             weather = cast(dict[str, Any], weather_response.json())
@@ -86,11 +86,11 @@ def get_calendar_events(
     url = "https://caldav.icloud.com"
     username = "zdetor54@gmail.com"
 
-    dotenv_path = os.path.join(
-        os.path.abspath(os.path.dirname(__file__)), "..", "..", "keys.env"
-    )
-    load_dotenv(dotenv_path)
     password = os.getenv("APPLE_CAL_KEY")
+
+    # If no password/key configured, skip fetching events
+    if not password:
+        return []
 
     # Connect to the iCloud CalDAV server
     client = DAVClient(url, username=username, password=password)
