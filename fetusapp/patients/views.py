@@ -6,7 +6,6 @@ from typing import Any, cast
 
 import openai
 import pandas as pd
-from dotenv import load_dotenv
 from flask import (
     Blueprint,
     Response,
@@ -19,7 +18,7 @@ from flask import (
 )
 from flask_login import current_user, login_required
 
-from fetusapp import app, db
+from fetusapp import app, csrf, db  # type: ignore[has-type]
 from fetusapp.models import HistoryMedical, Patient
 
 from .forms import HistoryMedicalForm
@@ -45,12 +44,11 @@ app.jinja_env.filters["zfill"] = zfill  # type: ignore
 
 
 def extract_patient_details(text: str) -> dict[str, str]:
-    dotenv_path = os.path.join(
-        os.path.abspath(os.path.dirname(__file__)), "..", "..", "keys.env"
-    )
-    load_dotenv(dotenv_path)
-
     openai.api_key = os.getenv("OPENAI_API_KEY")
+
+    if not openai.api_key:
+        # If no key configured, skip API and fall back to regex behavior
+        return extract_patient_details_regex(text)
 
     # Define the prompt
     prompt = f"Extract the following types of PII from the following text: {text}"
@@ -330,6 +328,7 @@ def patient() -> Response:
 
 @patients.route("/api/patients", methods=["POST"])
 @login_required
+@csrf.exempt
 def create_patient_api() -> Response:
     try:
         data = request.get_json()
@@ -377,6 +376,7 @@ def create_patient_api() -> Response:
 
 @patients.route("/api/patients/<int:id>", methods=["PUT"])
 @login_required
+@csrf.exempt
 def update_patient_api(id: int) -> Response:
     try:
         data = request.get_json()
@@ -430,6 +430,7 @@ def update_patient_api(id: int) -> Response:
 
 @patients.route("/api/patients/<int:id>", methods=["DELETE"])
 @login_required
+@csrf.exempt
 def delete_patient_api(id: int) -> Response:
     try:
         patient = Patient.query.get_or_404(id)

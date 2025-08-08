@@ -2,7 +2,6 @@ import os
 
 from dotenv import load_dotenv
 from flask import Flask
-from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
@@ -16,7 +15,6 @@ load_dotenv(os.path.join(project_root, "keys.env"))
 
 # Secrets & core config
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "dev-insecure-change-me")
-bcrypt = Bcrypt(app)
 app.jinja_env.globals.update(getattr=getattr)
 
 #####################
@@ -47,7 +45,7 @@ app.config["WTF_CSRF_TIME_LIMIT"] = 3600  # Token timeout in seconds
 db = SQLAlchemy(app)
 Migrate(app, db)
 
-csrf = CSRFProtect()
+csrf: CSRFProtect = CSRFProtect()
 csrf.init_app(app)
 
 #####################
@@ -67,9 +65,9 @@ from fetusapp.users.views import users  # noqa: E402
 
 from . import models  # noqa: E402, F401
 
-app.register_blueprint(core)
+app.register_blueprint(core)  # type: ignore[has-type]
 app.register_blueprint(error_pages)
 app.register_blueprint(users)
-app.register_blueprint(patients)
-app.register_blueprint(medical_history)
+app.register_blueprint(patients)  # type: ignore[has-type]
+app.register_blueprint(medical_history)  # type: ignore[has-type]
 app.register_blueprint(chatai)
