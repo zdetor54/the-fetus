@@ -2,7 +2,6 @@ import os
 
 from dotenv import load_dotenv
 from flask import Flask
-from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
@@ -16,7 +15,6 @@ load_dotenv(os.path.join(project_root, "keys.env"))
 
 # Secrets & core config
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "dev-insecure-change-me")
-bcrypt = Bcrypt(app)
 app.jinja_env.globals.update(getattr=getattr)
 
 #####################
