@@ -1,5 +1,6 @@
 import os
 
+from dotenv import load_dotenv
 from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
@@ -8,7 +9,13 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = "mysecretkey"
+
+# Load environment from keys.env at project root (one level up from this file)
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+load_dotenv(os.path.join(project_root, "keys.env"))
+
+# Secrets & core config
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "dev-insecure-change-me")
 bcrypt = Bcrypt(app)
 app.jinja_env.globals.update(getattr=getattr)
 
@@ -16,16 +23,22 @@ app.jinja_env.globals.update(getattr=getattr)
 # DATABASE SETUP ####
 #####################
 basedir = os.path.abspath(os.path.dirname(__file__))
-# Check if running on Azure (Azure sets this environment variable)
-if os.environ.get("WEBSITE_HOSTNAME"):
-    # Running on Azure - use persistent storage
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:////home/data/data.sqlite"
+
+# If DATABASE_URL is provided (e.g., in keys.env or environment), prefer that.
+db_uri = os.getenv("DATABASE_URL")
+if db_uri:
+    app.config["SQLALCHEMY_DATABASE_URI"] = db_uri
 else:
-    # Running locally - use your existing path
-    basedir = os.path.abspath(os.path.dirname(__file__))
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(
-        basedir, "data.sqlite"
-    )
+    # Check if running on Azure (Azure sets this environment variable)
+    if os.environ.get("WEBSITE_HOSTNAME"):
+        # Running on Azure - use persistent storage
+        app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:////home/data/data.sqlite"
+    else:
+        # Running locally - use your existing path
+        basedir = os.path.abspath(os.path.dirname(__file__))
+        app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(
+            basedir, "data.sqlite"
+        )
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["WTF_CSRF_ENABLED"] = True  # Enable CSRF protection
@@ -43,7 +56,7 @@ csrf.init_app(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = "users.login"
+login_manager.login_view = "core.index"
 
 from fetusapp.chatai.views import chatai  # noqa: E402
 from fetusapp.core.views import core  # noqa: E402

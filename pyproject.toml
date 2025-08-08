@@ -1,3 +1,39 @@
+[tool.poetry]
+name = "the-fetus"
+version = "0.1.0"
+description = "Medical practice management application"
+authors = ["Your Name <your.email@example.com>"]
+readme = "README.md"
+packages = [{include = "fetusapp"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+flask = "*"
+flask-login = "*"
+flask-sqlalchemy = "*"
+flask-migrate = "*"
+flask-wtf = "*"
+wtforms = "*"
+python-dotenv = "*"
+openai = "*"
+pandas = "*"
+unicodedata2 = "*"
+# Add other dependencies from your requirements.txt here
+
+[tool.poetry.group.dev.dependencies]
+black = "*"
+isort = "*"
+mypy = "*"
+flake8 = "*"
+pytest = "*"
+yfinance = "*"
+matplotlib = "^3.10.5"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+# ...existing code...
 [tool.black]
 line-length = 88
 target-version = ['py310']
