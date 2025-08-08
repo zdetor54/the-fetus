@@ -45,7 +45,7 @@ app.config["WTF_CSRF_TIME_LIMIT"] = 3600  # Token timeout in seconds
 db = SQLAlchemy(app)
 Migrate(app, db)
 
-csrf = CSRFProtect()
+csrf: CSRFProtect = CSRFProtect()
 csrf.init_app(app)
 
 #####################
@@ -69,5 +69,5 @@ app.register_blueprint(core)  # type: ignore[has-type]
 app.register_blueprint(error_pages)
 app.register_blueprint(users)
 app.register_blueprint(patients)  # type: ignore[has-type]
-app.register_blueprint(medical_history)
+app.register_blueprint(medical_history)  # type: ignore[has-type]
 app.register_blueprint(chatai)

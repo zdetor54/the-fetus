@@ -3,7 +3,7 @@ from datetime import datetime
 from flask import Blueprint, jsonify, request
 from flask_login import current_user, login_required
 
-from fetusapp import db
+from fetusapp import csrf, db  # type: ignore[has-type]
 from fetusapp.models import HistoryMedical
 
 from .forms import HistoryMedicalForm
@@ -13,6 +13,7 @@ medical_history = Blueprint("medical_history", __name__)
 
 @medical_history.route("/api/medical-history/<int:id>", methods=["PUT"])
 @login_required
+@csrf.exempt
 def update_medical_history(id: int) -> tuple[dict, int]:
     try:
         # Get existing record

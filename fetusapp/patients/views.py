@@ -18,7 +18,7 @@ from flask import (
 )
 from flask_login import current_user, login_required
 
-from fetusapp import app, db
+from fetusapp import app, csrf, db  # type: ignore[has-type]
 from fetusapp.models import HistoryMedical, Patient
 
 from .forms import HistoryMedicalForm
@@ -328,6 +328,7 @@ def patient() -> Response:
 
 @patients.route("/api/patients", methods=["POST"])
 @login_required
+@csrf.exempt
 def create_patient_api() -> Response:
     try:
         data = request.get_json()
@@ -375,6 +376,7 @@ def create_patient_api() -> Response:
 
 @patients.route("/api/patients/<int:id>", methods=["PUT"])
 @login_required
+@csrf.exempt
 def update_patient_api(id: int) -> Response:
     try:
         data = request.get_json()
@@ -428,6 +430,7 @@ def update_patient_api(id: int) -> Response:
 
 @patients.route("/api/patients/<int:id>", methods=["DELETE"])
 @login_required
+@csrf.exempt
 def delete_patient_api(id: int) -> Response:
     try:
         patient = Patient.query.get_or_404(id)
