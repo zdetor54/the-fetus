@@ -36,7 +36,7 @@ class HistoryMedicalForm(FlaskForm):
         "Βάρος(kg):", validators=[Optional(), NumberRange(min=30, max=200)]
     )
     height = FloatField(
-        "Ύψος(m):", validators=[Optional(), NumberRange(min=100, max=220)]
+        "Ύψος(m):", validators=[Optional(), NumberRange(min=1, max=2.2)]
     )
     bmi = FloatField("BMI:", validators=[Optional()])
 
