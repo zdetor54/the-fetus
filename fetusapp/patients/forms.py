@@ -3,7 +3,6 @@ from wtforms import (
     BooleanField,
     FloatField,
     IntegerField,
-    RadioField,
     StringField,
     SubmitField,
     TextAreaField,
@@ -48,11 +47,7 @@ class HistoryMedicalForm(FlaskForm):
 
     # Medical History
     surgeries = TextAreaField("Χειρουργεία:", validators=[Optional()])
-    transfusions_yn = RadioField(
-        "Μεταγγίσεις:",
-        choices=[(True, "Yes"), (False, "No")],
-        coerce=lambda x: x == "True",
-    )
+    transfusions_yn = BooleanField("Μεταγγίσεις:", validators=[Optional()])
     transfusions_reactions = TextAreaField(
         "Αντιδράσεις σε μεταγγίσεις:", validators=[Optional()]
     )

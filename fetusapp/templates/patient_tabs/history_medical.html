@@ -34,7 +34,11 @@
                                                 {% set form_elements = ['surgeries', 'alcohol', 'transfusions_yn', 'transfusions_reactions'] %}
 
                                                 {% for element in form_elements %}
-                                                    {{ macros.render_field(getattr(medical_history_form, element).label, getattr(medical_history_form, element).data) }}
+                                                    {% if element.endswith('_yn')%}
+                                                        {{ macros.render_field(getattr(medical_history_form, element).label, "Ναι" if getattr(medical_history_form, element).data else "Όχι") }}
+                                                    {% else %}
+                                                        {{ macros.render_field(getattr(medical_history_form, element).label, getattr(medical_history_form, element).data) }}
+                                                    {% endif %}
                                                 {% endfor %}
 
                                                 <h3 class="text-center mt-2 zd-bottom">Κάπνισμα</h3>
@@ -48,7 +52,11 @@
                                                 {% set form_elements = ['allergies_yn', 'allergies_to_med', 'allergies_other'] %}
 
                                                 {% for element in form_elements %}
-                                                    {{ macros.render_field(getattr(medical_history_form, element).label, getattr(medical_history_form, element).data) }}
+                                                    {% if element.endswith('_yn')%}
+                                                        {{ macros.render_field(getattr(medical_history_form, element).label, "Ναι" if getattr(medical_history_form, element).data else "Όχι") }}
+                                                    {% else %}
+                                                        {{ macros.render_field(getattr(medical_history_form, element).label, getattr(medical_history_form, element).data) }}
+                                                    {% endif %}
                                                 {% endfor %}
                                 </div>
                             </div>

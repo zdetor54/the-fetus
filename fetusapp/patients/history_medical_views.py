@@ -21,29 +21,6 @@ def update_medical_history(id: int) -> tuple[dict, int]:
 
         # Read and normalize JSON payload so WTForms validators accept radios/booleans
         payload = request.get_json(silent=True) or {}
-        # transfusions_yn RadioField expects string "True" or "False"
-        if "transfusions_yn" not in payload:
-            payload["transfusions_yn"] = "False"
-        else:
-            v = payload["transfusions_yn"]
-            if isinstance(v, bool):
-                payload["transfusions_yn"] = "True" if v else "False"
-            else:
-                payload["transfusions_yn"] = str(v)
-        # allergies_yn is a BooleanField — coerce common truthy/falsey strings
-        if "allergies_yn" not in payload:
-            payload["allergies_yn"] = False
-        else:
-            v = payload["allergies_yn"]
-            if isinstance(v, str):
-                payload["allergies_yn"] = v.strip().lower() in (
-                    "1",
-                    "true",
-                    "yes",
-                    "on",
-                )
-            else:
-                payload["allergies_yn"] = bool(v)
 
         form = HistoryMedicalForm(data=payload)
 
