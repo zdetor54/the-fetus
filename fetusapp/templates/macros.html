@@ -6,3 +6,23 @@
         No <br>
     {% endif %}
 {% endmacro %}
+{% macro input_group(field_name, field_config, value) %}
+    <div class="input-group">
+        {% if field_config.type == 'select' %}
+            <select id="{{ field_name }}Input" name="{{ field_name }}"{% if not value%}class="text-muted"{% endif %}>
+                <option value="" class="text-muted">Επιλέξτε...</option>
+                {% for option in field_config.options %}
+                    <option value="{{ option.value }}" class="text-dark" {{ 'selected' if value == option.value else '' }}>
+                        {{ option.label }}
+                    </option>
+                {% endfor %}
+            </select>
+        {% else %}
+            <input type="{{ field_config.type }}"
+                id="{{ field_name }}Input"
+                name="{{ field_name }}"
+                value="{{ value if value else '' }}">
+        {% endif %}
+        <label for="{{ field_name }}Input" class="form-label">{{ field_config.label }}:</label>
+    </div>
+{% endmacro %}
