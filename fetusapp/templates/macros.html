@@ -1,9 +1,7 @@
 {% macro render_field(label, value) %}
-    <span>{{ label }}</span>
     {% if value is not none %}
+        <span>{{ label }}</span>
         {{ value }} <br>
-    {% else %}
-        No <br>
     {% endif %}
 {% endmacro %}
 {% macro input_group(field_name, field_config, value) %}
@@ -18,20 +16,20 @@
                 {% endfor %}
             </select>
         {% elif field_config.type == 'BooleanField' %}
-             <input type="hidden" name="{{ field_name }}" value="False">
-             <input type="checkbox"
-                 id="{{ field_name }}Input"
-                 name="{{ field_name }}"
-                 value="True"
-                 class="unstyled-checkbox"
-                 style="margin-left:0; float:left;"
-                 {% if value %}checked{% endif %}>
+            <input type="hidden" name="{{ field_name }}" value="False">
+            <input type="checkbox"
+                id="{{ field_name }}Input"
+                name="{{ field_name }}"
+                value="True"
+                class="unstyled-checkbox"
+                style="margin-left:0; float:left;"
+                {% if value %}checked{% endif %}>
         {% else %}
             <input type="{{ field_config.type }}"
                 id="{{ field_name }}Input"
                 name="{{ field_name }}"
                 value="{{ value if value else '' }}">
         {% endif %}
-        <label for="{{ field_name }}Input" class="form-label">{{ field_config.label }}:</label>
+        <label for="{{ field_name }}Input" class="form-label">{{ field_config.label }}</label>
     </div>
 {% endmacro %}
