@@ -17,6 +17,14 @@
                     </option>
                 {% endfor %}
             </select>
+        {% elif field_config.type == 'BooleanField' %}
+            <input type="checkbox"
+                   id="{{ field_name }}Input"
+                   name="{{ field_name }}"
+                   value="True"
+                   class="unstyled-checkbox"
+                   style="margin-left:0; float:left;"
+                   {% if value %}checked{% endif %}>
         {% else %}
             <input type="{{ field_config.type }}"
                 id="{{ field_name }}Input"
