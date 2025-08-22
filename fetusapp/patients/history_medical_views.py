@@ -11,6 +11,15 @@ from .forms import HistoryMedicalForm
 medical_history = Blueprint("medical_history", __name__)
 
 
+def calculate_bmi(weight: float | None, height: float | None) -> float | str:
+    try:
+        if weight and height:
+            return round(float(weight) / (float(height) ** 2), 2)
+    except Exception:
+        pass
+    return ""
+
+
 @medical_history.route("/api/medical-history/<int:id>", methods=["PUT"])
 @login_required
 @csrf.exempt
@@ -22,7 +31,12 @@ def update_medical_history(id: int) -> tuple[dict, int]:
         # Read and normalize JSON payload so WTForms validators accept booleans
         payload = request.get_json(silent=True) or {}
 
-        # Only convert for BooleanFields
+        # Calculate BMI and add to payload if weight and height are present
+        payload["bmi"] = calculate_bmi(
+            weight=payload.get("weight"), height=payload.get("height")
+        )
+
+        # Only convert for BooleanFields and clean text fields
         form_for_types = HistoryMedicalForm()
         for field_name, field in form_for_types._fields.items():
             if field.type == "BooleanField" and field_name in payload:
@@ -30,15 +44,27 @@ def update_medical_history(id: int) -> tuple[dict, int]:
                     payload[field_name] = True
                 elif payload[field_name] == "False":
                     payload[field_name] = False
+            if field.type in ["StringField", "TextAreaField"]:
+                val = payload.get(field_name, "")
+                val = val.strip() if isinstance(val, str) else val
+                payload[field_name] = val if val else None
 
         form = HistoryMedicalForm(data=payload)
 
         if form.validate():
             # Update history fields from form data
+
             for field in form._fields:
                 if field not in ["csrf_token", "submit"]:
                     if field in payload:
-                        setattr(history, field, form._fields[field].data)
+                        value = form._fields[field].data
+                        if value == "" and form._fields[field].type in [
+                            "StringField",
+                            "TextAreaField",
+                        ]:
+                            setattr(history, field, None)
+                        else:
+                            setattr(history, field, value)
 
             # Update metadata
             history.last_updated_by = current_user.id
