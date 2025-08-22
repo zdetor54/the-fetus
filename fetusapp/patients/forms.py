@@ -29,7 +29,7 @@ class BasicPatientForm(FlaskForm):
 
 class HistoryMedicalForm(FlaskForm):
     # System Fields
-    id = IntegerField("Patient ID", validators=[DataRequired()])
+    id = IntegerField("Patient ID", validators=[Optional()])
 
     # Physical Measurements
     weight = FloatField(
