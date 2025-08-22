@@ -19,8 +19,17 @@ def update_medical_history(id: int) -> tuple[dict, int]:
         # Get existing record
         history = HistoryMedical.query.get_or_404(id)
 
-        # Read and normalize JSON payload so WTForms validators accept radios/booleans
+        # Read and normalize JSON payload so WTForms validators accept booleans
         payload = request.get_json(silent=True) or {}
+
+        # Only convert for BooleanFields
+        form_for_types = HistoryMedicalForm()
+        for field_name, field in form_for_types._fields.items():
+            if field.type == "BooleanField" and field_name in payload:
+                if payload[field_name] == "True":
+                    payload[field_name] = True
+                elif payload[field_name] == "False":
+                    payload[field_name] = False
 
         form = HistoryMedicalForm(data=payload)
 
