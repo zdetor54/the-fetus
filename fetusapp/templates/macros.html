@@ -28,8 +28,8 @@
             <input type="{{ field_config.type }}"
                 id="{{ field_name }}Input"
                 name="{{ field_name }}"
-                value="{{ value if value else '' }}">
+                {% if value is not none and value != '' %}value="{{ value }}"{% endif %} required>
         {% endif %}
-        <label for="{{ field_name }}Input" class="form-label">{{ field_config.label }}</label>
+        <label for="{{ field_name }}Input">{{ field_config.label }}</label>
     </div>
 {% endmacro %}
