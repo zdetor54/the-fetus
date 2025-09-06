@@ -1,7 +1,12 @@
-{% macro render_field(label, value) %}
+{% macro render_field(label, value, field_type=None) %}
     {% if value is not none %}
+        {% if field_type == 'TextAreaField' %}
+            <span>{{ label }}</span>
+            <pre class="formatted-text" style="padding: 0;">{{ value }}</pre>
+        {% else %}
         <span>{{ label }}</span>
         {{ value }} <br>
+        {% endif %}
     {% endif %}
 {% endmacro %}
 {% macro input_group(field_name, field_config, value) %}
