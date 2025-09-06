@@ -1,7 +1,12 @@
-{% macro render_field(label, value) %}
+{% macro render_field(label, value, field_type=None) %}
     {% if value is not none %}
+        {% if field_type == 'TextAreaField' %}
+            <span>{{ label }}</span>
+            <pre class="formatted-text" style="padding: 0;">{{ value }}</pre>
+        {% else %}
         <span>{{ label }}</span>
         {{ value }} <br>
+        {% endif %}
     {% endif %}
 {% endmacro %}
 {% macro input_group(field_name, field_config, value) %}
@@ -15,6 +20,7 @@
                     </option>
                 {% endfor %}
             </select>
+            <label for="{{ field_name }}Input">{{ field_config.label }}</label>
         {% elif field_config.type == 'BooleanField' %}
             <input type="hidden" name="{{ field_name }}" value="False">
             <input type="checkbox"
@@ -24,12 +30,16 @@
                 class="unstyled-checkbox"
                 style="margin-left:0; float:left;"
                 {% if value %}checked{% endif %}>
+            <label for="{{ field_name }}Input">{{ field_config.label }}</label>
+        {% elif field_config.type == 'TextAreaField' %}
+            <label class="textarea-top-label" for="{{ field_name }}Input">{{ field_config.label }}</label>
+            <textarea id="{{ field_name }}Input" name="{{ field_name }}" class="form-control expanding-textarea" rows="3">{% if value is not none %}{{ value }}{% endif %}</textarea>
         {% else %}
             <input type="{{ field_config.type }}"
                 id="{{ field_name }}Input"
                 name="{{ field_name }}"
                 {% if value is not none and value != '' %}value="{{ value }}"{% endif %} required>
+            <label for="{{ field_name }}Input">{{ field_config.label }}</label>
         {% endif %}
-        <label for="{{ field_name }}Input">{{ field_config.label }}</label>
     </div>
 {% endmacro %}

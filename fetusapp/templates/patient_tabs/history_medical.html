@@ -55,7 +55,8 @@
                                                 {% set form_elements = ['heart_disease', 'hypertension', 'diabetes', 'nephropathy', 'liver_disease', 'thyroeidopatheia', 'other_diseases', 'medication'] %}
 
                                                 {% for element in form_elements %}
-                                                    {{ macros.render_field(getattr(medical_history_form, element).label, getattr(medical_history_form, element).data) }}
+                                                    {% set field = getattr(medical_history_form, element) %}
+                                                    {{ macros.render_field(field.label, field.data, field.type) }}
                                                 {% endfor %}
                                 </div>
                                 <div class="col-12 col-lg-6 px-4">
@@ -65,7 +66,8 @@
                                                     {% if element.endswith('_yn')%}
                                                         {{ macros.render_field(getattr(medical_history_form, element).label, "Ναι" if getattr(medical_history_form, element).data else "Όχι") }}
                                                     {% else %}
-                                                        {{ macros.render_field(getattr(medical_history_form, element).label, getattr(medical_history_form, element).data) }}
+                                                        {% set field = getattr(medical_history_form, element) %}
+                                                        {{ macros.render_field(field.label, field.data, field.type) }}
                                                     {% endif %}
                                                 {% endfor %}
 
@@ -73,7 +75,8 @@
                                                 {% set form_elements = ['smoking_before', 'smoking_during'] %}
 
                                                 {% for element in form_elements %}
-                                                    {{ macros.render_field(getattr(medical_history_form, element).label, getattr(medical_history_form, element).data) }}
+                                                    {% set field = getattr(medical_history_form, element) %}
+                                                    {{ macros.render_field(field.label, field.data, field.type) }}
                                                 {% endfor %}
 
                                                 <h3 class="text-center mt-2 zd-bottom">Αλλεργίες</h3>

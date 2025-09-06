@@ -420,6 +420,16 @@ em {
     transition: .5s;
 }
 
+/* Ensure textarea labels are always placed above the textarea */
+.input-group .textarea-top-label{
+    position: static !important;
+    transform: none !important;
+    top: auto !important;
+    display: block !important;
+    margin-bottom: 0.25rem;
+    color: var(--vibrant-pink);
+}
+
 .patient-lite .input-group input,
 .patient-lite .input-group select{
     width: 100%;
@@ -500,4 +510,30 @@ input[type="date"]::-webkit-datetime-edit {
 .ql-snow .ql-editor pre.ql-syntax {
     background-color: white !important;
     color: black !important;
+}
+
+/* Strong overrides to force the label on its own line and textarea below it across templates */
+.textarea-top-label {
+    display: block !important;
+    position: static !important;
+    transform: none !important;
+    top: auto !important;
+    margin-bottom: 0.5rem !important;
+    width: 100% !important;
+}
+
+.input-group textarea,
+.input-group .form-control.expanding-textarea {
+    display: block !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    margin-top: 0 !important;
+}
+
+/* If templates still use absolute-positioned labels (patient-lite), prefer textarea stacking when label has textarea-top-label */
+.patient-lite .input-group .textarea-top-label {
+    position: static !important;
+    transform: none !important;
+    top: auto !important;
+    display: block !important;
 }

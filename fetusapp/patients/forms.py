@@ -46,9 +46,13 @@ class HistoryMedicalForm(FlaskForm):
     alcohol = StringField("Αλκοόλ:", validators=[Optional()])
 
     # Medical History
-    surgeries = TextAreaField("Χειρουργεία:", validators=[Optional()])
+    surgeries = TextAreaField(
+        "Χειρουργεία:",
+        validators=[Optional()],
+        render_kw={"class": "expanding-textarea"},
+    )
     transfusions_yn = BooleanField("Μεταγγίσεις:", validators=[Optional()])
-    transfusions_reactions = TextAreaField(
+    transfusions_reactions = StringField(
         "Αντιδράσεις σε μεταγγίσεις:", validators=[Optional()]
     )
 
@@ -67,10 +71,14 @@ class HistoryMedicalForm(FlaskForm):
     nephropathy = StringField("Νεφροπάθεια:", validators=[Optional()])
     liver_disease = StringField("Ηπατοπάθεια:", validators=[Optional()])
     thyroeidopatheia = StringField("Θυρεοειδοπάθεια:", validators=[Optional()])
-    other_diseases = StringField("Άλλες Ασθένειες:", validators=[Optional()])
+    other_diseases = TextAreaField(
+        "Άλλες Ασθένειες:",
+        validators=[Optional()],
+        render_kw={"class": "expanding-textarea"},
+    )
 
     # Medications
-    medication = TextAreaField("Λήψη Φαρμάκων:", validators=[Optional()])
+    medication = StringField("Λήψη Φαρμάκων:", validators=[Optional()])
 
     # Gynecological History
     er_start = StringField("Έμμηνος Ρύση:", validators=[Optional()])
@@ -84,6 +92,8 @@ class HistoryMedicalForm(FlaskForm):
     calt_vag_fluid = StringField("Καλλιέργεια κολπικού υγρού:", validators=[Optional()])
 
     # General Comments
-    comments = TextAreaField("Σχόλια:", validators=[Optional()])
+    comments = TextAreaField(
+        "Σχόλια:", validators=[Optional()], render_kw={"class": "expanding-textarea"}
+    )
 
     submit = SubmitField("Αποθήκευση", validators=[Optional()])
