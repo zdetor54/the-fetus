@@ -451,16 +451,28 @@
 <script>
 // Bulletproof textarea auto-resize: runs on any click, and on input
 document.addEventListener('click', function() {
-    var ta = document.getElementById('comments-textarea');
-    if (ta && !ta._autoResizeBound) {
+    // Collect all relevant textareas (by ID and by class)
+    var textareas = Array.from(document.querySelectorAll('.expanding-textarea'));
+    var taById = document.getElementById('comments-textarea');
+    if (taById && !textareas.includes(taById)) {
+        textareas.push(taById);
+    }
+    textareas.forEach(function(ta) {
+        // Remove border-bottom from parent .input-group
+        if (ta && ta.parentElement && ta.parentElement.classList.contains('input-group')) {
+            ta.parentElement.style.borderBottom = 'none';
+        }
+
+        if (ta && !ta._autoResizeBound) {
             ta.style.height = 'auto';
             ta.style.height = ta.scrollHeight + 'px';
-        ta.addEventListener('input', function() {
-            this.style.height = 'auto';
-            this.style.height = this.scrollHeight + 'px';
-        });
-        ta._autoResizeBound = true;
-    }
+            ta.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = this.scrollHeight + 'px';
+            });
+            ta._autoResizeBound = true;
+        }
+    });
 });
 </script>
 {% endblock %}

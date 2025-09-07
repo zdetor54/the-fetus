@@ -523,11 +523,15 @@ input[type="date"]::-webkit-datetime-edit {
 }
 
 .input-group textarea,
+.form-control#comments-textarea,
 .input-group .form-control.expanding-textarea {
+    background-color: #fff5f0 !important;
     display: block !important;
     width: 100% !important;
     box-sizing: border-box !important;
     margin-top: 0 !important;
+    overflow: hidden !important;
+    border: 1px solid rgba(239, 83, 158, 0.5);
 }
 
 /* If templates still use absolute-positioned labels (patient-lite), prefer textarea stacking when label has textarea-top-label */
