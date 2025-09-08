@@ -353,6 +353,7 @@ em {
 #editableContentCD,
 #editableContentPD,
 #editableContentHistoryMedical,
+#editableContentHistoryObstetrics,
 .modal-content {
     background: var(--warm-beige);
     color: black;

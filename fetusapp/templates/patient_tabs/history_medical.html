@@ -274,35 +274,6 @@
         }
     }
 
-    const editorDiv = document.querySelector('#editor');
-    const initialContent = editorDiv.dataset.content;
-    var quill = new Quill('#editor', {
-        formats: {
-            'pre': true,  // Allow pre tags
-            'code-block': true  // Allow code blocks
-        },
-        theme: 'snow',
-        preserveWhitespace: true,
-        modules: {
-            toolbar: [
-                ['bold', 'italic', 'underline', 'strike'],
-                ['blockquote', 'code-block'],
-                [{ 'header': 1 }, { 'header': 2 }],
-                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                [{ 'color': [] }, { 'background': [] }],
-                ['clean']
-            ],
-            clipboard: {
-                matchVisual: false // Prevent Quill from creating extra paragraphs
-            }
-        }
-    });
-
-
-    if (initialContent) {
-        quill.clipboard.dangerouslyPasteHTML(`<pre>${initialContent}</pre>`);
-    }
-
     // When form submits, copy HTML content to hidden input
     document.querySelector('form').onsubmit = function() {
         document.querySelector('#hidden-content').value = quill.root.innerHTML;
@@ -332,7 +303,7 @@
             const form = document.getElementById('medicalHistoryForm');
             const historyId = form.querySelector('input[name="id"]').value;
             const patientId = '{{ patient.id }}';
-            console.log('patientId:', patientId);
+            // console.log('patientId:', patientId);
             const csrfToken = form.querySelector('input[name="csrf_token"]').value;
 
             // Get form data
@@ -344,7 +315,7 @@
                 formDataJson[key] = value;
             });
 
-            console.log('formDataJson:', formDataJson);
+            // console.log('formDataJson:', formDataJson);
 
             let response;
             if (historyId) {
@@ -389,16 +360,10 @@
         }
     }
 
-    document.addEventListener('DOMContentLoaded', enableAutoResizeTextarea);
-
     // Patch toggleEditMode to also enable auto-resize when switching to edit mode
     const originalToggleEditMode = toggleEditMode;
     toggleEditMode = function(sectionType) {
         originalToggleEditMode(sectionType);
-        if (sectionType === 'HistoryMedical') {
-            // Wait for DOM update (textarea rendered)
-            setTimeout(enableAutoResizeTextarea, 0);
-        }
     };
 
 </script>

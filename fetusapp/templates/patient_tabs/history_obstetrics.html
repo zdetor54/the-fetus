@@ -1,7 +1,5 @@
 {% import 'macros.html' as macros %}
 
-
-
 <div class="col-12">
     <div class="card card-cover inherit-text-color bg-transparent rounded-4 shadow-lg">
         <div class="d-flex flex-column h-100 text-shadow-1">
@@ -52,7 +50,23 @@
                         <div class="d-flex flex-column p-3 text-shadow-1">
                             <div class="wrapper">
                                 <div class="form-wrapper patient-lite px-2">
-                                    <form method="POST" id="medicalHistoryForm" data-history-id="{{ medical_history_form.id.data if medical_history_form else '' }}">
+                                    <form method="POST" id="obstretricsHistoryForm" data-history-id="{{ obstetrics_history_form.id.data if obstetrics_history_form else '' }}">
+                                        {{ history_obstetrics_form.hidden_tag() }}
+                                        {{ history_obstetrics_form.id(type="hidden") }}
+                                        <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+                                            <div class="row py-2">
+                                                <div class="col-12">
+                                                {% set form_elements = ['ft', 'kt', 'embrioulkia', 'te', 'ae'] %}
+
+                                                {% for element in form_elements %}
+                                                    {% set field = getattr(history_obstetrics_form, element) %}
+                                                    {% if field.type != 'HiddenField' %}
+                                                        {{ macros.input_group(field.name, {'type': field.type, 'label': field.label.text}, field.data) }}
+                                                    {% endif %}
+                                                {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
                                             <button type="button" class="btn login-btn px-4" onclick="saveChangesHistoryObstetrics()">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-floppy" viewBox="0 1 16 16">
@@ -79,3 +93,62 @@
         </div>
     </div>
 </div>
+{% block tab_javascript %}
+<script>
+    async function saveChangesHistoryObstetrics() {
+        try {
+            const form = document.getElementById('obstretricsHistoryForm');
+            const formData = new FormData(form);
+            const historyId = form.querySelector('input[name="id"]').value;
+            const patientId = '{{ patient.id }}';
+            console.log('patientId:', patientId);
+            const csrfToken = form.querySelector('input[name="csrf_token"]').value;
+
+            // Convert FormData to JSON
+            const formDataJson = {};
+            formData.forEach((value, key) => {
+                formDataJson[key] = value;
+            });
+
+            console.log('formDataJson:', formDataJson);
+            let response;
+            if (historyId) {
+            response = await fetch(`/api/obstetrics-history/${historyId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify(formDataJson)
+                });
+            } else {
+                response = await fetch(`/api/patients/${patientId}/obstetrics-history`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify(formDataJson)
+                });
+            }
+
+            if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+
+            if (result.success) {
+                // refresh the page
+                location.reload();
+                toggleEditMode('HistoryObstetrics');
+            } else {
+                throw new Error(result.error || 'Failed to save changes');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error saving changes: ' + error.message);
+        }
+    };
+</script>
+{% endblock %}
