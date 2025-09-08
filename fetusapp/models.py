@@ -343,19 +343,75 @@ class HistoryObstetrics(db.Model):
         patient_id,
         created_by,
         last_updated_by,
-        Ft=None,
-        Kt=None,
-        Embrioulkia=None,
-        Te=None,
-        Ae=None,
+        ft=None,
+        kt=None,
+        embrioulkia=None,
+        te=None,
+        ae=None,
         is_active=True,
     ):
         self.patient_id = patient_id
         self.created_by = created_by
         self.last_updated_by = last_updated_by
-        self.Ft = Ft
-        self.Kt = Kt
-        self.Embrioulkia = Embrioulkia
-        self.Te = Te
-        self.Ae = Ae
+        self.ft = ft
+        self.kt = kt
+        self.embrioulkia = embrioulkia
+        self.te = te
+        self.ae = ae
         self.is_active = is_active
+
+    class HistoryObstetrics_x(db.Model):
+        __tablename__ = "history_obstetrics_x"
+
+        id = db.Column(db.Integer, primary_key=True)
+        patient_id = db.Column(db.Integer, db.ForeignKey("patients.id"), nullable=False)
+        created_by = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+        last_updated_by = db.Column(
+            db.Integer, db.ForeignKey("users.id"), nullable=False
+        )
+        created_on = db.Column(db.DateTime, server_default=db.func.now())
+        last_updated_on = db.Column(
+            db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now()
+        )
+
+        year_of_birth = db.Column(db.Integer, nullable=True)
+        birth_type = db.Column(db.String(50), nullable=True)
+        baby_weight = db.Column(db.Numeric(5, 2), nullable=True)
+        gestation_week = db.Column(db.Integer, nullable=True)
+        complications_notes = db.Column(db.Text, nullable=True)
+        is_active = db.Column(db.Boolean, default=True)
+
+        # Relationships
+        patient = db.relationship(
+            "Patient", backref=db.backref("obstetric_history_x", lazy=True)
+        )
+        creator = db.relationship(
+            "User", foreign_keys=[created_by], backref="created_obstetric_histories_x"
+        )
+        updater = db.relationship(
+            "User",
+            foreign_keys=[last_updated_by],
+            backref="updated_obstetric_histories_x",
+        )
+
+        def __init__(
+            self,
+            patient_id,
+            created_by,
+            last_updated_by,
+            year_of_birth=None,
+            birth_type=None,
+            baby_weight=None,
+            gestation_week=None,
+            complications_notes=None,
+            is_active=True,
+        ):
+            self.patient_id = patient_id
+            self.created_by = created_by
+            self.last_updated_by = last_updated_by
+            self.year_of_birth = year_of_birth
+            self.birth_type = birth_type
+            self.baby_weight = baby_weight
+            self.gestation_week = gestation_week
+            self.complications_notes = complications_notes
+            self.is_active = is_active
