@@ -346,7 +346,7 @@
               <button class="nav-link active" style="border-radius: 5rem;" id="pills-history_medical-tab" data-bs-toggle="pill" data-bs-target="#pills-history_medical" type="button" role="tab" aria-controls="pills-history_medical" aria-selected="true">Ιατρικό Ιστορικό</button>
             </li>
             <li class="nav-item" role="presentation">
-              <button class="nav-link" style="border-radius: 5rem;" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Μαιευτικό Ιστορικό</button>
+              <button class="nav-link" style="border-radius: 5rem;" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-history_obstetrics" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Μαιευτικό Ιστορικό</button>
             </li>
             <li class="nav-item" role="presentation">
               <button class="nav-link" style="border-radius: 5rem;" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Κύηση</button>
@@ -370,7 +370,11 @@
                 <h5 class="visually-hidden">Ιατρικό Ιστορικό</h5>
                 {% include 'patient_tabs/history_medical.html' %}
             </div>
-            <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
+            <div class="tab-pane fade" id="pills-history_obstetrics" role="tabpanel" aria-labelledby="pills-history_obstetrics-tab" tabindex="0">
+                <h5 class="visually-hidden">Μαιευτικό Ιστορικό</h5>
+                {% include 'patient_tabs/history_obstetrics.html' %}
+            </div>
+            <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab" tabindex="0">
                 <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Esse, quasi enim mollitia doloribus praesentium dolores aut nostrum atque. Eveniet praesentium mollitia, quasi quia maxime expedita impedit odit sed modi? Quisquam.
                     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corrupti et ipsum ratione harum ab, quia atque repellendus voluptate illo a soluta nesciunt ipsa rem necessitatibus nulla, aliquam, maxime natus nihil?
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa saepe illo ratione mollitia nobis. Impedit obcaecati itaque qui quam voluptate, iure ipsum nobis reiciendis repellendus cum quibusdam aperiam repellat dolorem!
@@ -379,7 +383,6 @@
                     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores cumque fugit vero ducimus saepe unde officiis impedit, optio quisquam ullam doloribus repellat provident sunt incidunt repudiandae dignissimos mollitia placeat perspiciatis?
                 </p>
             </div>
-            <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab" tabindex="0">...</div>
             <div class="tab-pane fade" id="pills-disabled" role="tabpanel" aria-labelledby="pills-disabled-tab" tabindex="0">...</div>
           </div>
         <button type="button" class="btn btn-outline-danger px-4" onclick="showDeleteModal()">
