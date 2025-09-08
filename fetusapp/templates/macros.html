@@ -1,5 +1,5 @@
 {% macro render_field(label, value, field_type=None) %}
-    {% if value is not none %}
+    {% if value is not none and value != 0 %}
         {% if field_type == 'TextAreaField' %}
             <span>{{ label }}</span>
             <pre class="formatted-text" style="padding: 0;">{{ value }}</pre>

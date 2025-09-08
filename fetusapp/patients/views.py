@@ -291,6 +291,7 @@ def patient() -> Response:
     if patient_id:
         patient = Patient.query.get(patient_id)
         history_medical_form = HistoryMedicalForm()
+        history_obstetrics_form = HistoryObstetricsForm()
         # get the medical history of the patient
 
         medical_history = HistoryMedical.query.filter_by(
