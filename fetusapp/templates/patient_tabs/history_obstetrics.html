@@ -1,1 +1,24 @@
 {% import 'macros.html' as macros %}
+
+<div class="container mt-3">
+
+    <div class="row">
+        <div class="col-12 colg-6">
+            {% if obstetrics_history_dict %}
+                <h5 class="text-center">Ιστορικό Κυήσεων</h5>
+                <ul>
+                {% for key, value in obstetrics_history_dict.items() %}
+                    {% if value %}
+                        <li>
+                            {{ macros.render_field(key.replace('_', ' ').capitalize(), value) }}
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                </ul>
+            {% else %}
+                <h5 class="text-center">Δεν υπάρχει καταγεγραμμένο ιστορικό κυήσεων</h5>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
