@@ -303,3 +303,60 @@ class HistoryMedical(BaseModel):
         self.test_pap = test_pap
         self.da = da
         self.calt_vag_fluid = calt_vag_fluid
+
+    class HistoryObstetrics(db.Model):
+        __tablename__ = "history_obstetrics"
+
+        id = db.Column(db.Integer, primary_key=True)
+        patient_id = db.Column(db.Integer, db.ForeignKey("patients.id"), nullable=False)
+        created_by = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+        last_updated_by = db.Column(
+            db.Integer, db.ForeignKey("users.id"), nullable=False
+        )
+        created_on = db.Column(db.DateTime, server_default=db.func.now())
+        last_updated_on = db.Column(
+            db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now()
+        )
+
+        # Obstetric History fields (example, adjust as per your JSON)
+        Ft = db.Column(db.Integer, nullable=True)  # Full-term births
+        Kt = db.Column(db.Integer, nullable=True)  # Premature births
+        Embrioulkia = db.Column(db.Integer, nullable=True)  # Miscarriages
+        Te = db.Column(db.Integer, nullable=True)  # Ectopic pregnancies
+        Ae = db.Column(db.Integer, nullable=True)  # Stillbirths
+        is_active = db.Column(db.Boolean, default=True)
+
+        # Relationships
+        patient = db.relationship(
+            "Patient", backref=db.backref("obstetric_history", lazy=True)
+        )
+        creator = db.relationship(
+            "User", foreign_keys=[created_by], backref="created_obstetric_histories"
+        )
+        updater = db.relationship(
+            "User",
+            foreign_keys=[last_updated_by],
+            backref="updated_obstetric_histories",
+        )
+
+        def __init__(
+            self,
+            patient_id,
+            created_by,
+            last_updated_by,
+            Ft=None,
+            Kt=None,
+            Embrioulkia=None,
+            Te=None,
+            Ae=None,
+            is_active=True,
+        ):
+            self.patient_id = patient_id
+            self.created_by = created_by
+            self.last_updated_by = last_updated_by
+            self.Ft = Ft
+            self.Kt = Kt
+            self.Embrioulkia = Embrioulkia
+            self.Te = Te
+            self.Ae = Ae
+            self.is_active = is_active
