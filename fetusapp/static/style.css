@@ -11,7 +11,33 @@
     --vibrant-pink: #9FE870;          /* wise*/
     --vibrant-pink: #EF539E;          /* monzo*/
     --warm-beige: #F3E1D7;            /* Background color */
-    background-color: black;
+    /* Match root background to body to avoid black gutter */
+    background-color: #212529;
+}
+
+/* Prevent layout shift when vertical scrollbar appears/disappears */
+html { scrollbar-gutter: stable; }
+@supports not (scrollbar-gutter: stable) {
+    html { overflow-y: scroll; }
+}
+
+/* Make the gutter/scrollbar track match the dark body background */
+html { background-color: #212529; }
+body { background-color: #212529; }
+
+/* Firefox scrollbar colors */
+:root {
+    scrollbar-color: #495057 #212529; /* thumb color, track color */
+    scrollbar-width: thin;
+}
+
+/* WebKit/Blink (Chrome, Edge, Safari) */
+::-webkit-scrollbar { width: 12px; }
+::-webkit-scrollbar-track { background: #212529; }
+::-webkit-scrollbar-thumb {
+    background-color: #495057; /* thumb */
+    border-radius: 8px;
+    border: 2px solid #212529; /* creates spacing around thumb */
 }
 
 .inherit-text-color {
@@ -86,9 +112,15 @@ h2, h5 {
 .navbar-dark .navbar-nav .nav-link.active,
 .navbar-dark .navbar-nav .show>.nav-link,
 .navbar-light .navbar-nav .nav-link.active,
-.navbar-light .navbar-nav .show>.nav-link
- {
+.navbar-light .navbar-nav .show>.nav-link{
     color: var(--vibrant-pink);
+}
+
+.nav-link {
+    color: rgba(255, 255, 255, .55);
+}
+.nav-link:hover {
+    color: rgba(255, 255, 255, .85);
 }
 
 /* Custom CSS to adjust spacing for the .logged-user-icon when navbar is collapsed (below 768px) */
@@ -285,9 +317,9 @@ footer a:hover{
     border-color: var(--vibrant-pink);
 }
 
-.nav-pills .nav-link {
+/* .nav-pills .nav-link {
     color: #212529;
-}
+} */
 
 /* .bg-light {
     background-color: #F3E1D7 !important;
