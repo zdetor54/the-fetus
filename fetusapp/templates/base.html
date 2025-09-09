@@ -69,9 +69,10 @@
 
 
           {% if current_user.is_authenticated %}
-          <form action="" method="post" id="findPatient" onsubmit="event.preventDefault(); performNavSearch();">
+          <div id="findPatient">
             <div class="input-group">
-                <input type="text" class="form-control" name="nav_search_query" placeholder="Ονοματεπώνυμο/Τηλ" aria-label="Search for a patient" aria-describedby="button-search" style="border-start-start-radius: 5rem ; border-end-start-radius: 5rem ;">
+                <!-- Added attributes to discourage browser/payment/password managers from injecting overlays -->
+                <input type="search" class="form-control" name="nav_search_query" id="nav-search-input" placeholder="Ονοματεπώνυμο/Τηλ" aria-label="Search for a patient" aria-describedby="button-search searchHelp" style="border-start-start-radius: 5rem ; border-end-start-radius: 5rem ;" autocomplete="search" inputmode="search" data-lpignore="true" data-1p-ignore="true" data-form-type="other" autocorrect="off" spellcheck="false">
                 <button class="btn btn-outline-secondary" type="submit" id="button-search" onclick="performNavSearch()">
                   Αναζήτηση
                   <svg xmlns="http://www.w3.org/2000/svg"
@@ -84,7 +85,7 @@
                   </svg>
                 </button>
             </div>
-          </form>
+          </div>
             {% if current_user.is_admin %}
             <!-- <a class="ms-md-2 custom-link" href="{{url_for('users.signup')}}"> -->
             <a class="ms-md-2 custom-link" id="mode-toggle" href="#">

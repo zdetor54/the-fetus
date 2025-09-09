@@ -353,6 +353,7 @@ em {
 #editableContentCD,
 #editableContentPD,
 #editableContentHistoryMedical,
+#editableContentHistoryObstetrics,
 .modal-content {
     background: var(--warm-beige);
     color: black;
@@ -541,3 +542,48 @@ input[type="date"]::-webkit-datetime-edit {
     top: auto !important;
     display: block !important;
 }
+
+        /* Remove border and margin for input-groups containing only a checkbox */
+        .patient-lite .input-group:has(> input.unstyled-checkbox) {
+            border-bottom: none !important;
+            /* margin: 0 !important; */
+        }
+
+        .patient-lite .input-group input.unstyled-checkbox,
+        .unstyled-checkbox {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        width: 18px;
+        height: 18px;
+        border: 1.5px solid #b36;
+        border-radius: 3px;
+        background: #fff;
+        outline: none;
+        margin: 0 8px 0 0;
+        box-shadow: none;
+        display: inline-block;
+        vertical-align: middle;
+        position: relative;
+        cursor: pointer;
+        left: 0;
+        margin: 1rem 0 0 0;
+    }
+    .patient-lite .input-group input.unstyled-checkbox:checked,
+    .unstyled-checkbox:checked {
+        background: #b36;
+        border-color: #b36;
+    }
+    .patient-lite .input-group input.unstyled-checkbox:checked:after,
+    .unstyled-checkbox:checked:after{
+        content: '';
+        display: block;
+        position: absolute;
+        left: 5px;
+        top: 1px;
+        width: 4px;
+        height: 9px;
+        border: solid #fff;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+    }

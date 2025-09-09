@@ -19,7 +19,8 @@
                   <div class="d-flex flex-column h-100 p-3 pb-3 text-shadow-1">
                     <form action="" method="post" id="findPatient" onsubmit="event.preventDefault(); performMainSearch();">
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" name="search_query" placeholder="Ονοματεπώνυμο ή/και τηλέφωνο" aria-label="Search for a patient" aria-describedby="button-search" style="border-start-start-radius: 5rem ; border-end-start-radius: 5rem ;">
+                            <!-- Added attributes to suppress autofill/payment manager tooltip -->
+                            <input type="search" class="form-control" name="search_query" id="patients-search-input" placeholder="Ονοματεπώνυμο ή/και τηλέφωνο" aria-label="Search for a patient" aria-describedby="button-search" style="border-start-start-radius: 5rem ; border-end-start-radius: 5rem ;" autocomplete="search" inputmode="search" data-lpignore="true" data-1p-ignore="true" data-form-type="other" autocorrect="off" spellcheck="false">
                             <button class="btn btn-outline-secondary" type="submit" id="button-search">Αναζήτηση
                                 <svg xmlns="http://www.w3.org/2000/svg"
                                         width="16"

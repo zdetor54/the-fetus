@@ -19,9 +19,14 @@ from flask import (
 from flask_login import current_user, login_required
 
 from fetusapp import app, csrf, db  # type: ignore[has-type]
-from fetusapp.models import HistoryMedical, Patient
+from fetusapp.models import (
+    HistoryMedical,
+    HistoryObstetrics,
+    HistoryObstetrics_x,
+    Patient,
+)
 
-from .forms import HistoryMedicalForm
+from .forms import HistoryMedicalForm, HistoryObstetricsForm
 
 patients = Blueprint("patients", __name__)
 
@@ -286,6 +291,7 @@ def patient() -> Response:
     if patient_id:
         patient = Patient.query.get(patient_id)
         history_medical_form = HistoryMedicalForm()
+        history_obstetrics_form = HistoryObstetricsForm()
         # get the medical history of the patient
 
         medical_history = HistoryMedical.query.filter_by(
@@ -301,6 +307,18 @@ def patient() -> Response:
         except AttributeError:
             medical_history_dict = dict()
 
+        obstetrics_history = HistoryObstetrics.query.filter_by(
+            patient_id=patient_id, is_active=True
+        ).first()
+
+        if obstetrics_history:
+            history_obstetrics_form = HistoryObstetricsForm(obj=obstetrics_history)
+
+        try:
+            obstetrics_history_dict = obstetrics_history.to_dict()
+        except AttributeError:
+            obstetrics_history_dict = dict()
+
         return render_template(
             "patient.html",
             active_page="patient",
@@ -308,11 +326,12 @@ def patient() -> Response:
             patient=patient,
             now=date.today(),
             contact_fields=contact_fields,
-            medical_history=medical_history,
             medical_history_form=history_medical_form,
             medical_history_dict=medical_history_dict,
             personal_data_fields=personal_data_fields,
             partner_data_fields=partner_data_fields,
+            obstetrics_history_dict=obstetrics_history_dict,
+            history_obstetrics_form=history_obstetrics_form,
         )
 
     return render_template(

@@ -60,6 +60,7 @@ from fetusapp.chatai.views import chatai  # noqa: E402
 from fetusapp.core.views import core  # noqa: E402
 from fetusapp.error_pages.handlers import error_pages  # noqa: E402
 from fetusapp.patients.history_medical_views import medical_history  # noqa: E402
+from fetusapp.patients.history_obstetrics_views import obstetrics_history  # noqa: E402
 from fetusapp.patients.views import patients  # noqa: E402
 from fetusapp.users.views import users  # noqa: E402
 
@@ -70,4 +71,5 @@ app.register_blueprint(error_pages)
 app.register_blueprint(users)
 app.register_blueprint(patients)  # type: ignore[has-type]
 app.register_blueprint(medical_history)  # type: ignore[has-type]
+app.register_blueprint(obstetrics_history)  # type: ignore[has-type]
 app.register_blueprint(chatai)
