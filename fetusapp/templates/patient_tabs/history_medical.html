@@ -264,6 +264,8 @@
 
             const result = await response.json();
             if (result.success) {
+                // Remember the active pill before reload so we can restore it
+                try { sessionStorage.setItem('lastActiveTab', '#pills-history_medical'); } catch (e) {}
                 location.reload();
             } else {
                 throw new Error(result.error || 'Unknown error');
@@ -357,6 +359,8 @@
             const result = await response.json();
 
             if (result.success) {
+                // Remember the active pill before reload so we can restore it
+                try { sessionStorage.setItem('lastActiveTab', '#pills-history_medical'); } catch (e) {}
                 // refresh the page
                 location.reload();
                 toggleEditMode('HistoryMedical');
