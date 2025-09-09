@@ -38,15 +38,24 @@
                 <div class="form-container" style="position: relative; transition: max-height 0.2s ease-in-out;" id="formContainerHistoryObstetrics">
                     {% if obstetrics_history_dict %}
                         <div class="read-only read-only-labels p-4" id="readOnlyContentHistoryObstetrics">
-                            <div class="row py-2">
-                                <div class="col-12">
+                            <div class="row g-3 py-2">
                                 {% set form_elements = ['ft', 'kt', 'embrioulkia', 'te', 'ae'] %}
 
                                 {% for element in form_elements %}
-                                    {% set field = getattr(history_obstetrics_form, element) %}
-                                    {{ macros.render_field(field.label, field.data, field.type) }}
+                                    {% set field = history_obstetrics_form[element] %}
+                                    {% if field.data is not none and (field.data != '' or field.data != 0) %}
+                                    <div class="col-6 col-md-4 col-lg-2">
+                                        <div class="card shadow-sm text-center h-100 rounded-4">
+                                            <div class="card-body py-3">
+                                                <div class="small" style="color: var(--vibrant-pink);">{{ field.label.text }}</div>
+                                                <div class="fs-3 fw-semibold">
+                                                    {{ field.data }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
                                 {% endfor %}
-                                </div>
                             </div>
                             <div class="d-flex flex-wrap justify-content-end gap-2 mt-3">
                                 <button type="button" class="btn btn-outline-secondary px-4" data-edit-button="true" onclick="toggleEditMode('HistoryObstetrics')">
