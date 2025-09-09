@@ -50,7 +50,7 @@
                         <div class="d-flex flex-column p-3 text-shadow-1">
                             <div class="wrapper">
                                 <div class="form-wrapper patient-lite px-2">
-                                    <form method="POST" id="obstretricsHistoryForm" data-history-id="{{ obstetrics_history_form.id.data if obstetrics_history_form else '' }}">
+                                    <form method="POST" id="obstetricsHistoryForm" data-history-id="{{ obstetrics_history_form.id.data if obstetrics_history_form else '' }}">
                                         {{ history_obstetrics_form.hidden_tag() }}
                                         {{ history_obstetrics_form.id(type="hidden") }}
                                         <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
@@ -97,7 +97,7 @@
 <script>
     async function saveChangesHistoryObstetrics() {
         try {
-            const form = document.getElementById('obstretricsHistoryForm');
+            const form = document.getElementById('obstetricsHistoryForm');
             const formData = new FormData(form);
             const historyId = form.querySelector('input[name="id"]').value;
             const patientId = '{{ patient.id }}';

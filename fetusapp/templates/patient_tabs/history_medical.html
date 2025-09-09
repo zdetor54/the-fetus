@@ -274,10 +274,19 @@
         }
     }
 
-    // When form submits, copy HTML content to hidden input
-    document.querySelector('form').onsubmit = function() {
-        document.querySelector('#hidden-content').value = quill.root.innerHTML;
-    };
+    // Scoped submit handler: only attach to the medical history form (avoid hijacking navbar search form)
+    document.addEventListener('DOMContentLoaded', () => {
+        const medicalForm = document.getElementById('medicalHistoryForm');
+        if (medicalForm) {
+            medicalForm.addEventListener('submit', function(e) {
+                // Allow existing logic (if any) to control preventing default; here we just ensure hidden content sync.
+                const hiddenField = document.getElementById('hidden-content');
+                if (hiddenField && window.quill && quill.root) {
+                    hiddenField.value = quill.root.innerHTML;
+                }
+            });
+        }
+    });
 
     function toggleEditMode(sectionType) {
         const formContainer = document.getElementById(`formContainer${sectionType}`);
