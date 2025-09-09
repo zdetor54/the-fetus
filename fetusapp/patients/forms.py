@@ -102,7 +102,7 @@ class HistoryMedicalForm(FlaskForm):
 class HistoryObstetricsForm(FlaskForm):
     id = IntegerField("Patient ID", validators=[Optional()])
     ft = IntegerField("Φυσιολογικοί Τοκετοί:", validators=[Optional()])
-    kt = IntegerField("Τοκετοί με Καισαρική Τομή:", validators=[Optional()])
+    kt = IntegerField("Καισαρικές:", validators=[Optional()])
     embrioulkia = IntegerField("Εμβρυουλκία:", validators=[Optional()])
     te = IntegerField("Τεχνητές Εκτρώσεις:", validators=[Optional()])
     ae = IntegerField("Αυτόματες Εκτρώσεις:", validators=[Optional()])

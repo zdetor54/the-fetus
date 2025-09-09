@@ -432,8 +432,13 @@ em {
     color: var(--vibrant-pink);
 }
 
-.card-cover{
+.card-cover
+{
     border-color: var(--vibrant-pink);
+}
+
+.card{
+    background-color: rgba(255, 255, 255, 0.05);
 }
 
 /* Patients: Patient Lite form */
