@@ -1,7 +1,9 @@
 from flask_wtf import FlaskForm
 from wtforms import (
     BooleanField,
+    FieldList,
     FloatField,
+    FormField,
     IntegerField,
     StringField,
     SubmitField,
@@ -106,4 +108,20 @@ class HistoryObstetricsForm(FlaskForm):
     embrioulkia = IntegerField("Εμβρυουλκία:", validators=[Optional()])
     te = IntegerField("Τεχνητές Εκτρώσεις:", validators=[Optional()])
     ae = IntegerField("Αυτόματες Εκτρώσεις:", validators=[Optional()])
-    submit = SubmitField("Αποθήκευση", validators=[Optional()])
+
+
+class HistoryObstetricsXEntryForm(FlaskForm):
+    id = IntegerField("ID", validators=[Optional()])
+    year_of_birth = IntegerField("Έτος Γέννησης:", validators=[Optional()])
+    birth_type = StringField("Τύπος Τοκετού:", validators=[Optional()])
+    baby_weight = FloatField("Βάρος Νεογνού (kg):", validators=[Optional()])
+    gestation_week = IntegerField("Εβδομάδα Κύησης:", validators=[Optional()])
+    complications_notes = TextAreaField(
+        "Επιπλοκές / Παρατηρήσεις:",
+        validators=[Optional()],
+        render_kw={"class": "expanding-textarea"},
+    )
+
+
+class HistoryObstetricsXForm(FlaskForm):
+    entries = FieldList(FormField(HistoryObstetricsXEntryForm), min_entries=0)

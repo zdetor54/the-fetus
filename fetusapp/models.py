@@ -361,7 +361,7 @@ class HistoryObstetrics(BaseModel):
         self.is_active = is_active
 
 
-class HistoryObstetrics_x(db.Model):
+class HistoryObstetrics_x(BaseModel):
     __tablename__ = "history_obstetrics_x"
 
     id = db.Column(db.Integer, primary_key=True)

@@ -26,7 +26,7 @@ from fetusapp.models import (
     Patient,
 )
 
-from .forms import HistoryMedicalForm, HistoryObstetricsForm
+from .forms import HistoryMedicalForm, HistoryObstetricsForm, HistoryObstetricsXForm
 
 patients = Blueprint("patients", __name__)
 
@@ -292,6 +292,7 @@ def patient() -> Response:
         patient = Patient.query.get(patient_id)
         history_medical_form = HistoryMedicalForm()
         history_obstetrics_form = HistoryObstetricsForm()
+        history_obstetrics_x_form = HistoryObstetricsXForm()
         # get the medical history of the patient
 
         medical_history = HistoryMedical.query.filter_by(
@@ -301,7 +302,6 @@ def patient() -> Response:
         if medical_history:
             history_medical_form = HistoryMedicalForm(obj=medical_history)
 
-        # TODO: Remove the print statement after we are done with the development
         try:
             medical_history_dict = medical_history.to_dict()
         except AttributeError:
@@ -319,6 +319,17 @@ def patient() -> Response:
         except AttributeError:
             obstetrics_history_dict = dict()
 
+        obstetrics_history_x = HistoryObstetrics_x.query.filter_by(
+            patient_id=patient_id, is_active=True
+        ).all()
+
+        # Prepare list of dicts using the model helper and populate FieldList directly
+        obstetrics_history_x_dicts = [entry.to_dict() for entry in obstetrics_history_x]
+        for row in obstetrics_history_x_dicts:
+            history_obstetrics_x_form.entries.append_entry(row)
+
+        print(history_obstetrics_x_form.entries.data)
+
         return render_template(
             "patient.html",
             active_page="patient",
@@ -332,6 +343,8 @@ def patient() -> Response:
             partner_data_fields=partner_data_fields,
             obstetrics_history_dict=obstetrics_history_dict,
             history_obstetrics_form=history_obstetrics_form,
+            history_obstetrics_x_form=history_obstetrics_x_form,
+            obstetrics_history_x_list=obstetrics_history_x_dicts,
         )
 
     return render_template(
