@@ -319,9 +319,11 @@ def patient() -> Response:
         except AttributeError:
             obstetrics_history_dict = dict()
 
-        obstetrics_history_x = HistoryObstetrics_x.query.filter_by(
-            patient_id=patient_id, is_active=True
-        ).all()
+        obstetrics_history_x = (
+            HistoryObstetrics_x.query.filter_by(patient_id=patient_id, is_active=True)
+            .order_by(HistoryObstetrics_x.year_of_birth.desc())
+            .all()
+        )
 
         # Prepare list of dicts using the model helper and populate FieldList directly
         obstetrics_history_x_dicts = [entry.to_dict() for entry in obstetrics_history_x]
