@@ -381,10 +381,7 @@ em {
 #pills-register,
 #pills-delete,
 #pills-update,
-#editableContentCD,
-#editableContentPD,
-#editableContentHistoryMedical,
-#editableContentHistoryObstetrics,
+[id^="editableContent"],
 .modal-content {
     background: var(--warm-beige);
     color: black;
