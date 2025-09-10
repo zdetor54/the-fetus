@@ -381,10 +381,7 @@ em {
 #pills-register,
 #pills-delete,
 #pills-update,
-#editableContentCD,
-#editableContentPD,
-#editableContentHistoryMedical,
-#editableContentHistoryObstetrics,
+[id^="editableContent"],
 .modal-content {
     background: var(--warm-beige);
     color: black;
@@ -437,7 +434,7 @@ em {
     border-color: var(--vibrant-pink);
 }
 
-.card{
+#readOnlyContentHistoryObstetrics .card{
     background-color: rgba(255, 255, 255, 0.05);
 }
 
