@@ -40,7 +40,7 @@
                                 {% set form_elements = ['ft', 'kt', 'embrioulkia', 'te', 'ae'] %}
                                 {% for element in form_elements %}
                                     {% set field = history_obstetrics_form[element] %}
-                                    {% if field.data is not none and (field.data != '' or field.data != 0) %}
+                                    {% if field.data is not none and (field.data != '' and field.data != 0) %}
                                     <div class="col-6 col-md-4 col-lg-2">
                                         <div class="card shadow-sm text-center h-100 rounded-4">
                                             <div class="card-body py-3">
@@ -187,7 +187,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
-                                                    <button type="button" class="btn login-btn px-4" onclick="saveChangesHistoryObstetrics()">
+                                                    <button type="button" class="btn login-btn px-4" onclick="saveChangesHistoryObstetricsX()">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-floppy" viewBox="0 1 16 16">
                                                             <path d="M11 2H9v3h2z"/>
                                                             <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
@@ -249,6 +249,66 @@ async function confirmDeleteObstetricsHistory() {
     }
 }
 async function saveChangesHistoryObstetrics() {
+    try {
+        const form = document.getElementById('obstetricsHistoryForm');
+        const formData = new FormData(form);
+        const historyId = form.querySelector('input[name="id"]').value;
+        const patientId = '{{ patient.id }}';
+        console.log('patientId:', patientId);
+        const csrfToken = form.querySelector('input[name="csrf_token"]').value;
+
+        // Convert FormData to JSON
+        const formDataJson = {};
+        formData.forEach((value, key) => {
+            formDataJson[key] = value;
+        });
+
+        console.log('formDataJson:', formDataJson);
+        let response;
+        if (historyId) {
+        response = await fetch(`/api/obstetrics-history/${historyId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify(formDataJson)
+            });
+        } else {
+            // Send POST request (create new)
+            formDataJson['patient_id'] = patientId;
+            response = await fetch(`/api/obstetrics-history`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify(formDataJson)
+            });
+        }
+
+        if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        if (result.success) {
+            // Remember the active pill before reload so we can restore it
+            try { sessionStorage.setItem('lastActiveTab', '#pills-history_obstetrics'); } catch (e) {}
+            // refresh the page
+            location.reload();
+            toggleEditMode('HistoryObstetrics');
+        } else {
+            throw new Error(result.error || 'Failed to save changes');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error saving changes: ' + error.message);
+    }
+};
+
+async function saveChangesHistoryObstetricsX() {
     try {
         const form = document.getElementById('obstetricsHistoryForm');
         const formData = new FormData(form);
