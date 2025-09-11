@@ -11,10 +11,10 @@
 {% endmacro %}
 {% macro input_group(field_name, field_config, value) %}
     <div class="input-group">
-        {% if field_config.type == 'select' %}
+        {% if field_config.type == 'SelectField' %}
             <select id="{{ field_name }}Input" name="{{ field_name }}"{% if not value%}class="text-muted"{% endif %}>
                 <option value="" class="text-muted">Επιλέξτε...</option>
-                {% for option in field_config.options %}
+                {% for option in field_config.choices %}
                     <option value="{{ option.value }}" class="text-dark" {{ 'selected' if value == option.value else '' }}>
                         {{ option.label }}
                     </option>

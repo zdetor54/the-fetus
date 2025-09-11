@@ -327,8 +327,17 @@ def patient() -> Response:
 
         # Prepare list of dicts using the model helper and populate FieldList directly
         obstetrics_history_x_dicts = [entry.to_dict() for entry in obstetrics_history_x]
-        for row in obstetrics_history_x_dicts:
-            history_obstetrics_x_form.entries.append_entry(row)
+        if obstetrics_history_x_dicts:
+            for row in obstetrics_history_x_dicts:
+                history_obstetrics_x_form.entries.append_entry(row)
+        else:
+            # ensure at least one empty form so template can render fields
+            history_obstetrics_x_form.entries.append_entry()
+            obstetrics_history_x_dicts = (
+                history_obstetrics_x_form.entries.data
+                if history_obstetrics_x_form.entries.data
+                else [{}]
+            )
 
         print(history_obstetrics_x_form.entries.data)
 
