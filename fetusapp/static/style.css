@@ -474,6 +474,10 @@ em {
     outline: none;
 }
 
+select option {
+    background-color: #fff5f0; /* dropdown list background */
+}
+
 .patient-lite .input-group input:focus~label,
 .patient-lite .input-group input:valid~label,
 .patient-lite .input-group select:focus~label,
@@ -494,23 +498,6 @@ em {
     display: flex;
     gap: 10px;
     align-items: center;
-}
-
-input[type="date"],
-select{
-    /* -webkit-appearance: none; */
-    /* -moz-appearance: none; */
-    /* appearance: none; */
-    background-color: transparent;
-    color: inherit;
-    font-family: inherit;
-    font-size: inherit;
-    padding: 0.5rem;
-    border: none;
-    border-bottom: 1px solid #ced4da;
-    border-radius: 0;
-    text-align: left;
-    width: 100%;
 }
 
 

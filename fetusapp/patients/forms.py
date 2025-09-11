@@ -5,6 +5,7 @@ from wtforms import (
     FloatField,
     FormField,
     IntegerField,
+    SelectField,
     StringField,
     SubmitField,
     TextAreaField,
@@ -113,7 +114,15 @@ class HistoryObstetricsForm(FlaskForm):
 class HistoryObstetricsXEntryForm(FlaskForm):
     id = IntegerField("ID", validators=[Optional()])
     year_of_birth = IntegerField("Έτος Γέννησης:", validators=[Optional()])
-    birth_type = StringField("Τύπος Τοκετού:", validators=[Optional()])
+    birth_type = SelectField(
+        "Τύπος Τοκετού:",
+        validators=[Optional()],
+        choices=[
+            ("Φυσιολογικός Τοκετός", "Φυσιολογικός Τοκετός"),
+            ("Καισαρική Τομή", "Καισαρική Τομή"),
+            ("Εμβρυουλκία", "Εμβρυουλκία"),
+        ],
+    )
     baby_weight = FloatField("Βάρος Νεογνού (kg):", validators=[Optional()])
     gestation_week = IntegerField("Εβδομάδα Κύησης:", validators=[Optional()])
     complications_notes = TextAreaField(

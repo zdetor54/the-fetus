@@ -38,7 +38,6 @@
             </div>
             <div class="modal-body">
                 <p class="text-center">Είστε σίγουροι ότι θέλετε να διαγράψετε την καρτέλα του τέκνου της {{ patient.first_name | proper_case }} {{ patient.last_name | proper_case }};</p>
-
             </div>
             <div class="modal-footer justify-content-center">
                 <form action="">
@@ -187,9 +186,27 @@
                       <div class="col-12">
                         <div class="row py-2">
                           <div class="col-12">
-                            {% set new_fields = ['year_of_birth','birth_type','baby_weight','gestation_week','complications_notes'] %}
+                            <div class="input-group">
+                                {% set entry_form = history_obstetrics_x_form.entries[0] %}
+                                {% set field = getattr(entry_form, 'birth_type') %}
+                                <select id="birth_type"
+                                    name="birth_type"
+                                        {% if not field %}
+                                            class="text-muted"
+                                        {% endif %}>
+                                    <option value="" class="text-muted">Επιλέξτε...</option>
+                                    {% for val, label in field.choices %}
+                                        <option value="{{ val }}">{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                                <label for="birth_type" class="form-label">{{ field.label.text }}</label>
+                            </div>
+                            {% set new_fields = ['year_of_birth','baby_weight','gestation_week','complications_notes'] %}
                             {% for element in new_fields %}
-                              {{ macros.input_group(element, {'type': 'TextField', 'label': element|replace('_',' ')|title}, '') }}
+                                {% set field = getattr(entry_form, element) %}
+                                {% if field.type != 'HiddenField' %}
+                                    {{ macros.input_group(element, {'type': field.type, 'label': field.label.text}, field.data) }}
+                                {% endif %}
                             {% endfor %}
                           </div>
                         </div>
@@ -222,7 +239,7 @@
     </div>
   </div>
 </div>
-{% if history_obstetrics_x_form and history_obstetrics_x_form.entries %}
+{% if history_obstetrics_x_form and history_obstetrics_x_form.entries and history_obstetrics_x_form.entries[0].data.id %}
 <div class="row pt-3 g-3" id="obstetricsHistoryEntries">
     {% for entry_form in history_obstetrics_x_form.entries %}
         {% set prefix = 'HistoryObstetricsX_' ~ loop.index %}
@@ -272,7 +289,21 @@
                                                 <div class="col-12">
                                                     <div class="row py-2">
                                                         <div class="col-12">
-                                                        {% set form_elements = ['year_of_birth', 'birth_type', 'baby_weight', 'gestation_week', 'complications_notes'] %}
+                                                        <div class="input-group">
+                                                            {% set field = getattr(entry_form, 'birth_type') %}
+                                                            <select id="birth_type"
+                                                                name="birth_type"
+                                                                    {% if not field %}
+                                                                        class="text-muted"
+                                                                    {% endif %}>
+                                                                <option value="" class="text-muted">Επιλέξτε...</option>
+                                                                {% for val, label in field.choices %}
+                                                                    <option value="{{ val }}" {% if ('' ~ field.data) == ('' ~ val) %}selected{% endif %}>{{ label }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                            <label for="birth_type" class="form-label">{{ field.label.text }}</label>
+                                                        </div>
+                                                        {% set form_elements = ['year_of_birth', 'baby_weight', 'gestation_week', 'complications_notes'] %}
                                                         {% for element in form_elements %}
                                                             {% set field = getattr(entry_form, element) %}
                                                             {% if field.type != 'HiddenField' %}
