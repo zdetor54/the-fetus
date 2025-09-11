@@ -171,7 +171,7 @@
                                         <div class="form-wrapper patient-lite px-2">
                                             <form method="POST" id="obstetricsHistoryForm{{ prefix }}" data-history-id="{{ obstetrics_history_form.id.data if obstetrics_history_form else '' }}">
                                                 {{ history_obstetrics_form.hidden_tag() }}
-                                                {{ entry_form.form.id(type='hidden') }}
+                                                <input type="hidden" name="id" value="{{ entry_form.form.id.data }}">
                                                 <!-- {{ entry_form.form.id.data }} -->
                                                 <div class="col-12">
                                                     <div class="row py-2">
@@ -180,14 +180,14 @@
                                                         {% for element in form_elements %}
                                                             {% set field = getattr(entry_form, element) %}
                                                             {% if field.type != 'HiddenField' %}
-                                                                {{ macros.input_group(field.name, {'type': field.type, 'label': field.label.text}, field.data) }}
+                                                                {{ macros.input_group(element, {'type': field.type, 'label': field.label.text}, field.data) }}
                                                             {% endif %}
                                                         {% endfor %}
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
-                                                    <button type="button" class="btn login-btn px-4" onclick="saveChangesHistoryObstetricsX()">
+                                                    <button type="button" class="btn login-btn px-4" onclick="saveChangesHistoryObstetricsX(this)">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-floppy" viewBox="0 1 16 16">
                                                             <path d="M11 2H9v3h2z"/>
                                                             <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
@@ -308,17 +308,16 @@ async function saveChangesHistoryObstetrics() {
     }
 };
 
-async function saveChangesHistoryObstetricsX() {
+async function saveChangesHistoryObstetricsX(btn) {
     try {
-        const form = document.getElementById('obstetricsHistoryForm');
-        const formData = new FormData(form);
+        const form = btn.closest('form');
         const historyId = form.querySelector('input[name="id"]').value;
         const patientId = '{{ patient.id }}';
-        console.log('patientId:', patientId);
         const csrfToken = form.querySelector('input[name="csrf_token"]').value;
 
         // Convert FormData to JSON
         const formDataJson = {};
+        const formData = new FormData(form);
         formData.forEach((value, key) => {
             formDataJson[key] = value;
         });
@@ -326,7 +325,7 @@ async function saveChangesHistoryObstetricsX() {
         console.log('formDataJson:', formDataJson);
         let response;
         if (historyId) {
-        response = await fetch(`/api/obstetrics-history/${historyId}`, {
+        response = await fetch(`/api/obstetrics-history-x/${historyId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

@@ -128,6 +128,8 @@ def update_obstetrics_history_x(id: int) -> tuple[dict, int]:
     try:
         # Get existing record
         history = HistoryObstetrics_x.query.get_or_404(id)
+        print("Updating HistoryObstetrics_x ID:", id)
+        print("Existing Data:", history.__dict__)
 
         # Read and normalize JSON payload so WTForms validators accept booleans
         payload = request.get_json(silent=True) or {}
