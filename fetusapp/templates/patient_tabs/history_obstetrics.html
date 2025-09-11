@@ -29,6 +29,40 @@
     </div>
 </div>
 
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteObstetricsHistoryXModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h5 class="modal-title text-center">Επιβεβαίωση Διαγραφής</h5>
+            </div>
+            <div class="modal-body">
+                <p class="text-center">Είστε σίγουροι ότι θέλετε να διαγράψετε την καρτέλα του τέκνου της {{ patient.first_name | proper_case }} {{ patient.last_name | proper_case }};</p>
+
+            </div>
+            <div class="modal-footer justify-content-center">
+                <form action="">
+                    <input id="deleteHistoryId" name="id" value="" type="hidden">
+                    <button type="button" class="btn btn-outline-light px-4" data-bs-dismiss="modal">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-x-square" viewBox="0 1 16 16">
+                            <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                        </svg>
+                        Ακύρωση
+                    </button>
+                    <button type="button" class="btn btn-danger px-4" onclick="confirmDeleteObstetricsHistoryX(this)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-trash3" viewBox="0 1 16 16">
+                            <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                        </svg>
+                        Διαγραφή
+                    </button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="col-12">
     <div class="card card-cover inherit-text-color bg-transparent rounded-4 shadow-lg">
         <div class="d-flex flex-column h-100 text-shadow-1">
@@ -40,7 +74,7 @@
                                 {% set form_elements = ['ft', 'kt', 'embrioulkia', 'te', 'ae'] %}
                                 {% for element in form_elements %}
                                     {% set field = history_obstetrics_form[element] %}
-                                    {% if field.data is not none and (field.data != '' or field.data != 0) %}
+                                    {% if field.data is not none and (field.data != '' and field.data != 0) %}
                                     <div class="col-6 col-md-4 col-lg-2">
                                         <div class="card shadow-sm text-center h-100 rounded-4">
                                             <div class="card-body py-3">
@@ -121,8 +155,9 @@
     </div>
 </div>
 
+
 <div class="read-only read-only-labels pt-3 zd d-flex justify-content-end" id="readOnlyContentHistoryObstetrics">
-    <button type="button" class="btn btn-outline-secondary px-4 ms-auto" data-edit-button="true" onclick="toggleEditMode('HistoryObstetrics')">
+    <button type="button" class="btn btn-outline-secondary px-4 ms-auto" data-edit-button="true" onclick="toggleEditMode('HistoryObstetricsX_new')">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-plus-square" viewBox="0 1 16 16">
             <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
             <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
@@ -130,7 +165,63 @@
         Δημιουργία Καρτέλας
 </button>
 </div>
-
+<!-- Hidden NEW obstetrics history card -->
+<div class="row pt-3 g-3" id="obstetricsHistoryNewWrapper">
+  <div class="col-12 col-lg-6 obstetrics-history-entry" id="entryWrapperHistoryObstetricsX_new" >
+    <div class="card card-cover inherit-text-color bg-transparent rounded-4 shadow-lg" id="cardHistoryObstetricsX_new" style="border: none;">
+      <div class="d-flex flex-column h-100 text-shadow-1">
+        <div class="container px-0">
+          <div class="form-container" id="formContainerHistoryObstetricsX_new">
+            <!-- Read-only (placeholder) -->
+            <div class="read-only read-only-labels p-4" id="readOnlyContentHistoryObstetricsX_new" style="display:none;">
+              <p>Hello World</p>
+            </div>
+            <!-- Editable View -->
+            <div class="editable card card-cover rounded-4 shadow-lg" id="editableContentHistoryObstetricsX_new" style="display:none; border: 1px solid var(--vibrant-pink);">
+              <div class="d-flex flex-column p-3 text-shadow-1">
+                <div class="wrapper">
+                  <div class="form-wrapper patient-lite px-2">
+                    <form method="POST" id="obstetricsHistoryFormHistoryObstetricsX_new">
+                      {{ history_obstetrics_form.hidden_tag() }}
+                      <input type="hidden" name="id" value="">
+                      <div class="col-12">
+                        <div class="row py-2">
+                          <div class="col-12">
+                            {% set new_fields = ['year_of_birth','birth_type','baby_weight','gestation_week','complications_notes'] %}
+                            {% for element in new_fields %}
+                              {{ macros.input_group(element, {'type': 'TextField', 'label': element|replace('_',' ')|title}, '') }}
+                            {% endfor %}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+                        <button type="button" class="btn login-btn px-4" onclick="saveChangesHistoryObstetricsX(this)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-floppy" viewBox="0 1 16 16">
+                                <path d="M11 2H9v3h2z"/>
+                                <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
+                            </svg>
+                            Αποθήκευση
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary px-4" onclick="cancelChanges()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-x-square" viewBox="0 1 16 16">
+                                <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                            </svg>
+                            Ακύρωση
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- /editable -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% if history_obstetrics_x_form and history_obstetrics_x_form.entries %}
 <div class="row pt-3 g-3" id="obstetricsHistoryEntries">
     {% for entry_form in history_obstetrics_x_form.entries %}
@@ -140,6 +231,7 @@
                 <div class="d-flex flex-column h-100 text-shadow-1">
                     <div class="container px-0 ">
                         <div class="form-container" style="position: relative; transition: max-height 0.2s ease-in-out;" id="formContainer{{ prefix }}">
+                            <input type="hidden" name="id" value="{{ entry_form.form.id.data }}" style="display: none;">
                             <!-- Read Only View -->
                             <div class="read-only read-only-labels p-4" id="readOnlyContent{{ prefix }}">
                                 <div class="row py-2">
@@ -155,13 +247,17 @@
                                     </div>
                                 </div>
                                 <div class="d-flex flex-wrap justify-content-end gap-2 mt-3">
-                                    <button type="button" class="btn btn-outline-secondary px-4" data-edit-button="true" onclick="toggleEditMode('{{ prefix }}')">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="1 0 16 16"><path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/><path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/></svg>
-                                        Επεξεργασία
-                                    </button>
-                                    <button type="button" class="btn btn-outline-danger px-4" onclick="showDeleteObstetricsHistoryModal()">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-trash3" viewBox="1 0 16 16"><path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/></svg>
-                                    </button>
+                                    <form action="">
+                                        <input type="hidden" name="id" value="{{ entry_form.form.id.data }}">
+                                        <button type="button" class="btn btn-outline-secondary px-4" data-edit-button="true" onclick="toggleEditMode('{{ prefix }}')">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="1 0 16 16"><path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/><path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/></svg>
+                                            Επεξεργασία
+                                        </button>
+                                        <button type="button" class="btn btn-outline-danger px-4" onclick="showDeleteObstetricsHistoryXModal(this)">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-trash3" viewBox="1 0 16 16"><path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/></svg>
+                                        </button>
+                                    </form>
+
                                 </div>
                             </div>
                             <!-- Editable View -->
@@ -171,7 +267,8 @@
                                         <div class="form-wrapper patient-lite px-2">
                                             <form method="POST" id="obstetricsHistoryForm{{ prefix }}" data-history-id="{{ obstetrics_history_form.id.data if obstetrics_history_form else '' }}">
                                                 {{ history_obstetrics_form.hidden_tag() }}
-                                                {{ history_obstetrics_form.id(type="hidden") }}
+                                                <input type="hidden" name="id" value="{{ entry_form.form.id.data }}">
+                                                <!-- {{ entry_form.form.id.data }} -->
                                                 <div class="col-12">
                                                     <div class="row py-2">
                                                         <div class="col-12">
@@ -179,14 +276,14 @@
                                                         {% for element in form_elements %}
                                                             {% set field = getattr(entry_form, element) %}
                                                             {% if field.type != 'HiddenField' %}
-                                                                {{ macros.input_group(field.name, {'type': field.type, 'label': field.label.text}, field.data) }}
+                                                                {{ macros.input_group(element, {'type': field.type, 'label': field.label.text}, field.data) }}
                                                             {% endif %}
                                                         {% endfor %}
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
-                                                    <button type="button" class="btn login-btn px-4" onclick="saveChangesHistoryObstetrics()">
+                                                    <button type="button" class="btn login-btn px-4" onclick="saveChangesHistoryObstetricsX(this)">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-floppy" viewBox="0 1 16 16">
                                                             <path d="M11 2H9v3h2z"/>
                                                             <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
@@ -244,7 +341,7 @@ async function confirmDeleteObstetricsHistory() {
         }
     } catch (error) {
         console.error('Delete error:', error);
-        alert('Αποτυχία διαγραφής ιατρικού ιστορικού: ' + error.message);
+        alert('Αποτυχία διαγραφής μαιευτικού ιστορικού: ' + error.message);
     }
 }
 async function saveChangesHistoryObstetrics() {
@@ -277,6 +374,100 @@ async function saveChangesHistoryObstetrics() {
             // Send POST request (create new)
             formDataJson['patient_id'] = patientId;
             response = await fetch(`/api/obstetrics-history`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify(formDataJson)
+            });
+        }
+
+        if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        if (result.success) {
+            // Remember the active pill before reload so we can restore it
+            try { sessionStorage.setItem('lastActiveTab', '#pills-history_obstetrics'); } catch (e) {}
+            // refresh the page
+            location.reload();
+            toggleEditMode('HistoryObstetrics');
+        } else {
+            throw new Error(result.error || 'Failed to save changes');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error saving changes: ' + error.message);
+    }
+};
+
+function showDeleteObstetricsHistoryXModal(btn) {
+    const form = btn.closest('form');
+    const historyId = form.querySelector('input[name="id"]').value;
+    console.log('historyId to delete:', historyId);
+    document.getElementById('deleteHistoryId').value = historyId;
+    const deleteModal = new bootstrap.Modal(document.getElementById('deleteObstetricsHistoryXModal'));
+    deleteModal.show();
+}
+
+async function confirmDeleteObstetricsHistoryX(btn) {
+    const form = btn.closest('form');
+    const historyId = form.querySelector('input[name="id"]').value;
+    console.log('historyId to delete:', historyId)
+    try {
+        const response = await fetch(`/api/obstetrics-history-x/${historyId}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (!response.ok) throw new Error('Delete failed');
+
+        const result = await response.json();
+        if (result.success) {
+            // Remember the active pill before reload so we can restore it
+            try { sessionStorage.setItem('lastActiveTab', '#pills-history_obstetrics'); } catch (e) {}
+            location.reload();
+        } else {
+            throw new Error(result.error || 'Unknown error');
+        }
+    } catch (error) {
+        console.error('Delete error:', error);
+        alert('Αποτυχία διαγραφής καρτέλας ιστορικού: ' + error.message);
+    }
+}
+
+async function saveChangesHistoryObstetricsX(btn) {
+    try {
+        const form = btn.closest('form');
+        const historyId = form.querySelector('input[name="id"]').value;
+        const patientId = '{{ patient.id }}';
+        const csrfToken = form.querySelector('input[name="csrf_token"]').value;
+
+        // Convert FormData to JSON
+        const formDataJson = {};
+        const formData = new FormData(form);
+        formData.forEach((value, key) => {
+            formDataJson[key] = value;
+        });
+
+        console.log('formDataJson:', formDataJson);
+        let response;
+        if (historyId) {
+        response = await fetch(`/api/obstetrics-history-x/${historyId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify(formDataJson)
+            });
+        } else {
+            // Send POST request (create new)
+            formDataJson['patient_id'] = patientId;
+            response = await fetch(`/api/obstetrics-history-x`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
