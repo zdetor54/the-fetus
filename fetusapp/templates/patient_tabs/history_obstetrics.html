@@ -171,7 +171,8 @@
                                         <div class="form-wrapper patient-lite px-2">
                                             <form method="POST" id="obstetricsHistoryForm{{ prefix }}" data-history-id="{{ obstetrics_history_form.id.data if obstetrics_history_form else '' }}">
                                                 {{ history_obstetrics_form.hidden_tag() }}
-                                                {{ history_obstetrics_form.id(type="hidden") }}
+                                                {{ entry_form.form.id(type='hidden') }}
+                                                {{ entry_form.form.id.data }}
                                                 <div class="col-12">
                                                     <div class="row py-2">
                                                         <div class="col-12">
