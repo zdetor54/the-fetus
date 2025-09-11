@@ -121,7 +121,7 @@ def delete_obstetrics_history(id: int) -> tuple[dict, int]:
         return jsonify({"success": False, "error": str(e)}), 400
 
 
-@obstetrics_history_x.route("/api/obstetrics-history/<int:id>", methods=["PUT"])
+@obstetrics_history_x.route("/api/obstetrics-history-x/<int:id>", methods=["PUT"])
 @login_required
 @csrf.exempt
 def update_obstetrics_history_x(id: int) -> tuple[dict, int]:
