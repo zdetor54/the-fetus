@@ -1,53 +1,18 @@
-from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 
 def escape_string(value: Any) -> str:
-    """Escape values for safe SQL insertion.
-
-    - Treat None or empty string as SQL NULL.
-    - Remove NUL characters which break many SQL engines.
-    - Normalize CRLF to LF.
-    - Double single quotes (including some unicode single-quote variants) so SQL
-      string literals aren't terminated early.
-    """
-    if value is None:
+    """Escape single quotes and handle null values for SQL strings."""
+    if value is None or value == "":
         return "null"
+    return "'" + str(value).replace("'", "''") + "'"
 
-    s = str(value)
-    if s == "":
+
+def format_date(date_str: str) -> str:
+    """Format date strings, returning 'null' for empty or zero dates."""
+    if not date_str or date_str == "0000-00-00 00:00:00" or date_str == "0000-00-00":
         return "null"
-
-    # Remove NUL bytes which most SQL engines don't accept inside literals
-    s = s.replace("\x00", "")
-
-    # Normalize newlines (preserve them; SQL string literals can contain newlines)
-    s = s.replace("\r\n", "\n").replace("\r", "\n")
-
-    # Escape ASCII single quote and common unicode single-quote variants
-    s = s.replace("'", "''").replace("\u2019", "''").replace("\u2018", "''")
-
-    return f"'{s}'"
-
-
-def format_date(date_val: Any) -> str:
-    """Format date values, returning 'null' for empty or zero dates.
-
-    Accepts datetime objects or strings. Returns SQL NULL for blank/zero dates.
-    """
-    if date_val is None:
-        return "null"
-
-    # Accept actual datetime objects
-    if isinstance(date_val, datetime):
-        return f"'{date_val.strftime('%Y-%m-%d %H:%M:%S')}'"
-
-    s = str(date_val)
-    if s == "" or s == "0000-00-00 00:00:00" or s == "0000-00-00":
-        return "null"
-
-    # Wrap and escape any quotes/newlines in the provided string
-    return escape_string(s)
+    return f"'{date_str}'"
 
 
 def format_value(value: Any, value_type: str) -> str:
@@ -56,10 +21,27 @@ def format_value(value: Any, value_type: str) -> str:
         return format_date(value)
     elif value_type.lower() == "str":
         return escape_string(value)
-    elif value_type.lower() in ["int", "bool"]:
+    elif value_type.lower() in ["bool"]:
         if value is None or value == "":
             return "null"
         return str(value)
+    elif value_type.lower() in ["int", "decimal"]:
+        # Treat typical empty/sentinel representations (including zero) as NULL
+        # because source system encodes missing decimals as 0 / '0'.
+        if value is None:
+            return "null"
+        if isinstance(value, (int, float)):
+            return "null" if value == 0 else str(value)
+        if isinstance(value, str):
+            raw = value.strip()
+            if raw.lower() in {"", "none", "null", "n/a", "na", "0", "0.0"}:
+                return "null"
+            try:
+                num = float(raw)
+                return "null" if num == 0 else raw
+            except ValueError:
+                return "null"
+        return "null"
     else:
         return escape_string(value)  # Default to string handling
 
