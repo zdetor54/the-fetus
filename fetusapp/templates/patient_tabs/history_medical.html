@@ -41,6 +41,7 @@
                             <h3 class="text-center mt-2">Γενικά Σχόλια</h3>
 
                             <pre class="formatted-text zd">{{ medical_history_form.comments.data }}</pre>
+
                             <h3 class="text-center mt-2 zd-bottom">Ιατρικό Ιστορικό</h3>
                             <div class="row py-2">
                                 <div class="col-12 col-lg-6 px-4">
@@ -147,7 +148,15 @@
                                             {{ medical_history_form.hidden_tag() }}
                                             {{ medical_history_form.id(type="hidden") }}
                                             <h2 class="text-center mt-2">Γενικά Σχόλια</h2>
-                                            {{ medical_history_form.comments(class="form-control", id="comments-textarea", placeholder="Γενικά Σχόλια", rows = 5) }}
+
+                                            {% set form_elements = ['comments'] %}
+
+                                            {% for element in form_elements %}
+                                                {% set field = getattr(medical_history_form, element) %}
+                                                {% if field.type != 'HiddenField' %}
+                                                    {{ macros.input_group(field.name, {'type': field.type, 'label': ''}, field.data) }}
+                                                {% endif %}
+                                            {% endfor %}
                                             <h2 class="text-center mt-5 zd-bottom">Ιατρικό Ιστορικό</h2>
                                             <div class="row py-2">
                                                 <div class="col-12 col-lg-6 px-4">
@@ -373,11 +382,44 @@
         }
     }
 
-    // Patch toggleEditMode to also enable auto-resize when switching to edit mode
+    // Auto-resize helper to apply to all expanding textareas (id or class based)
+    function initAutoResizeTextareas(scope=document) {
+        const textareas = new Set();
+        scope.querySelectorAll('textarea.expanding-textarea').forEach(t => textareas.add(t));
+        const comments = scope.getElementById ? scope.getElementById('comments-textarea') : null;
+        if (comments) textareas.add(comments);
+        textareas.forEach(ta => {
+            if (!ta) return;
+            // Remove border on parent input-group if present
+            if (ta.parentElement && ta.parentElement.classList.contains('input-group')) {
+                ta.parentElement.style.borderBottom = 'none';
+            }
+            const apply = () => {
+                ta.style.overflow = 'hidden';
+                ta.style.resize = 'none';
+                ta.style.height = 'auto';
+                ta.style.height = ta.scrollHeight + 'px';
+            };
+            if (!ta._autoResizeBound) {
+                ta.addEventListener('input', apply);
+                ta._autoResizeBound = true;
+            }
+            apply();
+        });
+    }
+
+    // Patch toggleEditMode to trigger auto-resize immediately when entering edit mode
     const originalToggleEditMode = toggleEditMode;
     toggleEditMode = function(sectionType) {
         originalToggleEditMode(sectionType);
+        if (sectionType === 'HistoryMedical') {
+            // Delay a tick to allow display changes to affect scrollHeight
+            setTimeout(() => initAutoResizeTextareas(document.getElementById('editableContentHistoryMedical')), 0);
+        }
     };
+
+    // Run once on load in case form starts in edit mode (or for pre-rendered content)
+    document.addEventListener('DOMContentLoaded', () => initAutoResizeTextareas());
 
 </script>
 <script>

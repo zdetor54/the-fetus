@@ -9,7 +9,7 @@
     --vibrant-pink: #EF539E;          /* Active state color for nav link */
     --vibrant-pink: #ff4f40;          /* monzo*/
     --vibrant-pink: #9FE870;          /* wise*/
-    --vibrant-pink: #efb853;          /* monzo*/
+    --vibrant-pink: #9c9c9c;          /* monzo*/
     --warm-beige: #F3E1D7;            /* Background color */
     /* Match root background to body to avoid black gutter */
     background-color: #212529;
@@ -477,6 +477,7 @@ em {
 select option {
     background-color: #fff5f0; /* dropdown list background */
 }
+
 
 .patient-lite .input-group input:focus~label,
 .patient-lite .input-group input:valid~label,
