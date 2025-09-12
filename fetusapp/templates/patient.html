@@ -374,16 +374,20 @@
                 <h5 class="visually-hidden">Μαιευτικό Ιστορικό</h5>
                 {% include 'patient_tabs/history_obstetrics.html' %}
             </div>
-            <div class="tab-pane fade rounded-4 m-2" id="pills-pregnancies" role="tabpanel" aria-labelledby="pills-pregnancies-tab" tabindex="0">
-                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Esse, quasi enim mollitia doloribus praesentium dolores aut nostrum atque. Eveniet praesentium mollitia, quasi quia maxime expedita impedit odit sed modi? Quisquam.
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corrupti et ipsum ratione harum ab, quia atque repellendus voluptate illo a soluta nesciunt ipsa rem necessitatibus nulla, aliquam, maxime natus nihil?
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa saepe illo ratione mollitia nobis. Impedit obcaecati itaque qui quam voluptate, iure ipsum nobis reiciendis repellendus cum quibusdam aperiam repellat dolorem!
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo esse praesentium id necessitatibus iusto nesciunt sit? Nam, qui illum! Culpa et consequatur libero sequi quae inventore incidunt perferendis vero ducimus?
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis accusantium voluptates, facere animi, eveniet consectetur hic veniam, dolores perferendis iusto doloremque? Eos atque veniam necessitatibus vel sapiente laboriosam quod rem.
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores cumque fugit vero ducimus saepe unde officiis impedit, optio quisquam ullam doloribus repellat provident sunt incidunt repudiandae dignissimos mollitia placeat perspiciatis?
-                </p>
+            <div class="tab-pane fade rounded-4 m-2"
+                id="pills-pregnancies"
+                role="tabpanel"
+                aria-labelledby="pills-pregnancies-tab"
+                tabindex="0"
+                data-lazy-url="/patient/{{ patient.id }}/tab/pregnancies">
+                <h5 class="visually-hidden">Κυήσεις</h5>
+                <div class="lazy-placeholder p-3 text-center text-muted small">
+                    <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+                    Φόρτωση όταν ανοίξει η καρτέλα...
+                </div>
             </div>
-            <div class="tab-pane fade rounded-4 m-2" id="pills-disabled" role="tabpanel" aria-labelledby="pills-disabled-tab" tabindex="0">...</div>
+            <div class="tab-pane fade rounded-4 m-2" id="pills-disabled" role="tabpanel" aria-labelledby="pills-disabled-tab" tabindex="0">... hello</div>
+
           </div>
         <button type="button" class="btn btn-outline-danger px-4" onclick="showDeleteModal()">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-trash3" viewBox="0 1 16 16">
@@ -611,6 +615,45 @@
         const lastKey = sessionStorage.getItem(storageKey);
         activateByKey(lastKey);
     });
+</script>
+
+<script>
+(function setupGenericLazyTabs(){
+    const loaded = new Set();
+
+    function loadPane(pane){
+        if (!pane || loaded.has(pane.id)) return;
+        const url = pane.getAttribute('data-lazy-url');
+        if (!url) return;
+        pane.innerHTML = '<div class="p-3 text-center"><div class="spinner-border" role="status"></div></div>';
+        fetch(url, {headers:{'X-Requested-With':'fetch'}})
+          .then(r => {
+              if(!r.ok) throw new Error(r.status);
+              return r.text();
+          })
+          .then(html => {
+              pane.innerHTML = html;
+              loaded.add(pane.id);
+          })
+          .catch(err => {
+              pane.innerHTML = '<div class="text-danger p-3">Αποτυχία φόρτωσης.</div>';
+              console.error('Lazy tab load error:', err);
+          });
+    }
+
+    document.addEventListener('shown.bs.tab', ev => {
+        const targetSel = ev.target?.getAttribute('data-bs-target');
+        if (!targetSel) return;
+        const pane = document.querySelector(targetSel + '[data-lazy-url]');
+        loadPane(pane);
+    });
+
+    // If an initially active pane is lazy
+    document.addEventListener('DOMContentLoaded', () => {
+        const activeLazy = document.querySelector('.tab-pane.active[data-lazy-url]');
+        loadPane(activeLazy);
+    });
+})();
 </script>
 
 {{ super() }}

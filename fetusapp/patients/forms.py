@@ -10,6 +10,7 @@ from wtforms import (
     SubmitField,
     TextAreaField,
 )
+from wtforms.fields import DateField
 from wtforms.validators import DataRequired, Email, NumberRange, Optional
 
 
@@ -134,3 +135,83 @@ class HistoryObstetricsXEntryForm(FlaskForm):
 
 class HistoryObstetricsXForm(FlaskForm):
     entries = FieldList(FormField(HistoryObstetricsXEntryForm), min_entries=0)
+
+
+# ---------------- Pregnancy History (master) & Visits (detail) ---------------- #
+
+
+class PregnancyHistoryEntryForm(FlaskForm):
+    """Top-level pregnancy record (one per pregnancy)"""
+
+    id = IntegerField("ID", validators=[Optional()])
+    ter = DateField("ΤΕΡ:", validators=[Optional()])
+    alcohol = StringField("Αλκοόλ:", validators=[Optional()])
+    smoking = StringField("Κάπνισμα:", validators=[Optional()])
+    amniocentesis = StringField("Αμνιοκέντηση:", validators=[Optional()])
+    medication = StringField("Φαρμακευτική Αγωγή:", validators=[Optional()])
+    other = StringField("Λοιπά:", validators=[Optional()])
+    diabetes = StringField("Σακχαρώδης Διαβήτης:", validators=[Optional()])
+    hypertension = StringField("Υπέρταση:", validators=[Optional()])
+    urine_albumin = StringField("Λεύκωμα Ούρων:", validators=[Optional()])
+    bleeding = StringField("Αιμορραγία:", validators=[Optional()])
+    blood_type = StringField("Ομάδα Αίματος:", validators=[Optional()])
+    rhesus = StringField("Rhesus:", validators=[Optional()])
+    hemoglobinopathies_bth = StringField(
+        "Δρεπανοκυτταρική ΒΘ:", validators=[Optional()]
+    )
+    hemoglobinopathies_bs = StringField("Δρεπανοκυτταρική BS:", validators=[Optional()])
+    vaginal_fluid_cultivation = StringField(
+        "Καλλιέργεια Κολπικού Υγρού:", validators=[Optional()]
+    )
+    mycoplasma_ureaplasma = StringField(
+        "Mycoplasma/Ureaplasma:", validators=[Optional()]
+    )
+    chlamydia = StringField("Chlamydia:", validators=[Optional()])
+    herpes_hsv = StringField("Herpes (HSV):", validators=[Optional()])
+    hiv_12 = StringField("HIV 1/2:", validators=[Optional()])
+    syphilis_vdlr = StringField("Syphilis (VDRL):", validators=[Optional()])
+    hepatitis_b_bhsag = StringField("Hepatitis B (HBsAg):", validators=[Optional()])
+    aids_hiv = StringField("AIDS/HIV:", validators=[Optional()])
+    red_cells = StringField("Ερυθρά Αιμοσφαίρια:", validators=[Optional()])
+    toxoplasma = StringField("Toxoplasma:", validators=[Optional()])
+    cytomegalovirus_cmv = StringField("CMV:", validators=[Optional()])
+    listeria = StringField("Listeria:", validators=[Optional()])
+    hcv = StringField("HCV:", validators=[Optional()])
+
+
+class PregnancyHistoryForm(FlaskForm):
+    """Container for multiple pregnancy history entries"""
+
+    entries = FieldList(FormField(PregnancyHistoryEntryForm), min_entries=0)
+
+
+class PregnancyHistoryXEntryForm(FlaskForm):
+    """Single antenatal visit (PregnancyHistory_x)"""
+
+    id = IntegerField("ID", validators=[Optional()])
+    date_of_visit = DateField("Ημ/νία Επίσκεψης:", validators=[Optional()])
+    cause_of_visit = StringField("Αιτία Επίσκεψης:", validators=[Optional()])
+    tokos = IntegerField("Τοκός:", validators=[Optional()])
+    pregnancy_age = StringField("Ηλικία Κύησης:", validators=[Optional()])
+    height = FloatField("Ύψος (cm):", validators=[Optional()])
+    weight_begin = FloatField("Βάρος Έναρξης (kg):", validators=[Optional()])
+    weight_current = FloatField("Τρέχον Βάρος (kg):", validators=[Optional()])
+    weight_change = FloatField("Μεταβολή Βάρους (kg):", validators=[Optional()])
+    presentation = StringField("Θέση Εμβρύου:", validators=[Optional()])
+    fetal_heart = StringField("Καρδιακοί Παλμοί Εμβρύου:", validators=[Optional()])
+    amniotic_sac = StringField("Αμνιακός Σάκος:", validators=[Optional()])
+    contractions = StringField("Συστολές:", validators=[Optional()])
+    cervical_dilation = StringField("Διαστολή Τραχήλου:", validators=[Optional()])
+    cervical_effacement = StringField("Λέπτυνση Τραχήλου:", validators=[Optional()])
+    arterial_pressure = StringField("Αρτηριακή Πίεση:", validators=[Optional()])
+    temperature = FloatField("Θερμοκρασία (°C):", validators=[Optional()])
+    sumphysial_fundal_height_sfh = FloatField("SFH (cm):", validators=[Optional()])
+    comments = TextAreaField(
+        "Σχόλια:", validators=[Optional()], render_kw={"class": "expanding-textarea"}
+    )
+
+
+class PregnancyHistoryXForm(FlaskForm):
+    """Container for multiple antenatal visit entries"""
+
+    entries = FieldList(FormField(PregnancyHistoryXEntryForm), min_entries=0)

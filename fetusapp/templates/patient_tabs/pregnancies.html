@@ -1,5 +1,11 @@
 {% import 'macros.html' as macros %}
 
-<p>
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Id, obcaecati eaque dignissimos sed atque repellat dolorem error sit magni temporibus, deserunt suscipit doloremque pariatur perferendis harum quis voluptatum itaque libero?
-</p>
+{% if history_pregnancy_form.entries and history_pregnancy_form.entries[0].data.id %}
+<div class="row pt-3 g-3" id="pregnancyHistoryEntries">
+    {% for entry_form in history_pregnancy_form.entries %}
+        {% set prefix = 'HistoryPregnancy_' ~ loop.index %}
+        <h5 class="mb-0">Ιστορικό Κύησης {{ entry_form.form.ter.data }}</h5>
+        <p> hello </p>
+    {% endfor %}
+</div>
+{% endif %}
