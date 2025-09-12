@@ -145,7 +145,7 @@
     {"source": "PregnancyID", "target": "pregnancy_id", "type": "int"},
     {"source": "DateOfVisit", "target": "date_of_visit", "type": "date"},
     {"source": "CauseOfVisit", "target": "cause_of_visit", "type": "str"},
-    {"source": "Tokos", "target": "tokos", "type": "str"},
+    {"source": "Tokos", "target": "tokos", "type": "int"},
     {"source": "PregnancyAge", "target": "pregnancy_age", "type": "str"},
     {"source": "Height", "target": "height", "type": "decimal"},
     {"source": "WeightBegin", "target": "weight_begin", "type": "decimal"},
