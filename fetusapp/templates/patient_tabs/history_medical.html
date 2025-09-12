@@ -303,15 +303,24 @@
         const formContainer = document.getElementById(`formContainer${sectionType}`);
         const readOnlyContent = document.getElementById(`readOnlyContent${sectionType}`);
         const editableContent = document.getElementById(`editableContent${sectionType}`);
+        if (!formContainer || !readOnlyContent || !editableContent) return;
 
-        if (editableContent.style.display === 'none') {
+        const enteringEdit = editableContent.style.display === 'none';
+        if (enteringEdit) {
             editableContent.style.display = 'block';
             readOnlyContent.style.display = 'none';
-            formContainer.style.maxHeight = editableContent.scrollHeight + 'px';
+            // Let container grow naturally while editing
+            formContainer.style.maxHeight = 'none';
             disableAllEditButtons();
+            // Init / re-init textarea auto-resize after paint
+            setTimeout(() => {
+                initAutoResizeTextareas(editableContent);
+                ensureMedicalResizeObserver();
+            }, 0);
         } else {
             editableContent.style.display = 'none';
             readOnlyContent.style.display = 'block';
+            // Collapse back to read-only measured height
             formContainer.style.maxHeight = readOnlyContent.scrollHeight + 'px';
             enableAllEditButtons();
         }
@@ -408,18 +417,36 @@
         });
     }
 
-    // Patch toggleEditMode to trigger auto-resize immediately when entering edit mode
-    const originalToggleEditMode = toggleEditMode;
-    toggleEditMode = function(sectionType) {
-        originalToggleEditMode(sectionType);
-        if (sectionType === 'HistoryMedical') {
-            // Delay a tick to allow display changes to affect scrollHeight
-            setTimeout(() => initAutoResizeTextareas(document.getElementById('editableContentHistoryMedical')), 0);
-        }
-    };
+    // ResizeObserver to gently adjust when leaving edit mode (not needed while editing because maxHeight none)
+    function ensureMedicalResizeObserver() {
+        const fc = document.getElementById('formContainerHistoryMedical');
+        const editable = document.getElementById('editableContentHistoryMedical');
+        if (!fc || !editable) return;
+        if (!window.ResizeObserver) return;
+        if (editable._medicalObserved) return;
+        const ro = new ResizeObserver(() => {
+            if (editable.style.display !== 'none' && fc.style.maxHeight === 'none') {
+                // natural growth, nothing to clamp
+                return;
+            }
+            if (editable.style.display === 'none') {
+                // read-only mode; keep maxHeight synced
+                const roContent = document.getElementById('readOnlyContentHistoryMedical');
+                if (roContent) fc.style.maxHeight = roContent.scrollHeight + 'px';
+            }
+        });
+        ro.observe(editable);
+        editable._medicalObserved = true;
+    }
 
-    // Run once on load in case form starts in edit mode (or for pre-rendered content)
-    document.addEventListener('DOMContentLoaded', () => initAutoResizeTextareas());
+    document.addEventListener('DOMContentLoaded', () => {
+        // Initial sizing for read-only
+        const fc = document.getElementById('formContainerHistoryMedical');
+        const roContent = document.getElementById('readOnlyContentHistoryMedical');
+        if (fc && roContent) fc.style.maxHeight = roContent.scrollHeight + 'px';
+        initAutoResizeTextareas();
+        ensureMedicalResizeObserver();
+    });
 
 </script>
 <script>
