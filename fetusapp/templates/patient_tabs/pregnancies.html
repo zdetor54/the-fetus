@@ -1,11 +1,42 @@
 {% import 'macros.html' as macros %}
 
 {% if history_pregnancy_form.entries and history_pregnancy_form.entries[0].data.id %}
-<div class="row pt-3 g-3" id="pregnancyHistoryEntries">
-    {% for entry_form in history_pregnancy_form.entries %}
-        {% set prefix = 'HistoryPregnancy_' ~ loop.index %}
-        <h5 class="mb-0">Ιστορικό Κύησης {{ entry_form.form.ter.data }}</h5>
-        <p> hello </p>
-    {% endfor %}
+<div class="row g-3" id="pregnancyHistoryEntries">
+    <div class="col-12 col-lg-2">
+        <ul class="nav nav-pills flex-column mb-3 p-2 secondary-nav-container bg-dark" id="pills-tab" role="tablist">
+            {% for entry_form in history_pregnancy_form.entries %}
+                {% set prefix = 'HistoryPregnancy_' ~ loop.index %}
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link {% if loop.first %}active{% endif %}"
+                        style="border-radius: 5rem;" 
+                        id="pills-appointments-{{ loop.index }}-tab" 
+                        data-tab-key="appointments" 
+                        data-bs-toggle="pill" 
+                        data-bs-target="#pills-appointments-{{ loop.index }}" 
+                        type="button" 
+                        role="tab" 
+                        aria-controls="pills-appointments-{{ loop.index }}" 
+                        aria-selected="false">
+                        {{ entry_form.form.ter.data }}
+                    </button>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="col-12 col-lg-10" style="background-color: tomato;">
+        <div class="tab-content p-3" id="pills-tabContent">
+            {% for entry_form in history_pregnancy_form.entries %}
+                {% set prefix = 'HistoryPregnancy_' ~ loop.index %}
+                <div class="tab-pane fade {% if loop.first %}show active{% endif %}" 
+                    id="pills-appointments-{{ loop.index }}" 
+                    role="tabpanel" 
+                    aria-labelledby="pills-appointments-{{ loop.index }}-tab" 
+                    tabindex="0">
+                    {{ entry_form.form.ter.data }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    
 </div>
 {% endif %}
