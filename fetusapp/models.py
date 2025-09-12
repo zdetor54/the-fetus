@@ -34,7 +34,7 @@ class BaseModel(db.Model):
         return dictionary
 
 
-class User(db.Model, UserMixin):
+class User(BaseModel, UserMixin):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -73,7 +73,7 @@ class User(db.Model, UserMixin):
         return f"Username: {self.username}"
 
 
-class Patient(db.Model, UserMixin):
+class Patient(BaseModel):
     __tablename__ = "patients"
 
     id = db.Column(db.Integer, primary_key=True)
