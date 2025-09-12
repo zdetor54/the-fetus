@@ -1,18 +1,53 @@
+from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 
 def escape_string(value: Any) -> str:
-    """Escape single quotes and handle null values for SQL strings."""
-    if value is None or value == "":
+    """Escape values for safe SQL insertion.
+
+    - Treat None or empty string as SQL NULL.
+    - Remove NUL characters which break many SQL engines.
+    - Normalize CRLF to LF.
+    - Double single quotes (including some unicode single-quote variants) so SQL
+      string literals aren't terminated early.
+    """
+    if value is None:
         return "null"
-    return "'" + str(value).replace("'", "''") + "'"
+
+    s = str(value)
+    if s == "":
+        return "null"
+
+    # Remove NUL bytes which most SQL engines don't accept inside literals
+    s = s.replace("\x00", "")
+
+    # Normalize newlines (preserve them; SQL string literals can contain newlines)
+    s = s.replace("\r\n", "\n").replace("\r", "\n")
+
+    # Escape ASCII single quote and common unicode single-quote variants
+    s = s.replace("'", "''").replace("\u2019", "''").replace("\u2018", "''")
+
+    return f"'{s}'"
 
 
-def format_date(date_str: str) -> str:
-    """Format date strings, returning 'null' for empty or zero dates."""
-    if not date_str or date_str == "0000-00-00 00:00:00" or date_str == "0000-00-00":
+def format_date(date_val: Any) -> str:
+    """Format date values, returning 'null' for empty or zero dates.
+
+    Accepts datetime objects or strings. Returns SQL NULL for blank/zero dates.
+    """
+    if date_val is None:
         return "null"
-    return f"'{date_str}'"
+
+    # Accept actual datetime objects
+    if isinstance(date_val, datetime):
+        return f"'{date_val.strftime('%Y-%m-%d %H:%M:%S')}'"
+
+    s = str(date_val)
+    if s == "" or s == "0000-00-00 00:00:00" or s == "0000-00-00":
+        return "null"
+
+    # Wrap and escape any quotes/newlines in the provided string
+    return escape_string(s)
 
 
 def format_value(value: Any, value_type: str) -> str:
