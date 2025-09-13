@@ -429,7 +429,7 @@ class PregnancyHistory(BaseModel):
     )
 
     # Pregnancy-level fields (from tblpregnancyhistory)
-    ter = db.Column(db.Date, nullable=True)
+    ter = db.Column(db.Date, nullable=False)
     alcohol = db.Column(db.String(128), nullable=True)
     smoking = db.Column(db.String(128), nullable=True)
     amniocentesis = db.Column(db.String(128), nullable=True)
