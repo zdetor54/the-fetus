@@ -410,6 +410,7 @@
 {% endblock %}
 
 {% block javascript %}
+
 <script>
 
     function showDeleteModal() {
@@ -627,18 +628,34 @@
         if (!url) return;
         pane.innerHTML = '<div class="p-3 text-center"><div class="spinner-border" role="status"></div></div>';
         fetch(url, {headers:{'X-Requested-With':'fetch'}})
-          .then(r => {
-              if(!r.ok) throw new Error(r.status);
-              return r.text();
-          })
-          .then(html => {
-              pane.innerHTML = html;
-              loaded.add(pane.id);
-          })
-          .catch(err => {
-              pane.innerHTML = '<div class="text-danger p-3">Αποτυχία φόρτωσης.</div>';
-              console.error('Lazy tab load error:', err);
-          });
+        .then(r => {
+            if(!r.ok) throw new Error(r.status);
+            return r.text();
+        })
+        .then(html => {
+            // IMPORTANT: execute scripts in the partial
+            if (typeof window.injectPregnancyHTML === 'function') {
+                injectPregnancyHTML(pane, html);
+            } else {
+                // Fallback
+                const tmp = document.createElement('div');
+                tmp.innerHTML = html;
+                const scripts = [...tmp.querySelectorAll('script')];
+                scripts.forEach(s=>s.parentNode.removeChild(s));
+                pane.innerHTML = tmp.innerHTML;
+                scripts.forEach(old=>{
+                    const s=document.createElement('script');
+                    if (old.src) s.src = old.src; else s.textContent = old.textContent;
+                    if (old.type) s.type = old.type;
+                    document.head.appendChild(s);
+                });
+            }
+            loaded.add(pane.id);
+        })
+        .catch(err => {
+            pane.innerHTML = '<div class="text-danger p-3">Αποτυχία φόρτωσης.</div>';
+            console.error('Lazy tab load error:', err);
+        });
     }
 
     document.addEventListener('shown.bs.tab', ev => {

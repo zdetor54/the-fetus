@@ -64,6 +64,7 @@ from fetusapp.patients.history_obstetrics_views import (  # noqa: E402
     obstetrics_history,
     obstetrics_history_x,
 )
+from fetusapp.patients.pregnancy_views import pregnancy, pregnancy_x  # noqa: E402
 from fetusapp.patients.views import patients  # noqa: E402
 from fetusapp.users.views import users  # noqa: E402
 
@@ -76,4 +77,6 @@ app.register_blueprint(patients)  # type: ignore[has-type]
 app.register_blueprint(medical_history)  # type: ignore[has-type]
 app.register_blueprint(obstetrics_history)  # type: ignore[has-type]
 app.register_blueprint(obstetrics_history_x)  # type: ignore[has-type]
+app.register_blueprint(pregnancy)  # type: ignore[has-type]
+app.register_blueprint(pregnancy_x)  # type: ignore[has-type]
 app.register_blueprint(chatai)

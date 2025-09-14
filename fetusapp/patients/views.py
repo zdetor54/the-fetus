@@ -398,9 +398,11 @@ def patient_tab_pregnancies(patient_id: int) -> Response:
             else [{}]
         )
     print(history_pregnancy_form.entries.data)
+    patient = Patient.query.get(patient_id)
     return render_template(
         "patient_tabs/pregnancies.html",
         history_pregnancy_form=history_pregnancy_form,
+        patient=patient,
     )
 
 

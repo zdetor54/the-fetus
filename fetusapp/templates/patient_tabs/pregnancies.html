@@ -14,7 +14,7 @@
                 <div class="row g-3" id="pregnancyHistoryEntries">
                     <div class="col-12 col-lg-2">
                         <div class="pt-3 ms-3 me-3 me-lg-0">
-                            <ul class="nav nav-pills flex-column secondary-nav-container bg-dark w-100" id="pills-tab" role="tablist">
+                            <ul class="nav nav-pills flex-column secondary-nav-container bg-dark w-100" id="pregnancies-inner-tab" role="tablist">
                                 {% for entry_form in history_pregnancy_form.entries %}
                                     {% set prefix = 'HistoryPregnancy_' ~ loop.index %}
                                     <li class="nav-item  w-90" role="presentation">
@@ -45,7 +45,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-lg-10">
-                        <div class="tab-content p-3" id="pills-tabContent">
+                        <div class="tab-content p-3" id="pregnancies-inner-tabContent">
                             {% for entry_form in history_pregnancy_form.entries %}
                                 {% set prefix = 'HistoryPregnancy_' ~ loop.index %}
                                 <div class="tab-pane fade {% if loop.first %}show active{% endif %}"
@@ -118,7 +118,7 @@
                                                                                 </div>
                                                                             </div>
                                                                             <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
-                                                                                <button type="button" class="btn login-btn px-4" onclick="saveChangesHistoryPregnancy(this)">
+                                                                                <button type="button" class="btn login-btn px-4" onclick="saveChangesPregnancy(this)">
                                                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-floppy" viewBox="0 1 16 16">
                                                                                         <path d="M11 2H9v3h2z"/>
                                                                                         <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
@@ -178,3 +178,68 @@
         </div>
     </div>
 </div>
+
+<script>
+    window.saveChangesPregnancy = async function(btn) {
+        try {
+            const form = btn.closest('form');
+            const pregnancyId = form.querySelector('input[name="id"]').value;
+            const patientId = '{{ patient.id }}';
+            const csrfToken = form.querySelector('input[name="csrf_token"]').value;
+            console.log('pregnancyId:', pregnancyId);
+            console.log('patientId:', patientId);
+
+            // Convert FormData to JSON
+            const formDataJson = {};
+            const formData = new FormData(form);
+            formData.forEach((value, key) => {
+                if (value !== "" && value !== null && value !== undefined) {
+                    formDataJson[key] = value;
+                }
+            });
+
+            console.log('formDataJson:', formDataJson);
+            let response;
+            if (pregnancyId) {
+            response = await fetch(`/api/pregnancy/${pregnancyId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify(formDataJson)
+                });
+            } else {
+                // Send POST request (create new)
+                formDataJson['patient_id'] = patientId;
+                response = await fetch(`/api/pregnancy`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify(formDataJson)
+                });
+            }
+
+            if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+
+            if (result.success) {
+                // Remember the active pill before reload so we can restore it
+                try { sessionStorage.setItem('lastActiveTab', '#pills-history_obstetrics'); } catch (e) {}
+                // refresh the page
+                location.reload();
+                toggleEditMode('HistoryObstetrics');
+            } else {
+                throw new Error(result.error || 'Failed to save changes');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error saving changes: ' + error.message);
+        }
+    };
+</script>
