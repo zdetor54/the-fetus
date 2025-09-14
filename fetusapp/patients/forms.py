@@ -144,7 +144,7 @@ class PregnancyHistoryEntryForm(FlaskForm):
     """Top-level pregnancy record (one per pregnancy)"""
 
     id = IntegerField("ID", validators=[Optional()])
-    ter = DateField("ΤΕΡ:", validators=[Optional()])
+    ter = DateField("Τελευταία Έμμηνος Ρύση:", validators=[Optional()])
     alcohol = StringField("Αλκοόλ:", validators=[Optional()])
     smoking = StringField("Κάπνισμα:", validators=[Optional()])
     amniocentesis = StringField("Αμνιοκέντηση:", validators=[Optional()])
@@ -157,25 +157,29 @@ class PregnancyHistoryEntryForm(FlaskForm):
     blood_type = StringField("Ομάδα Αίματος:", validators=[Optional()])
     rhesus = StringField("Rhesus:", validators=[Optional()])
     hemoglobinopathies_bth = StringField(
-        "Δρεπανοκυτταρική ΒΘ:", validators=[Optional()]
+        "Αιμοσφαιρινοπάθειες βth:", validators=[Optional()]
     )
-    hemoglobinopathies_bs = StringField("Δρεπανοκυτταρική BS:", validators=[Optional()])
+    hemoglobinopathies_bs = StringField(
+        "Αιμοσφαιρινοπάθειες βs:", validators=[Optional()]
+    )
     vaginal_fluid_cultivation = StringField(
         "Καλλιέργεια Κολπικού Υγρού:", validators=[Optional()]
     )
     mycoplasma_ureaplasma = StringField(
-        "Mycoplasma/Ureaplasma:", validators=[Optional()]
+        "Μυκόπλασμα/Ουρεόπλασμα:", validators=[Optional()]
     )
-    chlamydia = StringField("Chlamydia:", validators=[Optional()])
-    herpes_hsv = StringField("Herpes (HSV):", validators=[Optional()])
-    hiv_12 = StringField("HIV 1/2:", validators=[Optional()])
-    syphilis_vdlr = StringField("Syphilis (VDRL):", validators=[Optional()])
-    hepatitis_b_bhsag = StringField("Hepatitis B (HBsAg):", validators=[Optional()])
+    chlamydia = StringField("Χλαμύδια:", validators=[Optional()])
+    herpes_hsv = StringField("Έρπητας (HSV):", validators=[Optional()])
+    hiv_12 = StringField("HIV 1-2:", validators=[Optional()])
+    syphilis_vdlr = StringField("Σύφιλη - VDRL:", validators=[Optional()])
+    hepatitis_b_bhsag = StringField("Ηπατίτιδα B-ΗΒsAg:", validators=[Optional()])
     aids_hiv = StringField("AIDS/HIV:", validators=[Optional()])
     red_cells = StringField("Ερυθρά Αιμοσφαίρια:", validators=[Optional()])
-    toxoplasma = StringField("Toxoplasma:", validators=[Optional()])
-    cytomegalovirus_cmv = StringField("CMV:", validators=[Optional()])
-    listeria = StringField("Listeria:", validators=[Optional()])
+    toxoplasma = StringField("Τοξόπλασμα:", validators=[Optional()])
+    cytomegalovirus_cmv = StringField(
+        "Κυτταρομεγαλοϊός - CMV:", validators=[Optional()]
+    )
+    listeria = StringField("Λιστέρια:", validators=[Optional()])
     hcv = StringField("HCV:", validators=[Optional()])
 
 
