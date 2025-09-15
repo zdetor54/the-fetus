@@ -48,3 +48,58 @@ def update_pregnancy(id: int) -> tuple[dict, int]:
     except Exception as e:
         db.session.rollback()
         return jsonify({"success": False, "error": str(e)}), 400
+
+
+@pregnancy.route("/api/pregnancy", methods=["POST"])
+@login_required
+@csrf.exempt
+def create_obstetrics_history() -> tuple[dict, int]:
+    try:
+        payload = request.get_json(silent=True) or {}
+        patient_id = payload.get("patient_id")
+        print("Patient ID:", patient_id)
+        if not patient_id:
+            return jsonify({"success": False, "error": "Missing patient_id"}), 400
+
+        form = PregnancyHistoryEntryForm(data=payload)
+
+        # Remove 'id' from payload for creation (let DB handle it)
+        if "id" in payload:
+            del payload["id"]
+
+        # Set required system fields
+        payload["patient_id"] = patient_id
+        payload["created_by"] = current_user.id
+        payload["last_updated_by"] = current_user.id
+
+        if form.validate():
+            new_history = PregnancyHistory(
+                patient_id=patient_id,
+                created_by=current_user.id,
+                last_updated_by=current_user.id,
+            )
+
+            for field in form._fields:
+                if field not in [
+                    "csrf_token",
+                    "submit",
+                    "patient_id",
+                    "created_by",
+                    "last_updated_by",
+                ]:
+                    if field in payload:
+                        setattr(new_history, field, form._fields[field].data)
+
+            new_history.created_by = current_user.id
+            new_history.created_on = datetime.utcnow()
+            new_history.last_updated_by = current_user.id
+            new_history.last_updated_on = datetime.utcnow()
+
+            db.session.add(new_history)
+            db.session.commit()
+            return jsonify({"success": True, "id": new_history.id}), 201
+        else:
+            return jsonify({"success": False, "errors": form.errors}), 400
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "error": str(e)}), 400
