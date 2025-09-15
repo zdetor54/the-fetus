@@ -89,9 +89,10 @@
                                                                     </div>
                                                                     {% set exclude = ['csrf_token', 'id', 'ter'] %}
                                                                     <div class="row g-3 zd">
+                                                                        <p>Έχετε x επισκέψεις για την συγκεκριμένη κύηση</p>
                                                                         {% for name, field in entry_form.form._fields.items() %}
                                                                             {% if field.type != 'HiddenField' and name not in exclude and field.data %}
-                                                                                <div class="col-12 col-xl-6 col-xxl-4">
+                                                                                <div class="col-12 col-xl-6 col-xxl-4 gy-0">
                                                                                     {{ macros.render_field(field.label, field.data, field.type) }}
                                                                                 </div>
                                                                             {% endif %}
