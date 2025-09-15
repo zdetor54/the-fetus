@@ -34,7 +34,7 @@ class BaseModel(db.Model):
         return dictionary
 
 
-class User(db.Model, UserMixin):
+class User(BaseModel, UserMixin):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -73,7 +73,7 @@ class User(db.Model, UserMixin):
         return f"Username: {self.username}"
 
 
-class Patient(db.Model, UserMixin):
+class Patient(BaseModel):
     __tablename__ = "patients"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -413,4 +413,217 @@ class HistoryObstetrics_x(BaseModel):
         self.baby_weight = baby_weight
         self.gestation_week = gestation_week
         self.complications_notes = complications_notes
+        self.is_active = is_active
+
+
+class PregnancyHistory(BaseModel):
+    __tablename__ = "pregnancy_history"
+
+    id = db.Column(db.Integer, primary_key=True)
+    patient_id = db.Column(db.Integer, db.ForeignKey("patients.id"), nullable=False)
+    created_by = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    last_updated_by = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    created_on = db.Column(db.DateTime, server_default=db.func.now())
+    last_updated_on = db.Column(
+        db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now()
+    )
+
+    # Pregnancy-level fields (from tblpregnancyhistory)
+    ter = db.Column(db.Date, nullable=False)
+    alcohol = db.Column(db.String(128), nullable=True)
+    smoking = db.Column(db.String(128), nullable=True)
+    amniocentesis = db.Column(db.String(128), nullable=True)
+    medication = db.Column(db.String(128), nullable=True)
+    other = db.Column(db.String(128), nullable=True)
+    diabetes = db.Column(db.String(128), nullable=True)
+    hypertension = db.Column(db.String(128), nullable=True)
+    urine_albumin = db.Column(db.String(128), nullable=True)
+    bleeding = db.Column(db.String(128), nullable=True)
+    blood_type = db.Column(db.String(64), nullable=True)
+    rhesus = db.Column(db.String(32), nullable=True)
+    hemoglobinopathies_bth = db.Column(db.String(128), nullable=True)
+    hemoglobinopathies_bs = db.Column(db.String(128), nullable=True)
+    vaginal_fluid_cultivation = db.Column(db.String(128), nullable=True)
+    mycoplasma_ureaplasma = db.Column(db.String(128), nullable=True)
+    chlamydia = db.Column(db.String(128), nullable=True)
+    herpes_hsv = db.Column(db.String(128), nullable=True)
+    hiv_12 = db.Column(db.String(128), nullable=True)
+    syphilis_vdlr = db.Column(db.String(128), nullable=True)
+    hepatitis_b_bhsag = db.Column(db.String(128), nullable=True)
+    aids_hiv = db.Column(db.String(128), nullable=True)
+    red_cells = db.Column(db.String(128), nullable=True)
+    toxoplasma = db.Column(db.String(128), nullable=True)
+    cytomegalovirus_cmv = db.Column(db.String(128), nullable=True)
+    listeria = db.Column(db.String(128), nullable=True)
+    hcv = db.Column(db.String(128), nullable=True)
+    is_active = db.Column(db.Boolean, default=True)
+
+    # Relationships
+    patient = db.relationship("Patient", backref=db.backref("pregnancies", lazy=True))
+    creator = db.relationship(
+        "User", foreign_keys=[created_by], backref="created_pregnancies"
+    )
+    updater = db.relationship(
+        "User", foreign_keys=[last_updated_by], backref="updated_pregnancies"
+    )
+
+    def __init__(
+        self,
+        patient_id,
+        created_by,
+        last_updated_by,
+        ter=None,
+        alcohol=None,
+        smoking=None,
+        amniocentesis=None,
+        medication=None,
+        other=None,
+        diabetes=None,
+        hypertension=None,
+        urine_albumin=None,
+        bleeding=None,
+        blood_type=None,
+        rhesus=None,
+        hemoglobinopathies_bth=None,
+        hemoglobinopathies_bs=None,
+        vaginal_fluid_cultivation=None,
+        mycoplasma_ureaplasma=None,
+        chlamydia=None,
+        herpes_hsv=None,
+        hiv_12=None,
+        syphilis_vdlr=None,
+        hepatitis_b_bhsag=None,
+        aids_hiv=None,
+        red_cells=None,
+        toxoplasma=None,
+        cytomegalovirus_cmv=None,
+        listeria=None,
+        hcv=None,
+        is_active=True,
+    ):
+        self.patient_id = patient_id
+        self.created_by = created_by
+        self.last_updated_by = last_updated_by
+        self.ter = ter
+        self.alcohol = alcohol
+        self.smoking = smoking
+        self.amniocentesis = amniocentesis
+        self.medication = medication
+        self.other = other
+        self.diabetes = diabetes
+        self.hypertension = hypertension
+        self.urine_albumin = urine_albumin
+        self.bleeding = bleeding
+        self.blood_type = blood_type
+        self.rhesus = rhesus
+        self.hemoglobinopathies_bth = hemoglobinopathies_bth
+        self.hemoglobinopathies_bs = hemoglobinopathies_bs
+        self.vaginal_fluid_cultivation = vaginal_fluid_cultivation
+        self.mycoplasma_ureaplasma = mycoplasma_ureaplasma
+        self.chlamydia = chlamydia
+        self.herpes_hsv = herpes_hsv
+        self.hiv_12 = hiv_12
+        self.syphilis_vdlr = syphilis_vdlr
+        self.hepatitis_b_bhsag = hepatitis_b_bhsag
+        self.aids_hiv = aids_hiv
+        self.red_cells = red_cells
+        self.toxoplasma = toxoplasma
+        self.cytomegalovirus_cmv = cytomegalovirus_cmv
+        self.listeria = listeria
+        self.hcv = hcv
+        self.is_active = is_active
+
+
+class PregnancyHistory_x(BaseModel):
+    __tablename__ = "pregnancy_history_x"
+
+    id = db.Column(db.Integer, primary_key=True)
+    pregnancy_id = db.Column(
+        db.Integer, db.ForeignKey("pregnancy_history.id"), nullable=False
+    )
+    created_by = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    last_updated_by = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    created_on = db.Column(db.DateTime, server_default=db.func.now())
+    last_updated_on = db.Column(
+        db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now()
+    )
+
+    # Visit-level fields (from tblpregnancyhistory_x)
+    date_of_visit = db.Column(db.Date, nullable=True)
+    cause_of_visit = db.Column(db.String(128), nullable=True)
+    tokos = db.Column(db.Integer, nullable=True)
+    pregnancy_age = db.Column(db.String(64), nullable=True)
+    height = db.Column(db.Numeric(5, 2), nullable=True)
+    weight_begin = db.Column(db.Numeric(5, 2), nullable=True)
+    weight_current = db.Column(db.Numeric(5, 2), nullable=True)
+    weight_change = db.Column(db.Numeric(5, 2), nullable=True)
+    presentation = db.Column(db.String(64), nullable=True)
+    fetal_heart = db.Column(db.String(64), nullable=True)
+    amniotic_sac = db.Column(db.String(64), nullable=True)
+    contractions = db.Column(db.String(64), nullable=True)
+    cervical_dilation = db.Column(db.String(64), nullable=True)
+    cervical_effacement = db.Column(db.String(64), nullable=True)
+    arterial_pressure = db.Column(db.String(64), nullable=True)
+    temperature = db.Column(db.Numeric(5, 2), nullable=True)
+    sumphysial_fundal_height_sfh = db.Column(db.Numeric(6, 2), nullable=True)
+    comments = db.Column(db.Text, nullable=True)
+    is_active = db.Column(db.Boolean, default=True)
+
+    # Relationships
+    pregnancy = db.relationship(
+        "PregnancyHistory", backref=db.backref("visits", lazy=True)
+    )
+    creator = db.relationship(
+        "User", foreign_keys=[created_by], backref="created_pregnancy_visits"
+    )
+    updater = db.relationship(
+        "User", foreign_keys=[last_updated_by], backref="updated_pregnancy_visits"
+    )
+
+    def __init__(
+        self,
+        pregnancy_id,
+        created_by,
+        last_updated_by,
+        date_of_visit=None,
+        cause_of_visit=None,
+        tokos=None,
+        pregnancy_age=None,
+        height=None,
+        weight_begin=None,
+        weight_current=None,
+        weight_change=None,
+        presentation=None,
+        fetal_heart=None,
+        amniotic_sac=None,
+        contractions=None,
+        cervical_dilation=None,
+        cervical_effacement=None,
+        arterial_pressure=None,
+        temperature=None,
+        sumphysial_fundal_height_sfh=None,
+        comments=None,
+        is_active=True,
+    ):
+        self.pregnancy_id = pregnancy_id
+        self.created_by = created_by
+        self.last_updated_by = last_updated_by
+        self.date_of_visit = date_of_visit
+        self.cause_of_visit = cause_of_visit
+        self.tokos = tokos
+        self.pregnancy_age = pregnancy_age
+        self.height = height
+        self.weight_begin = weight_begin
+        self.weight_current = weight_current
+        self.weight_change = weight_change
+        self.presentation = presentation
+        self.fetal_heart = fetal_heart
+        self.amniotic_sac = amniotic_sac
+        self.contractions = contractions
+        self.cervical_dilation = cervical_dilation
+        self.cervical_effacement = cervical_effacement
+        self.arterial_pressure = arterial_pressure
+        self.temperature = temperature
+        self.sumphysial_fundal_height_sfh = sumphysial_fundal_height_sfh
+        self.comments = comments
         self.is_active = is_active

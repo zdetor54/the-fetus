@@ -9,7 +9,7 @@
     --vibrant-pink: #EF539E;          /* Active state color for nav link */
     --vibrant-pink: #ff4f40;          /* monzo*/
     --vibrant-pink: #9FE870;          /* wise*/
-    --vibrant-pink: #efb853;          /* monzo*/
+    --vibrant-pink: #f4bd6b;          /* monzo*/
     --warm-beige: #F3E1D7;            /* Background color */
     /* Match root background to body to avoid black gutter */
     background-color: #212529;
@@ -123,7 +123,8 @@ h2, h5 {
     color: rgba(255, 255, 255, .55);
 }
 .nav-pills .nav-link:hover {
-    color: rgba(255, 255, 255, .85);
+    /* color: rgba(255, 255, 255, .85); */
+    background-color: oklch(from var(--vibrant-pink) l calc(c - 0.1) h );
 }
 
 /* Custom CSS to adjust spacing for the .logged-user-icon when navbar is collapsed (below 768px) */
@@ -477,6 +478,7 @@ em {
 select option {
     background-color: #fff5f0; /* dropdown list background */
 }
+
 
 .patient-lite .input-group input:focus~label,
 .patient-lite .input-group input:valid~label,

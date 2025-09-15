@@ -341,49 +341,53 @@
 
     <div class="container zd py-5" style="text-align: center;">
         <div class="container justify-content-center" style="display: inline-flex; text-align: center;">
-        <ul class="nav nav-pills mb-3 p-2 secondary-nav-container bg-dark" id="pills-tab" role="tablist">
-            <li class="nav-item"  role="presentation">
-              <button class="nav-link active" style="border-radius: 5rem;" id="pills-history_medical-tab" data-bs-toggle="pill" data-bs-target="#pills-history_medical" type="button" role="tab" aria-controls="pills-history_medical" aria-selected="true">Ιατρικό Ιστορικό</button>
-            </li>
-            <li class="nav-item" role="presentation">
-              <button class="nav-link" style="border-radius: 5rem;" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-history_obstetrics" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Μαιευτικό Ιστορικό</button>
-            </li>
-            <li class="nav-item" role="presentation">
-              <button class="nav-link" style="border-radius: 5rem;" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Κύηση</button>
-            </li>
-            <li class="nav-item" role="presentation">
-              <button class="nav-link" style="border-radius: 5rem;" id="pills-disabled-tab" data-bs-toggle="pill" data-bs-target="#pills-disabled" type="button" role="tab" aria-controls="pills-disabled" aria-selected="false" >Γυναικολογικό Ιστορικό</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" style="border-radius: 5rem;" id="pills-disabled-tab" data-bs-toggle="pill" data-bs-target="#pills-disabled" type="button" role="tab" aria-controls="pills-disabled" aria-selected="false">Αρχεία</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" style="border-radius: 5rem;" id="pills-disabled-tab" data-bs-toggle="pill" data-bs-target="#pills-disabled" type="button" role="tab" aria-controls="pills-disabled" aria-selected="false">Εξετάσεις</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" style="border-radius: 5rem;" id="pills-disabled-tab" data-bs-toggle="pill" data-bs-target="#pills-disabled" type="button" role="tab" aria-controls="pills-disabled" aria-selected="false">Ραντεβού</button>
-            </li>
-        </ul>
+                <ul class="nav nav-pills mb-3 p-2 secondary-nav-container bg-dark" id="pills-tab" role="tablist">
+                        <li class="nav-item"  role="presentation">
+                            <button class="nav-link active" style="border-radius: 5rem;" id="pills-history-medical-tab" data-tab-key="history-medical" data-bs-toggle="pill" data-bs-target="#pills-history-medical" type="button" role="tab" aria-controls="pills-history-medical" aria-selected="true">Ιατρικό Ιστορικό</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" style="border-radius: 5rem;" id="pills-history-obstetrics-tab" data-tab-key="history-obstetrics" data-bs-toggle="pill" data-bs-target="#pills-history-obstetrics" type="button" role="tab" aria-controls="pills-history-obstetrics" aria-selected="false">Μαιευτικό Ιστορικό</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" style="border-radius: 5rem;" id="pills-pregnancies-tab" data-tab-key="pregnancies" data-bs-toggle="pill" data-bs-target="#pills-pregnancies" type="button" role="tab" aria-controls="pills-pregnancies" aria-selected="false">Κυήσεις</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" style="border-radius: 5rem;" id="pills-gynhistory-tab" data-tab-key="gyn-history" data-bs-toggle="pill" data-bs-target="#pills-disabled" type="button" role="tab" aria-controls="pills-disabled" aria-selected="false" >Γυναικολογικό Ιστορικό</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" style="border-radius: 5rem;" id="pills-files-tab" data-tab-key="files" data-bs-toggle="pill" data-bs-target="#pills-disabled" type="button" role="tab" aria-controls="pills-disabled" aria-selected="false">Αρχεία</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" style="border-radius: 5rem;" id="pills-tests-tab" data-tab-key="tests" data-bs-toggle="pill" data-bs-target="#pills-disabled" type="button" role="tab" aria-controls="pills-disabled" aria-selected="false">Εξετάσεις</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" style="border-radius: 5rem;" id="pills-appointments-tab" data-tab-key="appointments" data-bs-toggle="pill" data-bs-target="#pills-disabled" type="button" role="tab" aria-controls="pills-disabled" aria-selected="false">Ραντεβού</button>
+                        </li>
+                </ul>
         </div>
           <div class="tab-content p-3" style="text-align: left;" id="pills-tabContent">
-            <div class="tab-pane fade show active rounded-4 m-2" id="pills-history_medical" role="tabpanel" aria-labelledby="pills-history_medical-tab" tabindex="0">
+            <div class="tab-pane fade show active rounded-4 m-2" id="pills-history-medical" role="tabpanel" aria-labelledby="pills-history-medical-tab" tabindex="0">
                 <h5 class="visually-hidden">Ιατρικό Ιστορικό</h5>
                 {% include 'patient_tabs/history_medical.html' %}
             </div>
-            <div class="tab-pane fade rounded-4 m-2" id="pills-history_obstetrics" role="tabpanel" aria-labelledby="pills-history_obstetrics-tab" tabindex="0">
+            <div class="tab-pane fade rounded-4 m-2" id="pills-history-obstetrics" role="tabpanel" aria-labelledby="pills-history-obstetrics-tab" tabindex="0">
                 <h5 class="visually-hidden">Μαιευτικό Ιστορικό</h5>
                 {% include 'patient_tabs/history_obstetrics.html' %}
             </div>
-            <div class="tab-pane fade rounded-4 m-2" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab" tabindex="0">
-                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Esse, quasi enim mollitia doloribus praesentium dolores aut nostrum atque. Eveniet praesentium mollitia, quasi quia maxime expedita impedit odit sed modi? Quisquam.
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corrupti et ipsum ratione harum ab, quia atque repellendus voluptate illo a soluta nesciunt ipsa rem necessitatibus nulla, aliquam, maxime natus nihil?
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa saepe illo ratione mollitia nobis. Impedit obcaecati itaque qui quam voluptate, iure ipsum nobis reiciendis repellendus cum quibusdam aperiam repellat dolorem!
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo esse praesentium id necessitatibus iusto nesciunt sit? Nam, qui illum! Culpa et consequatur libero sequi quae inventore incidunt perferendis vero ducimus?
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis accusantium voluptates, facere animi, eveniet consectetur hic veniam, dolores perferendis iusto doloremque? Eos atque veniam necessitatibus vel sapiente laboriosam quod rem.
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores cumque fugit vero ducimus saepe unde officiis impedit, optio quisquam ullam doloribus repellat provident sunt incidunt repudiandae dignissimos mollitia placeat perspiciatis?
-                </p>
+            <div class="tab-pane fade rounded-4 m-2"
+                id="pills-pregnancies"
+                role="tabpanel"
+                aria-labelledby="pills-pregnancies-tab"
+                tabindex="0"
+                data-lazy-url="/patient/{{ patient.id }}/tab/pregnancies">
+                <h5 class="visually-hidden">Κυήσεις</h5>
+                <div class="lazy-placeholder p-3 text-center text-muted small">
+                    <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+                    Φόρτωση όταν ανοίξει η καρτέλα...
+                </div>
             </div>
-            <div class="tab-pane fade rounded-4 m-2" id="pills-disabled" role="tabpanel" aria-labelledby="pills-disabled-tab" tabindex="0">...</div>
+            <div class="tab-pane fade rounded-4 m-2" id="pills-disabled" role="tabpanel" aria-labelledby="pills-disabled-tab" tabindex="0">... hello</div>
+
           </div>
         <button type="button" class="btn btn-outline-danger px-4" onclick="showDeleteModal()">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-trash3" viewBox="0 1 16 16">
@@ -406,6 +410,7 @@
 {% endblock %}
 
 {% block javascript %}
+
 <script>
 
     function showDeleteModal() {
@@ -580,33 +585,111 @@
     setupFormContainer('formContainerHistoryMedical', 'readOnlyContentHistoryMedical');
     });
 
-    // Restore last active pill (tab) on load and keep it updated on change
+    // Restore & persist active tab using stable data-tab-key (fallback to data-bs-target)
     document.addEventListener('DOMContentLoaded', () => {
-        try {
-            // Update sessionStorage whenever user switches pills
-            document.querySelectorAll('#pills-tab button[data-bs-toggle="pill"]').forEach(btn => {
-                btn.addEventListener('shown.bs.tab', (ev) => {
-                    const target = ev.target?.getAttribute('data-bs-target');
-                    if (target) {
-                        sessionStorage.setItem('lastActiveTab', target);
-                    }
-                });
-            });
+        const storageKey = 'lastActiveTabKey';
+        const buttons = document.querySelectorAll('#pills-tab button[data-bs-toggle="pill"]');
 
-            // On load, activate the stored pill if present
-            const last = sessionStorage.getItem('lastActiveTab');
-            if (last) {
-                const trigger = document.querySelector(`#pills-tab button[data-bs-target="${last}"]`);
-                if (trigger && !trigger.classList.contains('active')) {
-                    const tab = new bootstrap.Tab(trigger);
-                    tab.show();
-                }
+        const activateByKey = (key) => {
+            if (!key) return;
+            // Prefer match on data-tab-key
+            let trigger = document.querySelector(`#pills-tab button[data-tab-key="${key}"]`);
+            if (!trigger) {
+                // Fallback: treat key as data-bs-target legacy value
+                trigger = document.querySelector(`#pills-tab button[data-bs-target="${key}"]`);
             }
-        } catch (e) {
-            // no-op
-        }
+            if (trigger && !trigger.classList.contains('active')) {
+                const tab = new bootstrap.Tab(trigger);
+                tab.show();
+            }
+        };
+
+        // Attach listeners
+        buttons.forEach(btn => {
+            btn.addEventListener('shown.bs.tab', (ev) => {
+                const key = ev.target.getAttribute('data-tab-key') || ev.target.getAttribute('data-bs-target');
+                if (key) sessionStorage.setItem(storageKey, key);
+            });
+        });
+
+        // Initial restore
+        const lastKey = sessionStorage.getItem(storageKey);
+        activateByKey(lastKey);
     });
 </script>
+
+<script>
+(function setupGenericLazyTabs(){
+    const loaded = new Set();
+
+    function loadPane(pane){
+        if (!pane || loaded.has(pane.id)) return;
+        const url = pane.getAttribute('data-lazy-url');
+        if (!url) return;
+        pane.innerHTML = '<div class="p-3 text-center"><div class="spinner-border" role="status"></div></div>';
+        fetch(url, {headers:{'X-Requested-With':'fetch'}})
+        .then(r => {
+            if(!r.ok) throw new Error(r.status);
+            return r.text();
+        })
+        .then(html => {
+            // IMPORTANT: execute scripts in the partial
+            if (typeof window.injectPregnancyHTML === 'function') {
+                injectPregnancyHTML(pane, html);
+            } else {
+                // Fallback
+                const tmp = document.createElement('div');
+                tmp.innerHTML = html;
+                const scripts = [...tmp.querySelectorAll('script')];
+                scripts.forEach(s=>s.parentNode.removeChild(s));
+                pane.innerHTML = tmp.innerHTML;
+                scripts.forEach(old=>{
+                    const s=document.createElement('script');
+                    if (old.src) s.src = old.src; else s.textContent = old.textContent;
+                    if (old.type) s.type = old.type;
+                    document.head.appendChild(s);
+                });
+            }
+            loaded.add(pane.id);
+            // Dispatch custom event when pregnancies tab content ready
+            if (pane.id === 'pills-pregnancies') {
+                document.dispatchEvent(new CustomEvent('pregnancies:ready'));
+            }
+        })
+        .catch(err => {
+            pane.innerHTML = '<div class="text-danger p-3">Αποτυχία φόρτωσης.</div>';
+            console.error('Lazy tab load error:', err);
+        });
+    }
+
+    document.addEventListener('shown.bs.tab', ev => {
+        const targetSel = ev.target?.getAttribute('data-bs-target');
+        if (!targetSel) return;
+        const pane = document.querySelector(targetSel + '[data-lazy-url]');
+        loadPane(pane);
+    });
+
+    // If an initially active pane is lazy
+    document.addEventListener('DOMContentLoaded', () => {
+        const activeLazy = document.querySelector('.tab-pane.active[data-lazy-url]');
+        loadPane(activeLazy);
+    });
+})();
+</script>
+
+    <script>
+    // Restore inner pregnancy tab after lazy load completion
+    document.addEventListener('pregnancies:ready', () => {
+        const paneId = sessionStorage.getItem('lastActivePregnancyPaneId');
+        if (!paneId) return;
+        const btn = document.querySelector(`#pregnancies-inner-tab button[data-bs-target="#${paneId}"]`);
+        if (btn && window.bootstrap && bootstrap.Tab) {
+            try { new bootstrap.Tab(btn).show(); } catch(e) { console.warn('Late inner restore failed', e); }
+        }
+        // Clear only after attempt
+        try { sessionStorage.removeItem('lastActivePregnancyPaneId'); } catch(e) {}
+    });
+    </script>
 
 {{ super() }}
 {% block tab_javascript %}{% endblock %}

@@ -21,10 +21,27 @@ def format_value(value: Any, value_type: str) -> str:
         return format_date(value)
     elif value_type.lower() == "str":
         return escape_string(value)
-    elif value_type.lower() in ["int", "bool"]:
+    elif value_type.lower() in ["bool"]:
         if value is None or value == "":
             return "null"
         return str(value)
+    elif value_type.lower() in ["int", "decimal"]:
+        # Treat typical empty/sentinel representations (including zero) as NULL
+        # because source system encodes missing decimals as 0 / '0'.
+        if value is None:
+            return "null"
+        if isinstance(value, (int, float)):
+            return "null" if value == 0 else str(value)
+        if isinstance(value, str):
+            raw = value.strip()
+            if raw.lower() in {"", "none", "null", "n/a", "na", "0", "0.0"}:
+                return "null"
+            try:
+                num = float(raw)
+                return "null" if num == 0 else raw
+            except ValueError:
+                return "null"
+        return "null"
     else:
         return escape_string(value)  # Default to string handling
 

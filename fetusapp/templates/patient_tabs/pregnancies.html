@@ -1,0 +1,339 @@
+{% import 'macros.html' as macros %}
+
+<style>
+.compact-form .mb-3,
+.compact-form .form-group,
+.compact-form .input-group { margin-bottom: 0rem !important; }
+
+/* Ensure right column at least matches left column height on large screens */
+@media (min-width: 992px) {
+    #pregnancyHistoryEntries { align-items: stretch; }
+    #pregnancyHistoryEntries > .col-lg-10 { display: flex; flex-direction: column; }
+    #pregnancies-inner-tabContent { flex: 1 1 auto; }
+}
+</style>
+
+<div class="col-12">
+    <div class="card card-cover inherit-text-color bg-transparent rounded-4 shadow-lg">
+        <div class="d-flex flex-column h-100 text-shadow-1">
+            {% if history_pregnancy_form.entries and history_pregnancy_form.entries[0].data.id %}
+            <div class="container px-0 ">
+                <div class="row g-3" id="pregnancyHistoryEntries">
+                    <div class="col-12 col-lg-2">
+                        <div class="pt-3 ms-3 me-3 me-lg-0">
+                            <ul class="nav nav-pills flex-column secondary-nav-container bg-dark w-100" id="pregnancies-inner-tab" role="tablist">
+                                {% for entry_form in history_pregnancy_form.entries %}
+                                    {% set prefix = 'HistoryPregnancy_' ~ loop.index %}
+                                    <li class="nav-item  w-90" role="presentation">
+                                        <button class="nav-link w-100 {% if loop.first %}active{% endif %}"
+                                            style="border-radius: 5rem;"
+                                            id="pills-pregnancies-{{ loop.index }}-tab"
+                                            data-tab-key="pregnancies"
+                                            data-bs-toggle="pill"
+                                            data-bs-target="#pills-pregnancies-{{ loop.index }}"
+                                            type="button"
+                                            role="tab"
+                                            aria-controls="pills-pregnancies-{{ loop.index }}"
+                                            aria-selected="false">
+                                            {{ entry_form.form.ter.data }}
+                                        </button>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <div class="read-only read-only-labels py-4 ">
+                                <button type="button" class="btn btn-outline-secondary px-4 w-100" data-edit-button="true" onclick="toggleEditMode('HistoryPregnancy_new')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-plus-square" viewBox="0 1 16 16">
+                                        <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                                    </svg>
+                                    Νέα Κύηση
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-10">
+                        <div class="tab-content p-3" id="pregnancies-inner-tabContent">
+                            {% for entry_form in history_pregnancy_form.entries %}
+                                {% set prefix = 'HistoryPregnancy_' ~ loop.index %}
+                                <div class="tab-pane fade {% if loop.first %}show active{% endif %}"
+                                    id="pills-pregnancies-{{ loop.index }}"
+                                    role="tabpanel"
+                                    aria-labelledby="pills-pregnancies-{{ loop.index }}-tab"
+                                    tabindex="0">
+                                    <div class="col-12 pregnancy-history-entry" id="entryWrapper{{ prefix }}" >
+                                        <div class="card card-cover inherit-text-color bg-transparent rounded-4 shadow-lg" id="card{{ prefix }}" style="border: none;">
+                                            <div class="d-flex flex-column h-100 text-shadow-1">
+                                                <div class="container px-0 ">
+                                                    <div class="form-container" style="position: relative; transition: max-height 0.2s ease-in-out;" id="formContainer{{ prefix }}">
+                                                        <input type="hidden" name="id" value="{{ entry_form.form.id.data }}" style="display: none;">
+                                                        <!-- Read Only View -->
+                                                        <div class="read-only read-only-labels p-4" id="readOnlyContent{{ prefix }}">
+                                                            <div class="row py-2">
+                                                                <div class="col-12">
+                                                                    <div class="text-center">
+                                                                        <div class="fs-1 fw-semibold">
+                                                                            <button type="button" class="btn btn-outline-secondary me-3 px-4" onclick="navigatePregnancy(-1, this)" data-nav-btn="prev">
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-left" viewBox="0 0 16 16">
+                                                                                <path fill-rule="evenodd" d="M9.224 1.553a.5.5 0 0 1 .223.67L6.56 8l2.888 5.776a.5.5 0 1 1-.894.448l-3-6a.5.5 0 0 1 0-.448l3-6a.5.5 0 0 1 .67-.223"></path>
+                                                                                </svg>
+                                                                                <span class="visually-hidden">Previous</span>
+                                                                            </button>
+                                                                            <h2 style="display: inline;">{{ entry_form.form.ter.data }}</h2>
+                                                                            <button type="button" class="btn btn-outline-secondary ms-3 px-4" onclick="navigatePregnancy(1, this)" data-nav-btn="next">
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-right" viewBox="0 0 16 16">
+                                                                                <path fill-rule="evenodd" d="M6.776 1.553a.5.5 0 0 1 .671.223l3 6a.5.5 0 0 1 0 .448l-3 6a.5.5 0 1 1-.894-.448L9.44 8 6.553 2.224a.5.5 0 0 1 .223-.671"></path>
+                                                                                </svg>
+                                                                                <span class="visually-hidden">Next</span>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                    {% set exclude = ['csrf_token', 'id', 'ter'] %}
+                                                                    <div class="row g-3 zd">
+                                                                        <p>Έχετε x επισκέψεις για την συγκεκριμένη κύηση</p>
+                                                                        {% for name, field in entry_form.form._fields.items() %}
+                                                                            {% if field.type != 'HiddenField' and name not in exclude and field.data %}
+                                                                                <div class="col-12 col-xl-6 col-xxl-4 gy-0">
+                                                                                    {{ macros.render_field(field.label, field.data, field.type) }}
+                                                                                </div>
+                                                                            {% endif %}
+                                                                        {% endfor %}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="d-flex flex-wrap justify-content-end gap-2 mt-3">
+                                                                <form action="">
+                                                                    <input type="hidden" name="id" value="{{ entry_form.form.id.data }}">
+                                                                    <button type="button" class="btn btn-outline-secondary px-4" data-edit-button="true" onclick="toggleEditMode('{{ prefix }}')">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="1 0 16 16"><path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/><path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/></svg>
+                                                                        Επεξεργασία
+                                                                    </button>
+                                                                    <button type="button" class="btn btn-outline-danger px-4" onclick="showDeletePregnancyHistoryModal(this)">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-trash3" viewBox="1 0 16 16"><path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/></svg>
+                                                                    </button>
+                                                                </form>
+
+                                                            </div>
+                                                        </div>
+                                                        <!-- Editable View -->
+                                                        <div class="editable card card-cover rounded-4 shadow-lg" id="editableContent{{ prefix }}" style="display: none;">
+                                                            <div class="d-flex flex-column p-3 text-shadow-1">
+                                                                <div class="wrapper">
+                                                                    <div class="form-wrapper patient-lite px-2">
+                                                                        <form method="POST" id="pregnancyHistoryForm{{ prefix }}" data-history-id="{{ pregnancy_history_form.id.data if pregnancy_history_form else '' }}">
+                                                                            {{ history_pregnancy_form.hidden_tag() }}
+                                                                            <input type="hidden" name="id" value="{{ entry_form.form.id.data }}">
+                                                                            <!-- {{ entry_form.form.id.data }} -->
+                                                                            <div class="col-12">
+                                                                                <div class="row py-2">
+                                                                                    <div class="compact-form">
+                                                                                        <div class="row gx-3 gy-0">
+                                                                                            {% set exclude = ['csrf_token','id'] %}
+                                                                                            {% for name, field in entry_form.form._fields.items() %}
+                                                                                                {% if field.type != 'HiddenField' and name not in exclude %}
+                                                                                                    <div class="col-12 col-sm-6 col-lg-4">
+                                                                                                        {{ macros.input_group(name, {'type': field.type, 'label': field.label.text}, field.data) }}
+                                                                                                    </div>
+                                                                                                {% endif %}
+                                                                                            {% endfor %}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+                                                                                <button type="button" class="btn login-btn px-4" onclick="saveChangesPregnancy(this)">
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-floppy" viewBox="0 1 16 16">
+                                                                                        <path d="M11 2H9v3h2z"/>
+                                                                                        <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
+                                                                                    </svg>
+                                                                                    Αποθήκευση
+                                                                                </button>
+                                                                                <button type="button" class="btn btn-outline-secondary px-4" onclick="cancelPregnancyEdit()">
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-x-square" viewBox="0 1 16 16">
+                                                                                        <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                                                                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                                                                                    </svg>
+                                                                                    Ακύρωση
+                                                                                </button>
+                                                                            </div>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% for entry_form in history_pregnancy_form.entries %}
+                        {% set prefix = 'HistoryPregnancy_' ~ loop.index %}
+
+                    {% endfor %}
+                </div>
+            </div>
+            {% else %}
+            <div class="container px-0 ">
+                <div class="row g-3">
+                    <div class="col-12 col-xxl-2">
+                        <div class="pt-3 ms-3 me-3 me-xxl-0">
+                            <div class="read-only read-only-labels pb-0 pb-xxl-4 pt-2">
+                                <button type="button" class="btn btn-outline-secondary px-4 w-100" data-edit-button="true" onclick="toggleEditMode('HistoryPregnancy_new')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-plus-square" viewBox="0 1 16 16">
+                                        <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                                    </svg>
+                                    Νέα Κύηση
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-10">
+                        <div class="tab-content p-3" id="pills-tabContent">
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+// Enhanced pregnancy save logic with inner tab state persistence
+window.saveChangesPregnancy = async function(btn) {
+    try {
+        const form = btn.closest('form');
+        if (!form) return;
+        const pregnancyId = form.querySelector('input[name="id"]').value;
+        const patientId = '{{ patient.id }}';
+        const csrfToken = form.querySelector('input[name="csrf_token"]').value;
+
+        // Persist outer pregnancies tab activation
+        try { sessionStorage.setItem('lastActiveTabKey', 'pregnancies'); } catch(e) {}
+        // Persist currently active inner pane id
+        const activeInnerPane = document.querySelector('#pregnancies-inner-tabContent .tab-pane.active');
+        if (activeInnerPane) {
+            try { sessionStorage.setItem('lastActivePregnancyPaneId', activeInnerPane.id); } catch(e) {}
+        }
+
+        // Build JSON excluding empty string values
+        const formDataJson = {};
+        const formData = new FormData(form);
+        formData.forEach((value, key) => {
+            formDataJson[key] = value;
+        });
+
+        let url, method;
+        if (pregnancyId) { url = `/api/pregnancy/${pregnancyId}`; method = 'PUT'; }
+        else { formDataJson.patient_id = patientId; url = '/api/pregnancy'; method = 'POST'; }
+
+        const response = await fetch(url, {
+            method,
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+            body: JSON.stringify(formDataJson)
+        });
+        if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+        const result = await response.json();
+        if (!result.success) throw new Error(result.error || 'Failed to save changes');
+        location.reload();
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error saving changes: ' + error.message);
+    }
+};
+
+// Attempt immediate inner tab restore when partial is injected
+(function restoreStoredPregnancyInnerTab(){
+    const paneId = sessionStorage.getItem('lastActivePregnancyPaneId');
+    if (!paneId) return;
+    const btn = document.querySelector(`#pregnancies-inner-tab button[data-bs-target="#${paneId}"]`);
+    if (btn && window.bootstrap && bootstrap.Tab) {
+        try { new bootstrap.Tab(btn).show(); } catch(e) { console.warn('Inner restore failed', e); }
+    }
+})();
+
+// Cancel edit while preserving active inner tab and outer pregnancies tab
+window.cancelPregnancyEdit = function(){
+    try { sessionStorage.setItem('lastActiveTabKey', 'pregnancies'); } catch(e) {}
+    const activeInnerPane = document.querySelector('#pregnancies-inner-tabContent .tab-pane.active');
+    if (activeInnerPane) {
+        try { sessionStorage.setItem('lastActivePregnancyPaneId', activeInnerPane.id); } catch(e) {}
+    }
+    location.reload();
+};
+
+// Navigate between pregnancies using prev/next buttons inside header
+window.navigatePregnancy = function(direction, btn){
+    try {
+        const allButtons = Array.from(document.querySelectorAll('#pregnancies-inner-tab button.nav-link'));
+        if (!allButtons.length) return;
+        const activeIndex = allButtons.findIndex(b => b.classList.contains('active'));
+        if (activeIndex === -1) return;
+        let targetIndex = activeIndex + direction;
+        if (targetIndex < 0 || targetIndex >= allButtons.length) return; // Do nothing at bounds
+        const targetBtn = allButtons[targetIndex];
+        if (targetBtn) {
+            // Persist state before switching
+            try { sessionStorage.setItem('lastActiveTabKey', 'pregnancies'); } catch(e) {}
+            const targetPaneId = targetBtn.getAttribute('data-bs-target').replace('#','');
+            try { sessionStorage.setItem('lastActivePregnancyPaneId', targetPaneId); } catch(e) {}
+            // Activate via Bootstrap API
+            if (window.bootstrap && bootstrap.Tab) {
+                new bootstrap.Tab(targetBtn).show();
+            } else {
+                // Fallback manual class manipulation
+                allButtons.forEach(b=>b.classList.remove('active'));
+                targetBtn.classList.add('active');
+                document.querySelectorAll('#pregnancies-inner-tabContent .tab-pane').forEach(p=>p.classList.remove('show','active'));
+                const pane = document.getElementById(targetPaneId);
+                if (pane) pane.classList.add('show','active');
+            }
+            // Update disabled state on prev/next buttons in current header context
+            updatePregnancyNavButtonStates();
+        }
+    } catch (e) { console.warn('navigatePregnancy error', e); }
+};
+
+function updatePregnancyNavButtonStates(){
+    const allButtons = Array.from(document.querySelectorAll('#pregnancies-inner-tab button.nav-link'));
+    const activeIndex = allButtons.findIndex(b => b.classList.contains('active'));
+    // For every visible header (each tab pane has its own header block)
+    document.querySelectorAll('#pregnancies-inner-tabContent .tab-pane .fs-1').forEach(header => {
+        const prev = header.querySelector('button[data-nav-btn="prev"]');
+        const next = header.querySelector('button[data-nav-btn="next"]');
+        if (prev) prev.disabled = (activeIndex <= 0);
+        if (next) next.disabled = (activeIndex === allButtons.length - 1);
+    });
+}
+
+// Initialize states after injection
+updatePregnancyNavButtonStates();
+
+// Fallback height synchronisation (covers dynamic content changes)
+function syncPregnancyColumnsHeight(){
+    const row = document.getElementById('pregnancyHistoryEntries');
+    if (!row) return;
+    const left = row.querySelector('.col-lg-2');
+    const right = row.querySelector('.col-lg-10');
+    if (!left || !right) return;
+    if (window.innerWidth >= 992) {
+        // Reset first so shrink recalculates correctly
+        right.style.minHeight = '';
+        const h = left.offsetHeight;
+        right.style.minHeight = h + 'px';
+    } else {
+        right.style.minHeight = '';
+    }
+}
+window.addEventListener('load', syncPregnancyColumnsHeight);
+window.addEventListener('resize', syncPregnancyColumnsHeight);
+document.addEventListener('pregnancies:nav', () => setTimeout(syncPregnancyColumnsHeight, 30));
+document.addEventListener('shown.bs.tab', (ev) => {
+  if (ev.target && ev.target.closest('#pregnancies-inner-tab')) {
+     setTimeout(syncPregnancyColumnsHeight, 30);
+  }
+});
+</script>

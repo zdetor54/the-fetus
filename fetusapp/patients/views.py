@@ -24,9 +24,17 @@ from fetusapp.models import (
     HistoryObstetrics,
     HistoryObstetrics_x,
     Patient,
+    PregnancyHistory,
+    PregnancyHistory_x,
 )
 
-from .forms import HistoryMedicalForm, HistoryObstetricsForm, HistoryObstetricsXForm
+from .forms import (
+    HistoryMedicalForm,
+    HistoryObstetricsForm,
+    HistoryObstetricsXForm,
+    PregnancyHistoryForm,
+    PregnancyHistoryXForm,
+)
 
 patients = Blueprint("patients", __name__)
 
@@ -339,8 +347,6 @@ def patient() -> Response:
                 else [{}]
             )
 
-        print(history_obstetrics_x_form.entries.data)
-
         return render_template(
             "patient.html",
             active_page="patient",
@@ -366,6 +372,37 @@ def patient() -> Response:
         personal_data_fields=personal_data_fields,
         partner_data_fields=partner_data_fields,
         medical_history_form=history_medical_form,
+    )
+
+
+@patients.route("/patient/<int:patient_id>/tab/pregnancies")
+def patient_tab_pregnancies(patient_id: int) -> Response:
+    history_pregnancy_form = PregnancyHistoryForm()
+
+    pregnancy_history = (
+        PregnancyHistory.query.filter_by(patient_id=patient_id, is_active=True)
+        .filter(PregnancyHistory.ter.isnot(None))
+        .order_by(PregnancyHistory.ter.desc())
+        .all()
+    )
+    pregnancy_history_dicts = [entry.to_dict() for entry in pregnancy_history]
+    if pregnancy_history_dicts:
+        for row in pregnancy_history_dicts:
+            history_pregnancy_form.entries.append_entry(row)
+    else:
+        # ensure at least one empty form so template can render fields
+        history_pregnancy_form.entries.append_entry()
+        pregnancy_history_dicts = (
+            history_pregnancy_form.entries.data
+            if history_pregnancy_form.entries.data
+            else [{}]
+        )
+    # print(history_pregnancy_form.entries.data)
+    patient = Patient.query.get(patient_id)
+    return render_template(
+        "patient_tabs/pregnancies.html",
+        history_pregnancy_form=history_pregnancy_form,
+        patient=patient,
     )
 
 
