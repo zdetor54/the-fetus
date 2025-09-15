@@ -13,6 +13,38 @@
 }
 </style>
 
+<div class="modal fade" id="deletePregnancyModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h5 class="modal-title text-center">Επιβεβαίωση Διαγραφής</h5>
+            </div>
+            <div class="modal-body">
+                <p class="text-center">Είστε σίγουροι ότι θέλετε να διαγράψετε την κύηση {{ patient.first_name | proper_case }} {{ patient.last_name | proper_case }};</p>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <form action="">
+                    <input id="deletePregnancyId" name="id" value="" type="hidden">
+                    <button type="button" class="btn btn-outline-light px-4" data-bs-dismiss="modal">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-x-square" viewBox="0 1 16 16">
+                            <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                        </svg>
+                        Ακύρωση
+                    </button>
+                    <button type="button" class="btn btn-danger px-4" onclick="confirmDeletePregnancy(this)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-trash3" viewBox="0 1 16 16">
+                            <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                        </svg>
+                        Διαγραφή
+                    </button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="col-12">
     <div class="card card-cover inherit-text-color bg-transparent rounded-4 shadow-lg">
         <div class="d-flex flex-column h-100 text-shadow-1">
@@ -41,7 +73,7 @@
                                 {% endfor %}
                             </ul>
                             <div class="read-only read-only-labels py-4 ">
-                                <button type="button" class="btn btn-outline-secondary px-4 w-100" data-edit-button="true" onclick="toggleEditMode('HistoryPregnancy_new')">
+                                <button type="button" class="btn btn-outline-secondary px-4 w-100" data-edit-button="true" onclick="openNewPregnancy()">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-plus-square" viewBox="0 1 16 16">
                                         <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
                                         <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
@@ -51,7 +83,53 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-10">
+                    <div id="pregnancyNewContainer" class="col-12 col-lg-10" style="display: none;">
+                        <div class="tab-content p-3" id="pregnancies-new-tabContent">
+                           <div class="editable card card-cover rounded-4 shadow-lg" id="editableContent_New" style="display: none;">
+                                <div class="d-flex flex-column p-3 text-shadow-1">
+                                    <div class="wrapper">
+                                        <div class="form-wrapper patient-lite px-2">
+                                            <form method="POST" id="pregnancyHistoryForm_New">
+                                                {{ history_pregnancy_form.hidden_tag() }}
+                                                <input type="hidden" name="id" value="">
+                                                <div class="col-12">
+                                                    <div class="row py-2">
+                                                        <div class="compact-form">
+                                                                <div class="row gx-3 gy-0">
+                                                                    <div class="col-12 col-sm-6 col-lg-4">
+                                                                        <div class="input-group">
+                                                                            <input type="date" id="terInput" name="ter" value="" required>
+                                                                            <label for="terInput" style="top: 0%;">Τελευταία Έμμηνος Ρύση:</label>
+                                                                        </div>
+                                                                    </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+                                                    <button type="button" class="btn login-btn px-4" onclick="saveChangesPregnancy(this)">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-floppy" viewBox="0 1 16 16">
+                                                            <path d="M11 2H9v3h2z"/>
+                                                            <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
+                                                        </svg>
+                                                        Αποθήκευση
+                                                    </button>
+                                                    <button type="button" class="btn btn-outline-secondary px-4" onclick="cancelPregnancyEdit()">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-x-square" viewBox="0 1 16 16">
+                                                            <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                                                        </svg>
+                                                        Ακύρωση
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="pregnancyExistingContainer" class="col-12 col-lg-10">
                         <div class="tab-content p-3" id="pregnancies-inner-tabContent">
                             {% for entry_form in history_pregnancy_form.entries %}
                                 {% set prefix = 'HistoryPregnancy_' ~ loop.index %}
@@ -181,7 +259,7 @@
                     <div class="col-12 col-xxl-2">
                         <div class="pt-3 ms-3 me-3 me-xxl-0">
                             <div class="read-only read-only-labels pb-0 pb-xxl-4 pt-2">
-                                <button type="button" class="btn btn-outline-secondary px-4 w-100" data-edit-button="true" onclick="toggleEditMode('HistoryPregnancy_new')">
+                                <button type="button" class="btn btn-outline-secondary px-4 w-100" data-edit-button="true" onclick="openNewPregnancy()">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-plus-square" viewBox="0 1 16 16">
                                         <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
                                         <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
@@ -238,6 +316,7 @@ window.saveChangesPregnancy = async function(btn) {
         if (!response.ok) throw new Error(`HTTP error ${response.status}`);
         const result = await response.json();
         if (!result.success) throw new Error(result.error || 'Failed to save changes');
+        // After successful save, reload and restore containers
         location.reload();
     } catch (error) {
         console.error('Error:', error);
@@ -262,8 +341,39 @@ window.cancelPregnancyEdit = function(){
     if (activeInnerPane) {
         try { sessionStorage.setItem('lastActivePregnancyPaneId', activeInnerPane.id); } catch(e) {}
     }
+    // If user was creating a new pregnancy, just toggle containers instead of full reload
+    const newContainer = document.getElementById('pregnancyNewContainer');
+    const existingContainer = document.getElementById('pregnancyExistingContainer');
+    if (newContainer && existingContainer && newContainer.style.display !== 'none') {
+        newContainer.style.display = 'none';
+        existingContainer.style.display = '';
+        return; // Skip reload
+    }
     location.reload();
 };
+
+// Show the new pregnancy form container and hide existing entries
+function openNewPregnancy(){
+    const newContainer = document.getElementById('pregnancyNewContainer');
+    const existingContainer = document.getElementById('pregnancyExistingContainer');
+    if (newContainer && existingContainer){
+        existingContainer.style.display = 'none';
+        newContainer.style.display = '';
+        // Ensure form becomes editable
+        const editable = document.getElementById('editableContent_New');
+        if (editable) editable.style.display = '';
+    }
+}
+
+// Close new pregnancy creation view (used after successful creation via reload fallback or manual cancel)
+function closeNewPregnancy(){
+    const newContainer = document.getElementById('pregnancyNewContainer');
+    const existingContainer = document.getElementById('pregnancyExistingContainer');
+    if (newContainer && existingContainer){
+        newContainer.style.display = 'none';
+        existingContainer.style.display = '';
+    }
+}
 
 // Navigate between pregnancies using prev/next buttons inside header
 window.navigatePregnancy = function(direction, btn){
@@ -336,4 +446,39 @@ document.addEventListener('shown.bs.tab', (ev) => {
      setTimeout(syncPregnancyColumnsHeight, 30);
   }
 });
+
+window.showDeletePregnancyHistoryModal = async function(btn) {
+    const form = btn.closest('form');
+    const pregnancyId = form.querySelector('input[name="id"]').value;
+    console.log('pregnancyId to delete:', pregnancyId);
+    document.getElementById('deletePregnancyId').value = pregnancyId;
+    const deleteModal = new bootstrap.Modal(document.getElementById('deletePregnancyModal'));
+    deleteModal.show();
+}
+
+async function confirmDeletePregnancy(btn) {
+    const form = btn.closest('form');
+    const pregnancyId = form.querySelector('input[name="id"]').value;
+    console.log('pregnancyId to delete:', pregnancyId)
+    try {
+        const response = await fetch(`/api/pregnancy/${pregnancyId}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (!response.ok) throw new Error('Delete failed');
+
+        const result = await response.json();
+        if (result.success) {
+            // Remember the active pill before reload so we can restore it
+            try { sessionStorage.setItem('lastActiveTab', '#pills-history_obstetrics'); } catch (e) {}
+            location.reload();
+        } else {
+            throw new Error(result.error || 'Unknown error');
+        }
+    } catch (error) {
+        console.error('Delete error:', error);
+        alert('Αποτυχία διαγραφής καρτέλας κύησης: ' + error.message);
+    }
+}
 </script>
