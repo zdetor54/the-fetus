@@ -30,7 +30,11 @@ def update_pregnancy(id: int) -> tuple[dict, int]:
             for field in form._fields:
                 if field not in ["csrf_token", "submit"]:
                     if field in payload:
-                        setattr(history, field, form._fields[field].data)
+                        value = form._fields[field].data
+                        if value != "" and value is not None:
+                            setattr(history, field, value)
+                        else:
+                            setattr(history, field, None)
 
             history.last_updated_by = current_user.id
             history.last_updated_on = datetime.utcnow()

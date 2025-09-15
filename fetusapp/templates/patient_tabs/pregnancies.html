@@ -66,10 +66,10 @@
                                                                     <div class="text-center">
                                                                         <div class="fs-1 fw-semibold">{{ entry_form.form.ter.data }}</div>
                                                                     </div>
-                                                                    {% set exclude = ['csrf_token', 'id'] %}
+                                                                    {% set exclude = ['csrf_token', 'id', 'ter'] %}
                                                                     <div class="row g-3">
                                                                         {% for name, field in entry_form.form._fields.items() %}
-                                                                            {% if field.type != 'HiddenField' and name not in exclude %}
+                                                                            {% if field.type != 'HiddenField' and name not in exclude and field.data %}
                                                                                 <div class="col-12 col-xl-6 col-xxl-4">
                                                                                     {{ macros.render_field(field.label, field.data, field.type) }}
                                                                                 </div>
@@ -193,9 +193,7 @@
             const formDataJson = {};
             const formData = new FormData(form);
             formData.forEach((value, key) => {
-                if (value !== "" && value !== null && value !== undefined) {
-                    formDataJson[key] = value;
-                }
+                formDataJson[key] = value;
             });
 
             console.log('formDataJson:', formDataJson);
@@ -237,9 +235,9 @@
             } else {
                 throw new Error(result.error || 'Failed to save changes');
             }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Error saving changes: ' + error.message);
-        }
-    };
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error saving changes: ' + error.message);
+            }
+        };
 </script>
