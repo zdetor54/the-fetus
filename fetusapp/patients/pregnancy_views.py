@@ -103,3 +103,25 @@ def create_obstetrics_history() -> tuple[dict, int]:
     except Exception as e:
         db.session.rollback()
         return jsonify({"success": False, "error": str(e)}), 400
+
+
+@pregnancy.route("/api/pregnancy/<int:id>", methods=["DELETE"])
+@login_required
+@csrf.exempt
+def delete_pregnancy(id: int) -> tuple[dict, int]:
+    try:
+        history = PregnancyHistory.query.get_or_404(id)
+        if not history:
+            return (
+                jsonify({"success": False, "error": "Pregnancy not found"}),
+                404,
+            )
+        # Soft delete: mark as inactive and update metadata
+        history.is_active = False
+        history.last_updated_by = current_user.id
+        history.last_updated_on = datetime.utcnow()
+        db.session.commit()
+        return jsonify({"success": True}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "error": str(e)}), 400
