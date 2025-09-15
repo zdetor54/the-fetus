@@ -4,6 +4,13 @@
 .compact-form .mb-3,
 .compact-form .form-group,
 .compact-form .input-group { margin-bottom: 0rem !important; }
+
+/* Ensure right column at least matches left column height on large screens */
+@media (min-width: 992px) {
+    #pregnancyHistoryEntries { align-items: stretch; }
+    #pregnancyHistoryEntries > .col-lg-10 { display: flex; flex-direction: column; }
+    #pregnancies-inner-tabContent { flex: 1 1 auto; }
+}
 </style>
 
 <div class="col-12">
@@ -169,7 +176,7 @@
             </div>
             {% else %}
             <div class="container px-0 ">
-                <div class="row g-3" id="pregnancyHistoryEntries">
+                <div class="row g-3">
                     <div class="col-12 col-xxl-2">
                         <div class="pt-3 ms-3 me-3 me-xxl-0">
                             <div class="read-only read-only-labels pb-0 pb-xxl-4 pt-2">
@@ -303,4 +310,29 @@ function updatePregnancyNavButtonStates(){
 
 // Initialize states after injection
 updatePregnancyNavButtonStates();
+
+// Fallback height synchronisation (covers dynamic content changes)
+function syncPregnancyColumnsHeight(){
+    const row = document.getElementById('pregnancyHistoryEntries');
+    if (!row) return;
+    const left = row.querySelector('.col-lg-2');
+    const right = row.querySelector('.col-lg-10');
+    if (!left || !right) return;
+    if (window.innerWidth >= 992) {
+        // Reset first so shrink recalculates correctly
+        right.style.minHeight = '';
+        const h = left.offsetHeight;
+        right.style.minHeight = h + 'px';
+    } else {
+        right.style.minHeight = '';
+    }
+}
+window.addEventListener('load', syncPregnancyColumnsHeight);
+window.addEventListener('resize', syncPregnancyColumnsHeight);
+document.addEventListener('pregnancies:nav', () => setTimeout(syncPregnancyColumnsHeight, 30));
+document.addEventListener('shown.bs.tab', (ev) => {
+  if (ev.target && ev.target.closest('#pregnancies-inner-tab')) {
+     setTimeout(syncPregnancyColumnsHeight, 30);
+  }
+});
 </script>
