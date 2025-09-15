@@ -20,13 +20,13 @@
                                     <li class="nav-item  w-90" role="presentation">
                                         <button class="nav-link w-100 {% if loop.first %}active{% endif %}"
                                             style="border-radius: 5rem;"
-                                            id="pills-appointments-{{ loop.index }}-tab"
-                                            data-tab-key="appointments"
+                                            id="pills-pregnancies-{{ loop.index }}-tab"
+                                            data-tab-key="pregnancies"
                                             data-bs-toggle="pill"
-                                            data-bs-target="#pills-appointments-{{ loop.index }}"
+                                            data-bs-target="#pills-pregnancies-{{ loop.index }}"
                                             type="button"
                                             role="tab"
-                                            aria-controls="pills-appointments-{{ loop.index }}"
+                                            aria-controls="pills-pregnancies-{{ loop.index }}"
                                             aria-selected="false">
                                             {{ entry_form.form.ter.data }}
                                         </button>
@@ -49,9 +49,9 @@
                             {% for entry_form in history_pregnancy_form.entries %}
                                 {% set prefix = 'HistoryPregnancy_' ~ loop.index %}
                                 <div class="tab-pane fade {% if loop.first %}show active{% endif %}"
-                                    id="pills-appointments-{{ loop.index }}"
+                                    id="pills-pregnancies-{{ loop.index }}"
                                     role="tabpanel"
-                                    aria-labelledby="pills-appointments-{{ loop.index }}-tab"
+                                    aria-labelledby="pills-pregnancies-{{ loop.index }}-tab"
                                     tabindex="0">
                                     <div class="col-12 pregnancy-history-entry" id="entryWrapper{{ prefix }}" >
                                         <div class="card card-cover inherit-text-color bg-transparent rounded-4 shadow-lg" id="card{{ prefix }}" style="border: none;">
