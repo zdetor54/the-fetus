@@ -61,6 +61,7 @@
                                             style="border-radius: 5rem;"
                                             id="pills-pregnancies-{{ loop.index }}-tab"
                                             data-tab-key="pregnancies"
+                                            data-pregnancy-id="{{ entry_form.form.id.data }}"
                                             data-bs-toggle="pill"
                                             data-bs-target="#pills-pregnancies-{{ loop.index }}"
                                             type="button"
@@ -167,7 +168,20 @@
                                                                     </div>
                                                                     {% set exclude = ['csrf_token', 'id', 'ter'] %}
                                                                     <div class="row g-3 zd">
-                                                                        <p>Έχετε x επισκέψεις για την συγκεκριμένη κύηση</p>
+                                                                        {# Count matching visit (history_pregnancyX) entries for this pregnancy #}
+                                                                        {% set ns = namespace(count=0) %}
+                                                                        {% for visit_entry in history_pregnancyX_form.entries %}
+                                                                            {% if visit_entry.form.pregnancy_id.data == entry_form.form.id.data %}
+                                                                                {% set ns.count = ns.count + 1 %}
+                                                                            {% endif %}
+                                                                        {% endfor %}
+                                                                        {% if ns.count > 1 %}
+                                                                            <p>Έχετε {{ ns.count }} επισκέψεις για την συγκεκριμένη κύηση</p>
+                                                                        {% elif ns.count == 1 %}
+                                                                            <p>Έχετε {{ ns.count }} επίσκεψη για την συγκεκριμένη κύηση</p>
+                                                                        {% else %}
+                                                                            <p>Δεν έχετε καμία επίσκεψη για την συγκεκριμένη κύηση</p>
+                                                                        {% endif %}
                                                                         {% for name, field in entry_form.form._fields.items() %}
                                                                             {% if field.type != 'HiddenField' and name not in exclude and field.data %}
                                                                                 <div class="col-12 col-xl-6 col-xxl-4 gy-0">
@@ -278,38 +292,33 @@
             {% endif %}
         </div>
 
-        <div class="accordion accordion-flush p-3" id="accordionFlushExample">
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="flush-headingOne">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                    Accordion Item #1
-                </button>
-                </h2>
-                <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-                <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the first item's accordion body.</div>
-                </div>
-            </div>
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="flush-headingTwo">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-                    Accordion Item #2
-                </button>
-                </h2>
-                <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
-                <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the second item's accordion body. Let's imagine this being filled with some actual content.</div>
-                </div>
-            </div>
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="flush-headingThree">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-                    Accordion Item #3
-                </button>
-                </h2>
-                <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
-                <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
-                </div>
-            </div>
+        <div class="read-only read-only-labels p-4 ">
+            <button type="button" class="btn btn-outline-secondary px-4 w-100" data-edit-button="true" onclick="openNewPregnancyΧ()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-plus-square" viewBox="0 1 16 16">
+                    <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                </svg>
+                Νέα Επίσκεψη
+            </button>
         </div>
+
+        {% if history_pregnancyX_form.entries and history_pregnancyX_form.entries[0].data.id%}
+        <div class="accordion accordion-flush p-3 mb-5" id="accordionFlushExample">
+            {% for entry_form in history_pregnancyX_form.entries %}
+                {% set prefix = 'HistoryPregnancyX_' ~ loop.index %}
+                <div class="accordion-item" data-pregnancy-id="{{ entry_form.form.pregnancy_id.data }}">
+                    <h2 class="accordion-header" id="{{ prefix }}">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#{{ prefix }}-collapse" aria-expanded="false" aria-controls="{{ prefix }}-collapse">
+                        {{ entry_form.form.date_of_visit.data }} [<span>{{ entry_form.form.pregnancy_age.data }}</span>]
+                    </button>
+                    </h2>
+                    <div id="{{ prefix }}-collapse" class="accordion-collapse collapse" aria-labelledby="{{ prefix }}" data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush {{ prefix }}</code> class. This is the first item's accordion body.</div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
     </div>
 </div>
 
@@ -456,6 +465,59 @@ function updatePregnancyNavButtonStates(){
 
 // Initialize states after injection
 updatePregnancyNavButtonStates();
+
+// Helper: determine active pregnancy ID from active pill (nav button)
+function computeActivePregnancyId(){
+    const activeBtn = document.querySelector('#pregnancies-inner-tab button.nav-link.active');
+    return activeBtn ? activeBtn.getAttribute('data-pregnancy-id') : null;
+}
+
+// Public accessor (can be called from other scripts)
+window.getActivePregnancyId = function(){
+    return computeActivePregnancyId();
+};
+
+// Dispatch custom event whenever the active pregnancy changes
+document.addEventListener('shown.bs.tab', (ev) => {
+    if (ev.target && ev.target.closest('#pregnancies-inner-tab')) {
+        const pid = computeActivePregnancyId();
+        const evt = new CustomEvent('pregnancy:active-changed', { detail: { pregnancyId: pid }});
+        document.dispatchEvent(evt);
+    }
+});
+
+// Initial broadcast after render (timeout to ensure DOM settled)
+setTimeout(()=>{
+    const pid = computeActivePregnancyId();
+    if(pid){
+        document.dispatchEvent(new CustomEvent('pregnancy:active-changed', { detail: { pregnancyId: pid }}));
+    }
+}, 0);
+
+// Filter accordion items to only show those for the active pregnancy
+function filterPregnancyAccordion(pregnancyId){
+    const items = document.querySelectorAll('#accordionFlushExample .accordion-item');
+    if(!items.length) return;
+    items.forEach(item => {
+        const pid = item.getAttribute('data-pregnancy-id');
+        // Show only if matches (empty pid considered non-match)
+        if(pregnancyId && pid === pregnancyId){
+            item.style.display = '';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+
+document.addEventListener('pregnancy:active-changed', (e)=>{
+    filterPregnancyAccordion(e.detail.pregnancyId);
+});
+
+// Initial filter after first broadcast
+document.addEventListener('DOMContentLoaded', () => {
+    const initialPid = computeActivePregnancyId();
+    if(initialPid){ filterPregnancyAccordion(initialPid); }
+});
 
 // Fallback height synchronisation (covers dynamic content changes)
 function syncPregnancyColumnsHeight(){

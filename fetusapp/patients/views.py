@@ -378,6 +378,7 @@ def patient() -> Response:
 @patients.route("/patient/<int:patient_id>/tab/pregnancies")
 def patient_tab_pregnancies(patient_id: int) -> Response:
     history_pregnancy_form = PregnancyHistoryForm()
+    history_pregnancyX_form = PregnancyHistoryXForm()
 
     pregnancy_history = (
         PregnancyHistory.query.filter_by(patient_id=patient_id, is_active=True)
@@ -386,6 +387,8 @@ def patient_tab_pregnancies(patient_id: int) -> Response:
         .all()
     )
     pregnancy_history_dicts = [entry.to_dict() for entry in pregnancy_history]
+    pregnancy_ids = [entry.id for entry in pregnancy_history]
+
     if pregnancy_history_dicts:
         for row in pregnancy_history_dicts:
             history_pregnancy_form.entries.append_entry(row)
@@ -397,11 +400,34 @@ def patient_tab_pregnancies(patient_id: int) -> Response:
             if history_pregnancy_form.entries.data
             else [{}]
         )
-    # print(history_pregnancy_form.entries.data)
+
+    pregnancy_history_x = (
+        PregnancyHistory_x.query.filter(
+            PregnancyHistory_x.pregnancy_id.in_(pregnancy_ids),
+            PregnancyHistory_x.is_active == True,  # noqa: E712
+        )
+        .order_by(PregnancyHistory_x.date_of_visit.desc())
+        .all()
+    )
+
+    pregnancy_history_x_dicts = [entry.to_dict() for entry in pregnancy_history_x]
+    if pregnancy_history_x_dicts:
+        for row in pregnancy_history_x_dicts:
+            history_pregnancyX_form.entries.append_entry(row)
+    else:
+        # ensure at least one empty form so template can render fields
+        history_pregnancyX_form.entries.append_entry()
+        pregnancy_history_x_dicts = (
+            history_pregnancyX_form.entries.data
+            if history_pregnancyX_form.entries.data
+            else [{}]
+        )
+    print(pregnancy_history_x_dicts)
     patient = Patient.query.get(patient_id)
     return render_template(
         "patient_tabs/pregnancies.html",
         history_pregnancy_form=history_pregnancy_form,
+        history_pregnancyX_form=history_pregnancyX_form,
         patient=patient,
     )
 

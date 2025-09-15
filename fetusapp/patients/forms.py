@@ -193,6 +193,7 @@ class PregnancyHistoryXEntryForm(FlaskForm):
     """Single antenatal visit (PregnancyHistory_x)"""
 
     id = IntegerField("ID", validators=[Optional()])
+    pregnancy_id = IntegerField("ID Κύησης:", validators=[Optional()])
     date_of_visit = DateField("Ημ/νία Επίσκεψης:", validators=[Optional()])
     cause_of_visit = StringField("Αιτία Επίσκεψης:", validators=[Optional()])
     tokos = IntegerField("Τοκός:", validators=[Optional()])
