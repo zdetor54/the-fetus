@@ -651,6 +651,10 @@
                 });
             }
             loaded.add(pane.id);
+            // Dispatch custom event when pregnancies tab content ready
+            if (pane.id === 'pills-pregnancies') {
+                document.dispatchEvent(new CustomEvent('pregnancies:ready'));
+            }
         })
         .catch(err => {
             pane.innerHTML = '<div class="text-danger p-3">Αποτυχία φόρτωσης.</div>';
@@ -672,6 +676,20 @@
     });
 })();
 </script>
+
+    <script>
+    // Restore inner pregnancy tab after lazy load completion
+    document.addEventListener('pregnancies:ready', () => {
+        const paneId = sessionStorage.getItem('lastActivePregnancyPaneId');
+        if (!paneId) return;
+        const btn = document.querySelector(`#pregnancies-inner-tab button[data-bs-target="#${paneId}"]`);
+        if (btn && window.bootstrap && bootstrap.Tab) {
+            try { new bootstrap.Tab(btn).show(); } catch(e) { console.warn('Late inner restore failed', e); }
+        }
+        // Clear only after attempt
+        try { sessionStorage.removeItem('lastActivePregnancyPaneId'); } catch(e) {}
+    });
+    </script>
 
 {{ super() }}
 {% block tab_javascript %}{% endblock %}

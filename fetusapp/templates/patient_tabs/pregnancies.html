@@ -180,64 +180,56 @@
 </div>
 
 <script>
-    window.saveChangesPregnancy = async function(btn) {
-        try {
-            const form = btn.closest('form');
-            const pregnancyId = form.querySelector('input[name="id"]').value;
-            const patientId = '{{ patient.id }}';
-            const csrfToken = form.querySelector('input[name="csrf_token"]').value;
-            console.log('pregnancyId:', pregnancyId);
-            console.log('patientId:', patientId);
+// Enhanced pregnancy save logic with inner tab state persistence
+window.saveChangesPregnancy = async function(btn) {
+    try {
+        const form = btn.closest('form');
+        if (!form) return;
+        const pregnancyId = form.querySelector('input[name="id"]').value;
+        const patientId = '{{ patient.id }}';
+        const csrfToken = form.querySelector('input[name="csrf_token"]').value;
 
-            // Convert FormData to JSON
-            const formDataJson = {};
-            const formData = new FormData(form);
-            formData.forEach((value, key) => {
-                formDataJson[key] = value;
-            });
+        // Persist outer pregnancies tab activation
+        try { sessionStorage.setItem('lastActiveTabKey', 'pregnancies'); } catch(e) {}
+        // Persist currently active inner pane id
+        const activeInnerPane = document.querySelector('#pregnancies-inner-tabContent .tab-pane.active');
+        if (activeInnerPane) {
+            try { sessionStorage.setItem('lastActivePregnancyPaneId', activeInnerPane.id); } catch(e) {}
+        }
 
-            console.log('formDataJson:', formDataJson);
-            let response;
-            if (pregnancyId) {
-            response = await fetch(`/api/pregnancy/${pregnancyId}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': csrfToken
-                    },
-                    body: JSON.stringify(formDataJson)
-                });
-            } else {
-                // Send POST request (create new)
-                formDataJson['patient_id'] = patientId;
-                response = await fetch(`/api/pregnancy`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': csrfToken
-                    },
-                    body: JSON.stringify(formDataJson)
-                });
-            }
+        // Build JSON excluding empty string values
+        const formDataJson = {};
+        const formData = new FormData(form);
+        formData.forEach((value, key) => {
+            formDataJson[key] = value;
+        });
 
-            if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-            }
+        let url, method;
+        if (pregnancyId) { url = `/api/pregnancy/${pregnancyId}`; method = 'PUT'; }
+        else { formDataJson.patient_id = patientId; url = '/api/pregnancy'; method = 'POST'; }
 
-            const result = await response.json();
+        const response = await fetch(url, {
+            method,
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+            body: JSON.stringify(formDataJson)
+        });
+        if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+        const result = await response.json();
+        if (!result.success) throw new Error(result.error || 'Failed to save changes');
+        location.reload();
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error saving changes: ' + error.message);
+    }
+};
 
-            if (result.success) {
-                // Remember the active pill before reload so we can restore it
-                try { sessionStorage.setItem('lastActiveTab', '#pills-history_obstetrics'); } catch (e) {}
-                // refresh the page
-                location.reload();
-                toggleEditMode('HistoryObstetrics');
-            } else {
-                throw new Error(result.error || 'Failed to save changes');
-            }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Error saving changes: ' + error.message);
-            }
-        };
+// Attempt immediate inner tab restore when partial is injected
+(function restoreStoredPregnancyInnerTab(){
+    const paneId = sessionStorage.getItem('lastActivePregnancyPaneId');
+    if (!paneId) return;
+    const btn = document.querySelector(`#pregnancies-inner-tab button[data-bs-target="#${paneId}"]`);
+    if (btn && window.bootstrap && bootstrap.Tab) {
+        try { new bootstrap.Tab(btn).show(); } catch(e) { console.warn('Inner restore failed', e); }
+    }
+})();
 </script>
