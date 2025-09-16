@@ -401,7 +401,7 @@
                                                     {% set field = getattr(entry_form, 'comments') %}
                                                     {{ macros.input_group(element, {'type': field.type, 'label': field.label.text}, field.data) }}
                                                     <div class="row gx-3 gy-0">
-                                                        {% set exclude = ['csrf_token','id', 'comments', 'pregnancy_age'] %}
+                                                        {% set exclude = ['csrf_token','id', 'comments', 'pregnancy_age', 'date_of_visit'] %}
                                                         {% for name, field in entry_form.form._fields.items() %}
                                                             {% if field.type != 'HiddenField' and name not in exclude %}
                                                                 <div class="col-12 col-xl-6 gy-0">
