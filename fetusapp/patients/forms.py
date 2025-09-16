@@ -4,6 +4,7 @@ from wtforms import (
     FieldList,
     FloatField,
     FormField,
+    HiddenField,
     IntegerField,
     SelectField,
     StringField,
@@ -193,26 +194,30 @@ class PregnancyHistoryXEntryForm(FlaskForm):
     """Single antenatal visit (PregnancyHistory_x)"""
 
     id = IntegerField("ID", validators=[Optional()])
-    pregnancy_id = IntegerField("ID Κύησης:", validators=[Optional()])
+    pregnancy_id = HiddenField()
     date_of_visit = DateField("Ημ/νία Επίσκεψης:", validators=[Optional()])
     cause_of_visit = StringField("Αιτία Επίσκεψης:", validators=[Optional()])
-    tokos = IntegerField("Τοκός:", validators=[Optional()])
+    tokos = IntegerField("Τόκος:", validators=[Optional()])
     pregnancy_age = StringField("Ηλικία Κύησης:", validators=[Optional()])
     height = FloatField("Ύψος (cm):", validators=[Optional()])
-    weight_begin = FloatField("Βάρος Έναρξης (kg):", validators=[Optional()])
+    weight_begin = FloatField("Αρχικό Βάρος (kg):", validators=[Optional()])
     weight_current = FloatField("Τρέχον Βάρος (kg):", validators=[Optional()])
     weight_change = FloatField("Μεταβολή Βάρους (kg):", validators=[Optional()])
-    presentation = StringField("Θέση Εμβρύου:", validators=[Optional()])
-    fetal_heart = StringField("Καρδιακοί Παλμοί Εμβρύου:", validators=[Optional()])
-    amniotic_sac = StringField("Αμνιακός Σάκος:", validators=[Optional()])
-    contractions = StringField("Συστολές:", validators=[Optional()])
-    cervical_dilation = StringField("Διαστολή Τραχήλου:", validators=[Optional()])
-    cervical_effacement = StringField("Λέπτυνση Τραχήλου:", validators=[Optional()])
+    presentation = StringField("Προβολή:", validators=[Optional()])
+    fetal_heart = StringField("Καρδιακοί Παλμοί:", validators=[Optional()])
+    amniotic_sac = StringField("Θυλάκιο:", validators=[Optional()])
+    contractions = StringField("Ωδίνες:", validators=[Optional()])
+    cervical_dilation = StringField("Διαστολή:", validators=[Optional()])
+    cervical_effacement = StringField("Εξάλειψη:", validators=[Optional()])
     arterial_pressure = StringField("Αρτηριακή Πίεση:", validators=[Optional()])
     temperature = FloatField("Θερμοκρασία (°C):", validators=[Optional()])
-    sumphysial_fundal_height_sfh = FloatField("SFH (cm):", validators=[Optional()])
+    sumphysial_fundal_height_sfh = FloatField(
+        "Ύψος Μήτρας (cm):", validators=[Optional()]
+    )
     comments = TextAreaField(
-        "Σχόλια:", validators=[Optional()], render_kw={"class": "expanding-textarea"}
+        "Σημειώσεις:",
+        validators=[Optional()],
+        render_kw={"class": "expanding-textarea"},
     )
 
 

@@ -31,8 +31,8 @@
 .accordion-flush .accordion-item .accordion-button {
     border-top-left-radius: 1rem;
     border-top-right-radius: 1rem;
-    border-bottom-left-radius: none;
-    border-bottom-right-radius: none;
+    border-bottom-left-radius: 0rem;
+    border-bottom-right-radius: 0rem;
 }
 
 .accordion-flush .accordion-item .accordion-button.collapsed:hover {
@@ -45,8 +45,8 @@
 .accordion-body {
     border: 1px solid var(--vibrant-pink);
     border-top: none;
-    border-top-left-radius: none;
-    border-top-right-radius: none;
+    border-top-left-radius: 0rem;
+    border-top-right-radius: 0rem;
     border-bottom-left-radius: 1rem;
     border-bottom-right-radius: 1rem;
 }
@@ -55,9 +55,6 @@
     width: 100%;
     text-align: center;
 }
-
-
-/* ...existing code... */
 
 .accordion-item {
     overflow: hidden;
@@ -79,5 +76,13 @@
 /* Optional: smoother feel (can remove if not wanted) */
 .accordion-body {
     transition: border-color .15s ease;
+
+    /* padding: none !important; */
 }
-/* ...existing code... */
+
+.rounded-bottom-4 {
+    border-top-left-radius: 0rem;
+    border-top-right-radius: 0rem;
+    border-bottom-left-radius: 0.8rem;  /* matches .rounded-4 */
+    border-bottom-right-radius: 0.8rem;
+}
