@@ -303,7 +303,7 @@
         </div>
 
         {% if history_pregnancyX_form.entries and history_pregnancyX_form.entries[0].data.id%}
-        <div class="accordion accordion-flush p-3 mb-5" id="pregnancyVisitsAccordion">
+        <div class="accordion accordion-flush p-4 mb-5" id="pregnancyVisitsAccordion">
             {% for entry_form in history_pregnancyX_form.entries %}
                 {% set prefix = 'HistoryPregnancyX_' ~ loop.index %}
                 {% set is_first = loop.first %}
@@ -317,7 +317,7 @@
                             aria-expanded="{{ 'true' if is_first else 'false' }}"
                             aria-controls="{{ prefix }}-collapse">
                             <h3>{{ entry_form.form.date_of_visit.data }}
-                            [ <span>{{ entry_form.form.pregnancy_age.data }}</span> ]</h3>
+                            [ <span>{{ entry_form.form.pregnancy_age.data }}</span> ]
 
                         </button>
                     </h3>
