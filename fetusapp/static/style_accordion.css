@@ -1,21 +1,83 @@
-.accordion-item {
+.accordion-item,
+.accordion-button {
     background-color: transparent;
     /* border: 1px solid rgba(0, 0, 0, .125); */
 }
 
-.accordion-button:not(.collapsed)
-{
-    color: white;
+.accordion-button:not(.collapsed){
+    color: white !important;
     background-color: var(--vibrant-pink);
     box-shadow: none;
 }
 
-.accordion-button:focus
-{
+.accordion-button:focus{
     box-shadow: none;
+}
+
+.accordion-button.collapsed:hover {
+    background-color: oklch(from var(--vibrant-pink) l calc(c - 0.1) h );
+    color: white !important;
 }
 
 .accordion-button:not(.collapsed)::after {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e") !important;
     transform: rotate(-180deg);
 }
+
+.accordion-button {
+    color: rgba(255, 255, 255, .55) !important;
+}
+
+.accordion-flush .accordion-item .accordion-button {
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    border-bottom-left-radius: none;
+    border-bottom-right-radius: none;
+}
+
+.accordion-flush .accordion-item .accordion-button.collapsed:hover {
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+}
+
+.accordion-body {
+    border: 1px solid var(--vibrant-pink);
+    border-top: none;
+    border-top-left-radius: none;
+    border-top-right-radius: none;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+}
+
+.accordion-button h3 {
+    width: 100%;
+    text-align: center;
+}
+
+
+/* ...existing code... */
+
+.accordion-item {
+    overflow: hidden;
+}
+
+.accordion-collapse.collapsing .accordion-body,
+.accordion-collapse:not(.show) .accordion-body {
+    border-color: transparent !important;
+    box-shadow: none;
+}
+
+.accordion-collapse.show .accordion-body {
+    border: 1px solid var(--vibrant-pink);
+    border-top: none;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+}
+
+/* Optional: smoother feel (can remove if not wanted) */
+.accordion-body {
+    transition: border-color .15s ease;
+}
+/* ...existing code... */

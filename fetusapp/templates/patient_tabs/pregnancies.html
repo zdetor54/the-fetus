@@ -306,14 +306,29 @@
         <div class="accordion accordion-flush p-3 mb-5" id="pregnancyVisitsAccordion">
             {% for entry_form in history_pregnancyX_form.entries %}
                 {% set prefix = 'HistoryPregnancyX_' ~ loop.index %}
+                {% set is_first = loop.first %}
                 <div class="accordion-item" data-pregnancy-id="{{ entry_form.form.pregnancy_id.data }}">
-                    <h2 class="accordion-header" id="{{ prefix }}">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#{{ prefix }}-collapse" aria-expanded="false" aria-controls="{{ prefix }}-collapse">
-                        {{ entry_form.form.date_of_visit.data }} [<span>{{ entry_form.form.pregnancy_age.data }}</span>]
-                    </button>
-                    </h2>
-                    <div id="{{ prefix }}-collapse" class="accordion-collapse collapse" aria-labelledby="{{ prefix }}" data-bs-parent="#pregnancyVisitsAccordion">
-                    <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush {{ prefix }}</code> class. This is the first item's accordion body.</div>
+                    <h3 class="accordion-header" id="{{ prefix }}">
+                        <button
+                            class="accordion-button{% if not is_first %} collapsed{% endif %}"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#{{ prefix }}-collapse"
+                            aria-expanded="{{ 'true' if is_first else 'false' }}"
+                            aria-controls="{{ prefix }}-collapse">
+                            <h3>{{ entry_form.form.date_of_visit.data }}
+                            [<span>{{ entry_form.form.pregnancy_age.data }}</span>]</h3>
+
+                        </button>
+                    </h3>
+                    <div
+                        id="{{ prefix }}-collapse"
+                        class="accordion-collapse collapse{% if is_first %} show{% endif %}"
+                        aria-labelledby="{{ prefix }}"
+                        data-bs-parent="#pregnancyVisitsAccordion">
+                        <div class="accordion-body">
+                            Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush {{ prefix }}</code> class. This is the first item's accordion body.
+                        </div>
                     </div>
                 </div>
             {% endfor %}
@@ -578,4 +593,54 @@ async function confirmDeletePregnancy(btn) {
         alert('Αποτυχία διαγραφής καρτέλας κύησης: ' + error.message);
     }
 }
+
+function resetAllVisitAccordions(){
+    document.querySelectorAll('#pregnancyVisitsAccordion .accordion-button').forEach(btn => {
+        btn.classList.add('collapsed');
+        btn.setAttribute('aria-expanded','false');
+    });
+    document.querySelectorAll('#pregnancyVisitsAccordion .accordion-collapse').forEach(col => {
+        col.classList.remove('show');
+    });
+}
+
+function expandFirstVisibleVisit(){
+    const items = Array.from(document.querySelectorAll('#pregnancyVisitsAccordion .accordion-item'))
+        .filter(it => it.style.display !== 'none');
+    if (!items.length) return;
+    const first = items[0];
+    const btn = first.querySelector('.accordion-button');
+    const col = first.querySelector('.accordion-collapse');
+    if (btn && col){
+        btn.classList.remove('collapsed');
+        btn.setAttribute('aria-expanded','true');
+        col.classList.add('show');
+    }
+}
+
+// Modify existing filter to invoke expansion
+function filterPregnancyAccordion(pregnancyId){
+    const items = document.querySelectorAll('#pregnancyVisitsAccordion .accordion-item');
+    if(!items.length) return;
+    items.forEach(item => {
+        const pid = item.getAttribute('data-pregnancy-id');
+        item.style.display = (pregnancyId && pid === pregnancyId) ? '' : 'none';
+    });
+    // After filtering, ensure only a valid visible one is open
+    resetAllVisitAccordions();
+    expandFirstVisibleVisit();
+}
+
+// Ensure first visible is open on initial load too
+document.addEventListener('pregnancy:active-changed', e => {
+    // filterPregnancyAccordion already calls expandFirstVisibleVisit
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    // If initial broadcast already ran, run again defensively
+    const pid = window.getActivePregnancyId && window.getActivePregnancyId();
+    if (pid) {
+        filterPregnancyAccordion(pid);
+    }
+});
 </script>
