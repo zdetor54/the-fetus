@@ -303,7 +303,7 @@
         </div>
 
         {% if history_pregnancyX_form.entries and history_pregnancyX_form.entries[0].data.id%}
-        <div class="accordion accordion-flush p-3 mb-5" id="accordionFlushExample">
+        <div class="accordion accordion-flush p-3 mb-5" id="pregnancyVisitsAccordion">
             {% for entry_form in history_pregnancyX_form.entries %}
                 {% set prefix = 'HistoryPregnancyX_' ~ loop.index %}
                 <div class="accordion-item" data-pregnancy-id="{{ entry_form.form.pregnancy_id.data }}">
@@ -312,7 +312,7 @@
                         {{ entry_form.form.date_of_visit.data }} [<span>{{ entry_form.form.pregnancy_age.data }}</span>]
                     </button>
                     </h2>
-                    <div id="{{ prefix }}-collapse" class="accordion-collapse collapse" aria-labelledby="{{ prefix }}" data-bs-parent="#accordionFlushExample">
+                    <div id="{{ prefix }}-collapse" class="accordion-collapse collapse" aria-labelledby="{{ prefix }}" data-bs-parent="#pregnancyVisitsAccordion">
                     <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush {{ prefix }}</code> class. This is the first item's accordion body.</div>
                     </div>
                 </div>
@@ -496,7 +496,7 @@ setTimeout(()=>{
 
 // Filter accordion items to only show those for the active pregnancy
 function filterPregnancyAccordion(pregnancyId){
-    const items = document.querySelectorAll('#accordionFlushExample .accordion-item');
+    const items = document.querySelectorAll('#pregnancyVisitsAccordion .accordion-item');
     if(!items.length) return;
     items.forEach(item => {
         const pid = item.getAttribute('data-pregnancy-id');
