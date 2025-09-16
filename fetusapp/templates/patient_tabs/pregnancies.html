@@ -394,12 +394,13 @@
                                                 <input type="hidden" name="id" value="{{ entry_form.form.id.data }}">
                                                 <!-- {{ entry_form.form.id.data }} -->
                                                 <div class="col-12">
+                                                    {% set elements = ['date_of_visit', 'comments'] %}
 
-                                                    {% set field = getattr(entry_form, 'date_of_visit') %}
-                                                    {{ macros.input_group(element, {'type': field.type, 'label': field.label.text}, field.data) }}
+                                                    {% for element in elements %}
+                                                        {% set field = getattr(entry_form, element) %}
+                                                        {{ macros.input_group(element, {'type': field.type, 'label': field.label.text}, field.data) }}
+                                                    {% endfor %}
 
-                                                    {% set field = getattr(entry_form, 'comments') %}
-                                                    {{ macros.input_group(element, {'type': field.type, 'label': field.label.text}, field.data) }}
                                                     <div class="row gx-3 gy-0">
                                                         {% set exclude = ['csrf_token','id', 'comments', 'pregnancy_age', 'date_of_visit'] %}
                                                         {% for name, field in entry_form.form._fields.items() %}
