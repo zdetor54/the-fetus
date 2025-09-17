@@ -9,7 +9,7 @@
     --vibrant-pink: #EF539E;          /* Active state color for nav link */
     --vibrant-pink: #ff4f40;          /* monzo*/
     --vibrant-pink: #9FE870;          /* wise*/
-    --vibrant-pink: #fad766;          /* monzo*/
+    --vibrant-pink: #f6cb53;          /* monzo*/
     --warm-beige: #F3E1D7;            /* Background color */
     /* Match root background to body to avoid black gutter */
     background-color: #212529;
@@ -384,7 +384,7 @@ em {
 #pills-update,
 [id^="editableContent"],
 .modal-content {
-    background: var(--warm-beige);
+    background: oklch(from var(--vibrant-pink) calc(l + 0.9) calc(c - 0.14) h );
     color: black;
     border: none;
 }
@@ -548,13 +548,13 @@ input[type="date"]::-webkit-datetime-edit {
 .input-group textarea,
 .form-control#comments-textarea,
 .input-group .form-control.expanding-textarea {
-    background-color: #fff5f0 !important;
+    background-color: oklch(from var(--vibrant-pink) calc(l + 0.9) calc(c - 0.17) h ) !important;
     display: block !important;
     width: 100% !important;
     box-sizing: border-box !important;
     margin-top: 0 !important;
     overflow: hidden !important;
-    border: 1px solid rgba(239, 83, 158, 0.5);
+    border: 1px solid oklch(from var(--vibrant-pink) calc(l - 0.05) calc(c - 0.05) h ) !important;
 }
 
 /* If templates still use absolute-positioned labels (patient-lite), prefer textarea stacking when label has textarea-top-label */
