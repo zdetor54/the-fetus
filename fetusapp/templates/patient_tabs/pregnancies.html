@@ -51,7 +51,7 @@
             {% if history_pregnancy_form.entries%}
             <div class="container px-0 ">
                 <div class="row g-3" id="pregnancyHistoryEntries">
-                    <div class="col-12 col-lg-2">
+                    <div class="col-12 col-lg-3 col-xl-2">
 
                         <div class="pt-3 ms-3 me-3 me-lg-0">
                             {% if history_pregnancy_form.entries[0].data.id %}
@@ -87,7 +87,7 @@
                             </div>
                         </div>
                     </div>
-                    <div id="pregnancyNewContainer" class="col-12 col-lg-10" style="display: none;">
+                    <div id="pregnancyNewContainer" class="col-12 col-lg-9 col-xl-10" style="display: none;">
                         <div class="tab-content p-3" id="pregnancies-new-tabContent">
                            <div class="editable card card-cover rounded-4 shadow-lg" id="editableContent_New" style="display: none;">
                                 <div class="d-flex flex-column p-3 text-shadow-1">
@@ -134,7 +134,7 @@
                         </div>
                     </div>
 
-                    <div id="pregnancyExistingContainer" class="col-12 col-lg-10">
+                    <div id="pregnancyExistingContainer" class="col-12 col-lg-9 col-xl-10">
                         <div class="tab-content p-3" id="pregnancies-inner-tabContent">
                             {% if history_pregnancy_form.entries[0].data.id %}
                             {% for entry_form in history_pregnancy_form.entries %}
