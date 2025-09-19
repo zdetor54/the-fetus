@@ -609,3 +609,87 @@ input[type="date"]::-webkit-datetime-edit {
         border-width: 0 2px 2px 0;
         transform: rotate(45deg);
     }
+
+/*
+  Responsive tweaks for mobile
+  - Reduce overall font sizing & paddings on small screens
+  - Keep form controls at >=16px to avoid iOS zoom on focus
+*/
+
+/* Phones: <576px */
+@media (max-width: 575.98px) {
+    html {
+        font-size: 13px; /* scales rem-based sizes */
+    }
+    body {
+        line-height: 1.2;
+    }
+
+    h1 { font-size: clamp(1.25rem, 5vw, 1.75rem); }
+    h2 { font-size: clamp(1.125rem, 4.5vw, 1.5rem); }
+    h3 { font-size: clamp(1rem, 4vw, 1.25rem); }
+    .display-6 { font-size: 1.5rem; }
+
+    .navbar .nav-link { font-size: 0.9rem; }
+    .navbar-brand svg { width: 30px; height: 30px; }
+
+    .btn { padding: 0.375rem 0.75rem; font-size: 0.9rem; }
+    .btn-lg { padding: 0.5rem 1rem; font-size: 1rem; }
+
+    .logged-user-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+    }
+
+    .nav-pills .nav-link { padding: 0.4rem 0.75rem; }
+
+    .single_quick_activity,
+    .welcome-message,
+    .single_quick_admin,
+    .weather-pill,
+    .quote-pill {
+        padding: 20px 16px;
+    }
+
+    .quick_activity_wrap,
+    .quick_admin_wrap {
+        grid-template-columns: 1fr; /* collapse to single column on phones */
+        grid-gap: 10px;
+    }
+
+    /* Prevent iOS from zooming inputs on focus */
+    input,
+    select,
+    textarea {
+        font-size: 16px;
+    }
+}
+
+/* Small tablets: 576px–767.98px */
+@media (min-width: 576px) and (max-width: 767.98px) {
+    html {
+        font-size: 15px; /* slight reduction from desktop */
+    }
+    h1 { font-size: clamp(1.4rem, 4.5vw, 1.9rem); }
+    h2 { font-size: clamp(1.25rem, 4vw, 1.6rem); }
+    h3 { font-size: clamp(1.05rem, 3.5vw, 1.3rem); }
+    .display-6 { font-size: 1.75rem; }
+
+    .navbar .nav-link { font-size: 0.95rem; }
+    .navbar-brand svg { width: 34px; height: 34px; }
+
+    .btn { padding: 0.45rem 0.9rem; font-size: 0.95rem; }
+
+    .quick_activity_wrap,
+    .quick_admin_wrap {
+        grid-template-columns: 1fr; /* give more space on small tablets */
+    }
+
+    /* Keep inputs at >=16px for mobile usability */
+    input,
+    select,
+    textarea {
+        font-size: 16px;
+    }
+}
