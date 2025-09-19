@@ -619,7 +619,7 @@ input[type="date"]::-webkit-datetime-edit {
 /* Phones: <576px */
 @media (max-width: 575.98px) {
     html {
-        font-size: 13px; /* scales rem-based sizes */
+        font-size: 14px; /* scales rem-based sizes */
     }
     body {
         line-height: 1.2;
