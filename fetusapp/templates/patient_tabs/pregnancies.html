@@ -308,8 +308,9 @@
             {% endif %}
         </div>
 
+        {% if history_pregnancy_form.entries[0].data.id %}
         <div class="read-only read-only-labels p-4 ">
-            <button type="button" class="btn btn-outline-secondary px-4 w-100" data-edit-button="true" onclick="openNewPregnancyΧ()">
+            <button type="button" class="btn btn-outline-secondary px-4 w-100" data-edit-button="true" onclick="openNewPregnancyX()">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-plus-square" viewBox="0 1 16 16">
                     <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
                     <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
@@ -317,12 +318,74 @@
                 Νέα Επίσκεψη
             </button>
         </div>
+        {% endif %}
 
-        {% if history_pregnancyX_form.entries and history_pregnancyX_form.entries[0].data.id%}
-        <div class="accordion accordion-flush p-4 mb-5" id="pregnancyVisitsAccordion">
+        {% if history_pregnancyX_form.entries %}
+
+
+ <div id="pregnancyXNewContainer" class="col-12 px-2" style="display: none;">
+
+    <div class="tab-content p-3" id="pregnanciesX-new-tabContent">
+        <div class="editable card card-cover rounded-4 shadow-lg" id="editableContent_XNew" style="display: none;">
+            <div class="d-flex flex-column p-3 text-shadow-1">
+                <div class="wrapper">
+                    <div class="form-wrapper patient-lite px-2">
+                        <form method="POST" id="pregnancyXHistoryForm_New">
+                            {{ history_pregnancyX_form.hidden_tag() }}
+                            <input type="hidden" name="id" value="">
+                            <div class="col-12">
+                                <div class="row py-2">
+                                    <div class="compact-form">
+                                        <div class="row gx-3 gy-0">
+                                            <div class="col-12">
+                                                <div class="input-group">
+                                                    <input type="date" id="date_of_visitInput" name="date_of_visit" value="" required>
+                                                    <label for="date_of_visitInput" style="top: 0%;">Ημερομηνία επίσκεψης:</label>
+                                                </div>
+                                                {% set elements = ['comments'] %}
+
+                                                {% for element in elements %}
+                                                    {% set field = getattr(history_pregnancyX_form.entries[0], element) %}
+                                                    {{ macros.input_group(element, {'type': field.type, 'label': field.label.text}, '') }}
+                                                {% endfor %}
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+                                <button type="button" class="btn login-btn px-4" onclick="saveChangesPregnancyX(this)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-floppy" viewBox="0 1 16 16">
+                                        <path d="M11 2H9v3h2z"/>
+                                        <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
+                                    </svg>
+                                    Αποθήκευση
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary px-4" onclick="cancelChanges()">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-x-square" viewBox="0 1 16 16">
+                                        <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                                    </svg>
+                                    Ακύρωση
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <div id="pregnancyXExistingContainer" class="col-12 px-2">
+    <div class="accordion accordion-flush p-4 mb-5" id="pregnancyVisitsAccordion">
             {% for entry_form in history_pregnancyX_form.entries %}
                 {% set prefix = 'HistoryPregnancyX_' ~ loop.index %}
                 {% set is_first = loop.first %}
+                {% if history_pregnancyX_form.entries[0].data.id %}
                 <div class="accordion-item" data-pregnancy-id="{{ entry_form.form.pregnancy_id.data }}" data-visit-id="{{ entry_form.form.id.data }}">
                     <h3 class="accordion-header" id="{{ prefix }}">
                         <button
@@ -354,45 +417,45 @@
 
 
 <div class="row g-3" id="PregnancyXEntries">
-        <div class="col-12" id="entryWrapper{{ prefix }}">
-            <div class="card card-cover bg-transparent border-0" id="card{{ prefix }}">
-                <div class="d-flex flex-column h-100 text-shadow-1">
-                    <div class="container px-0 ">
-                        <div class="form-container" style="position: relative; transition: max-height 0.2s ease-in-out;" id="formContainer{{ prefix }}">
-                            <input type="hidden" name="id" value="{{ entry_form.form.id.data }}" style="display: none;">
-                            <!-- Read Only View -->
-                            <div class="read-only read-only-labels p-4" id="readOnlyContent{{ prefix }}">
-                                <div class="row py-2">
-                                    <div class="col-12">
-                                        {% set field = getattr(entry_form, 'comments') %}
-                                        {{ macros.render_field(field.label, field.data, field.type) }}
+    <div class="col-12" id="entryWrapper{{ prefix }}">
+        <div class="card card-cover bg-transparent border-0" id="card{{ prefix }}">
+            <div class="d-flex flex-column h-100 text-shadow-1">
+                <div class="container px-0 ">
+                    <div class="form-container" style="position: relative; transition: max-height 0.2s ease-in-out;" id="formContainer{{ prefix }}">
+                        <input type="hidden" name="id" value="{{ entry_form.form.id.data }}" style="display: none;">
+                        <!-- Read Only View -->
+                        <div class="read-only read-only-labels p-4" id="readOnlyContent{{ prefix }}">
+                            <div class="row py-2">
+                                <div class="col-12">
+                                    {% set field = getattr(entry_form, 'comments') %}
+                                    {{ macros.render_field(field.label, field.data, field.type) }}
 
-                                        <div class="row gx-3 gy-0">
-                                        {% set exclude = ['csrf_token','id', 'comments', 'date_of_visit', 'pregnancy_age'] %}
-                                        {% for name, field in entry_form.form._fields.items() %}
-                                            {% if field.type != 'HiddenField' and name not in exclude %}
-                                                <div class="col-12 col-xl-6 gy-0">
-                                                    {{ macros.render_field(field.label, field.data, field.type) }}
-                                                </div>
-                                            {% endif %}
-                                        {% endfor %}
-                                        </div>
+                                    <div class="row gx-3 gy-0">
+                                    {% set exclude = ['csrf_token','id', 'comments', 'date_of_visit', 'pregnancy_age'] %}
+                                    {% for name, field in entry_form.form._fields.items() %}
+                                        {% if field.type != 'HiddenField' and name not in exclude %}
+                                            <div class="col-12 col-xl-6 gy-0">
+                                                {{ macros.render_field(field.label, field.data, field.type) }}
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
                                     </div>
                                 </div>
-                                <div class="d-flex flex-wrap justify-content-end gap-2 mt-3">
-                                    <form action="">
-                                        <input type="hidden" name="id" value="{{ entry_form.form.id.data }}">
-                                        <button type="button" class="btn btn-outline-secondary px-4" data-edit-button="true" onclick="toggleEditMode('{{ prefix }}')">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="1 0 16 16"><path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/><path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/></svg>
-                                            Επεξεργασία
-                                        </button>
-                                        <button type="button" class="btn btn-outline-danger px-4" onclick="showDeletePregnancyXModal(this)">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-trash3" viewBox="1 0 16 16"><path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/></svg>
-                                        </button>
-                                    </form>
-
-                                </div>
                             </div>
+                            <div class="d-flex flex-wrap justify-content-end gap-2 mt-3">
+                                <form action="">
+                                    <input type="hidden" name="id" value="{{ entry_form.form.id.data }}">
+                                    <button type="button" class="btn btn-outline-secondary px-4" data-edit-button="true" onclick="toggleEditMode('{{ prefix }}')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="1 0 16 16"><path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/><path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/></svg>
+                                        Επεξεργασία
+                                    </button>
+                                    <button type="button" class="btn btn-outline-danger px-4" onclick="showDeletePregnancyXModal(this)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-trash3" viewBox="1 0 16 16"><path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/></svg>
+                                    </button>
+                                </form>
+
+                            </div>
+                        </div>
 
 
 
@@ -400,74 +463,60 @@
 
 
 
-                            <!-- Editable View -->
-                            <div class="editable card card-cover rounded-bottom-4" id="editableContent{{ prefix }}" style="display: none;">
-                                <div class="d-flex flex-column p-3 text-shadow-1">
-                                    <div class="wrapper">
-                                        <div class="form-wrapper patient-lite px-2">
-                                            <form method="POST" id="obstetricsHistoryForm{{ prefix }}" data-history-id="{{ obstetrics_history_form.id.data if obstetrics_history_form else '' }}">
-                                                {{ history_pregnancyX_form.hidden_tag() }}
-                                                <input type="hidden" name="id" value="{{ entry_form.form.id.data }}">
-                                                <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
-                                                    <button type="button" class="btn login-btn px-4" onclick="saveChangesPregnancyX(this)">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-floppy" viewBox="0 1 16 16">
-                                                            <path d="M11 2H9v3h2z"/>
-                                                            <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
-                                                        </svg>
-                                                        Αποθήκευση
-                                                    </button>
-                                                    <button type="button" class="btn btn-outline-secondary px-4" onclick="cancelChanges()">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-x-square" viewBox="0 1 16 16">
-                                                            <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
-                                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-                                                        </svg>
-                                                        Ακύρωση
-                                                    </button>
-                                                </div>
-                                                <!-- {{ entry_form.form.id.data }} -->
-                                                <div class="col-12">
-                                                    {% set elements = ['date_of_visit', 'comments'] %}
+                        <!-- Editable View -->
+                        <div class="editable card card-cover rounded-bottom-4" id="editableContent{{ prefix }}" style="display: none;">
+                            <div class="d-flex flex-column p-3 text-shadow-1">
+                                <div class="wrapper">
+                                    <div class="form-wrapper patient-lite px-2">
+                                        <form method="POST" id="obstetricsHistoryForm{{ prefix }}" data-history-id="{{ obstetrics_history_form.id.data if obstetrics_history_form else '' }}">
+                                            {{ history_pregnancyX_form.hidden_tag() }}
+                                            <input type="hidden" name="id" value="{{ entry_form.form.id.data }}">
+                                            <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+                                                <button type="button" class="btn login-btn px-4" onclick="saveChangesPregnancyX(this)">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-floppy" viewBox="0 1 16 16">
+                                                        <path d="M11 2H9v3h2z"/>
+                                                        <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
+                                                    </svg>
+                                                    Αποθήκευση
+                                                </button>
+                                                <button type="button" class="btn btn-outline-secondary px-4" onclick="cancelChanges()">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-x-square" viewBox="0 1 16 16">
+                                                        <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                                                    </svg>
+                                                    Ακύρωση
+                                                </button>
+                                            </div>
+                                            <!-- {{ entry_form.form.id.data }} -->
+                                            <div class="col-12">
+                                                {% set elements = ['date_of_visit', 'comments'] %}
 
-                                                    {% for element in elements %}
-                                                        {% set field = getattr(entry_form, element) %}
-                                                        {{ macros.input_group(element, {'type': field.type, 'label': field.label.text}, field.data) }}
+                                                {% for element in elements %}
+                                                    {% set field = getattr(entry_form, element) %}
+                                                    {{ macros.input_group(element, {'type': field.type, 'label': field.label.text}, field.data) }}
+                                                {% endfor %}
+
+                                                <div class="row gx-3 gy-0">
+                                                    {% set exclude = ['csrf_token','id', 'comments', 'pregnancy_age', 'date_of_visit'] %}
+                                                    {% for name, field in entry_form.form._fields.items() %}
+                                                        {% if field.type != 'HiddenField' and name not in exclude %}
+                                                            <div class="col-12 col-xl-6 gy-0">
+                                                                {{ macros.input_group(element, {'type': field.type, 'label': field.label.text}, field.data) }}
+                                                            </div>
+                                                        {% endif %}
                                                     {% endfor %}
-
-                                                    <div class="row gx-3 gy-0">
-                                                        {% set exclude = ['csrf_token','id', 'comments', 'pregnancy_age', 'date_of_visit'] %}
-                                                        {% for name, field in entry_form.form._fields.items() %}
-                                                            {% if field.type != 'HiddenField' and name not in exclude %}
-                                                                <div class="col-12 col-xl-6 gy-0">
-                                                                    {{ macros.input_group(element, {'type': field.type, 'label': field.label.text}, field.data) }}
-                                                                </div>
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                    </div>
                                                 </div>
-                                            </form>
-                                        </div>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 </div>
 
 
@@ -492,10 +541,13 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
             {% endfor %}
         </div>
-        {% endif %}
+
     </div>
+        {% endif %}
+
 </div>
 
 
@@ -550,10 +602,10 @@ window.saveChangesPregnancyX = async function(btn) {
         const form = btn.closest('form');
         if (!form) return;
         const pregnancyXId = form.querySelector('input[name="id"]').value;
-        const patientId = '{{ patient.id }}';
+        const pregnancyId = window.getActivePregnancyId()
         const csrfToken = form.querySelector('input[name="csrf_token"]').value;
 
-        console.log('Saving PregnancyX form', {pregnancyXId, patientId, csrfToken});
+        console.log('Saving PregnancyX form', {pregnancyXId, pregnancyId, csrfToken});
 
         // Persist outer pregnancies tab activation and currently active inner pane id
         try { sessionStorage.setItem('lastActiveTabKey', 'pregnancies'); } catch(e) {}
@@ -583,7 +635,8 @@ window.saveChangesPregnancyX = async function(btn) {
 
         let url, method;
         if (pregnancyXId) { url = `/api/pregnancy-x/${pregnancyXId}`; method = 'PUT'; }
-        else { formDataJson.patient_id = patientId; url = '/api/pregnancy-x'; method = 'POST'; }
+        else { url = `/api/pregnancy-x/${pregnancyId}`; method = 'POST'; }
+
 
         const response = await fetch(url, {
             method,
@@ -634,6 +687,19 @@ window.cancelPregnancyEdit = function(){
     location.reload();
 };
 
+// Cancel new visit creation or edit and return to existing visits list without reloading
+window.cancelChanges = function(){
+    const newContainer = document.getElementById('pregnancyXNewContainer');
+    const existingContainer = document.getElementById('pregnancyXExistingContainer');
+    if (newContainer && existingContainer && newContainer.style.display !== 'none') {
+        newContainer.style.display = 'none';
+        existingContainer.style.display = '';
+        return;
+    }
+    // Default fallback: reload if we weren't in the new-container view
+    location.reload();
+}
+
 // Show the new pregnancy form container and hide existing entries
 function openNewPregnancy(){
     const newContainer = document.getElementById('pregnancyNewContainer');
@@ -643,6 +709,19 @@ function openNewPregnancy(){
         newContainer.style.display = '';
         // Ensure form becomes editable
         const editable = document.getElementById('editableContent_New');
+        if (editable) editable.style.display = '';
+    }
+}
+
+// Show the new pregnancy form container and hide existing entries
+function openNewPregnancyX(){
+    const newContainer = document.getElementById('pregnancyXNewContainer');
+    const existingContainer = document.getElementById('pregnancyXExistingContainer');
+    if (newContainer && existingContainer){
+        existingContainer.style.display = 'none';
+        newContainer.style.display = '';
+        // Ensure form becomes editable
+        const editable = document.getElementById('editableContent_XNew');
         if (editable) editable.style.display = '';
     }
 }
