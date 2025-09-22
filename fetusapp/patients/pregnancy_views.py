@@ -125,3 +125,63 @@ def delete_pregnancy(id: int) -> tuple[dict, int]:
     except Exception as e:
         db.session.rollback()
         return jsonify({"success": False, "error": str(e)}), 400
+
+
+@pregnancy.route("/api/pregnancy-x/<int:id>", methods=["PUT"])
+@login_required
+@csrf.exempt
+def update_pregnancy_x(id: int) -> tuple[dict, int]:
+    try:
+        # Get existing record
+        history = PregnancyHistory_x.query.get_or_404(id)
+
+        # Read and normalize JSON payload so WTForms validators accept booleans
+        payload = request.get_json(silent=True) or {}
+
+        form = PregnancyHistoryXEntryForm(data=payload)
+
+        if form.validate():
+            # Update history fields from form data
+            for field in form._fields:
+                if field not in ["csrf_token", "submit"]:
+                    if field in payload:
+                        value = form._fields[field].data
+                        if value != "" and value is not None:
+                            setattr(history, field, value)
+                        else:
+                            setattr(history, field, None)
+
+            history.last_updated_by = current_user.id
+            history.last_updated_on = datetime.utcnow()
+
+            print(f"Updated pregnancy history: {history.to_dict()}")
+
+            db.session.commit()
+            return jsonify({"success": True}), 200
+        else:
+            return jsonify({"success": False, "errors": form.errors}), 400
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "error": str(e)}), 400
+
+
+@pregnancy.route("/api/pregnancy-x/<int:id>", methods=["DELETE"])
+@login_required
+@csrf.exempt
+def delete_pregnancy_x(id: int) -> tuple[dict, int]:
+    try:
+        history = PregnancyHistory_x.query.get_or_404(id)
+        if not history:
+            return (
+                jsonify({"success": False, "error": "Pregnancy not found"}),
+                404,
+            )
+        # Soft delete: mark as inactive and update metadata
+        history.is_active = False
+        history.last_updated_by = current_user.id
+        history.last_updated_on = datetime.utcnow()
+        db.session.commit()
+        return jsonify({"success": True}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "error": str(e)}), 400

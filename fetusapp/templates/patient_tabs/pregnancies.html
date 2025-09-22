@@ -45,6 +45,38 @@
     </div>
 </div>
 
+<div class="modal fade" id="deletePregnancyXModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h5 class="modal-title text-center">Επιβεβαίωση Διαγραφής</h5>
+            </div>
+            <div class="modal-body">
+                <p class="text-center">Είστε σίγουροι ότι θέλετε να διαγράψετε την επίσκεψη κύησης της {{ patient.first_name | proper_case }} {{ patient.last_name | proper_case }};</p>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <form action="">
+                    <input id="deletePregnancyXId" name="id" value="" type="hidden">
+                    <button type="button" class="btn btn-outline-light px-4" data-bs-dismiss="modal">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-x-square" viewBox="0 1 16 16">
+                            <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                        </svg>
+                        Ακύρωση
+                    </button>
+                    <button type="button" class="btn btn-danger px-4" onclick="confirmDeletePregnancyX(this)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-trash3" viewBox="0 1 16 16">
+                            <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                        </svg>
+                        Διαγραφή
+                    </button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="col-12">
     <div class="card card-cover inherit-text-color bg-transparent rounded-4 shadow-lg">
         <div class="d-flex flex-column h-100 text-shadow-1">
@@ -219,6 +251,22 @@
                                                                         <form method="POST" id="pregnancyHistoryForm{{ prefix }}" data-history-id="{{ pregnancy_history_form.id.data if pregnancy_history_form else '' }}">
                                                                             {{ history_pregnancy_form.hidden_tag() }}
                                                                             <input type="hidden" name="id" value="{{ entry_form.form.id.data }}">
+                                                                            <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+                                                                                <button type="button" class="btn login-btn px-4" onclick="saveChangesPregnancy(this)">
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-floppy" viewBox="0 1 16 16">
+                                                                                        <path d="M11 2H9v3h2z"/>
+                                                                                        <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
+                                                                                    </svg>
+                                                                                    Αποθήκευση
+                                                                                </button>
+                                                                                <button type="button" class="btn btn-outline-secondary px-4" onclick="cancelPregnancyEdit()">
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-x-square" viewBox="0 1 16 16">
+                                                                                        <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                                                                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                                                                                    </svg>
+                                                                                    Ακύρωση
+                                                                                </button>
+                                                                            </div>
                                                                             <!-- {{ entry_form.form.id.data }} -->
                                                                             <div class="col-12">
                                                                                 <div class="row py-2">
@@ -235,22 +283,6 @@
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
-                                                                            </div>
-                                                                            <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
-                                                                                <button type="button" class="btn login-btn px-4" onclick="saveChangesPregnancy(this)">
-                                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-floppy" viewBox="0 1 16 16">
-                                                                                        <path d="M11 2H9v3h2z"/>
-                                                                                        <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
-                                                                                    </svg>
-                                                                                    Αποθήκευση
-                                                                                </button>
-                                                                                <button type="button" class="btn btn-outline-secondary px-4" onclick="cancelPregnancyEdit()">
-                                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-x-square" viewBox="0 1 16 16">
-                                                                                        <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
-                                                                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-                                                                                    </svg>
-                                                                                    Ακύρωση
-                                                                                </button>
                                                                             </div>
                                                                         </form>
                                                                     </div>
@@ -291,7 +323,7 @@
             {% for entry_form in history_pregnancyX_form.entries %}
                 {% set prefix = 'HistoryPregnancyX_' ~ loop.index %}
                 {% set is_first = loop.first %}
-                <div class="accordion-item" data-pregnancy-id="{{ entry_form.form.pregnancy_id.data }}">
+                <div class="accordion-item" data-pregnancy-id="{{ entry_form.form.pregnancy_id.data }}" data-visit-id="{{ entry_form.form.id.data }}">
                     <h3 class="accordion-header" id="{{ prefix }}">
                         <button
                             class="accordion-button{% if not is_first %} collapsed{% endif %}"
@@ -374,8 +406,24 @@
                                     <div class="wrapper">
                                         <div class="form-wrapper patient-lite px-2">
                                             <form method="POST" id="obstetricsHistoryForm{{ prefix }}" data-history-id="{{ obstetrics_history_form.id.data if obstetrics_history_form else '' }}">
-                                                {{ entry_form.hidden_tag() }}
+                                                {{ history_pregnancyX_form.hidden_tag() }}
                                                 <input type="hidden" name="id" value="{{ entry_form.form.id.data }}">
+                                                <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+                                                    <button type="button" class="btn login-btn px-4" onclick="saveChangesPregnancyX(this)">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-floppy" viewBox="0 1 16 16">
+                                                            <path d="M11 2H9v3h2z"/>
+                                                            <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
+                                                        </svg>
+                                                        Αποθήκευση
+                                                    </button>
+                                                    <button type="button" class="btn btn-outline-secondary px-4" onclick="cancelChanges()">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-x-square" viewBox="0 1 16 16">
+                                                            <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                                                        </svg>
+                                                        Ακύρωση
+                                                    </button>
+                                                </div>
                                                 <!-- {{ entry_form.form.id.data }} -->
                                                 <div class="col-12">
                                                     {% set elements = ['date_of_visit', 'comments'] %}
@@ -395,22 +443,6 @@
                                                             {% endif %}
                                                         {% endfor %}
                                                     </div>
-                                                </div>
-                                                <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
-                                                    <button type="button" class="btn login-btn px-4" onclick="saveChangesPregnancyX(this)">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-floppy" viewBox="0 1 16 16">
-                                                            <path d="M11 2H9v3h2z"/>
-                                                            <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
-                                                        </svg>
-                                                        Αποθήκευση
-                                                    </button>
-                                                    <button type="button" class="btn btn-outline-secondary px-4" onclick="cancelChanges()">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-x-square" viewBox="0 1 16 16">
-                                                            <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
-                                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-                                                        </svg>
-                                                        Ακύρωση
-                                                    </button>
                                                 </div>
                                             </form>
                                         </div>
@@ -504,6 +536,68 @@ window.saveChangesPregnancy = async function(btn) {
         if (!response.ok) throw new Error(`HTTP error ${response.status}`);
         const result = await response.json();
         if (!result.success) throw new Error(result.error || 'Failed to save changes');
+        // After successful save, reload and restore containers
+        location.reload();
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error saving changes: ' + error.message);
+    }
+};
+
+
+window.saveChangesPregnancyX = async function(btn) {
+    try {
+        const form = btn.closest('form');
+        if (!form) return;
+        const pregnancyXId = form.querySelector('input[name="id"]').value;
+        const patientId = '{{ patient.id }}';
+        const csrfToken = form.querySelector('input[name="csrf_token"]').value;
+
+        console.log('Saving PregnancyX form', {pregnancyXId, patientId, csrfToken});
+
+        // Persist outer pregnancies tab activation and currently active inner pane id
+        try { sessionStorage.setItem('lastActiveTabKey', 'pregnancies'); } catch(e) {}
+        const activeInnerPane = document.querySelector('#pregnancies-inner-tabContent .tab-pane.active');
+        if (activeInnerPane) {
+            try { sessionStorage.setItem('lastActivePregnancyPaneId', activeInnerPane.id); } catch(e) {}
+        }
+        // Persist currently focused/open visit (accordion) id when saving
+        try {
+            if (pregnancyXId) {
+                sessionStorage.setItem('lastActiveVisitId', pregnancyXId);
+            } else {
+                const accItem = form.closest('.accordion-item');
+                const vid = accItem ? accItem.getAttribute('data-visit-id') : null;
+                if (vid) sessionStorage.setItem('lastActiveVisitId', vid);
+            }
+        } catch(e) {}
+
+        // Build JSON excluding empty string values
+        const formDataJson = {};
+        const formData = new FormData(form);
+        formData.forEach((value, key) => {
+            formDataJson[key] = value;
+        });
+
+        console.log('Form data JSON', formDataJson);
+
+        let url, method;
+        if (pregnancyXId) { url = `/api/pregnancy-x/${pregnancyXId}`; method = 'PUT'; }
+        else { formDataJson.patient_id = patientId; url = '/api/pregnancy-x'; method = 'POST'; }
+
+        const response = await fetch(url, {
+            method,
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+            body: JSON.stringify(formDataJson)
+        });
+        if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+        const result = await response.json();
+        if (!result.success) throw new Error(result.error || 'Failed to save changes');
+        // If API returns new/updated id, persist it for precise restore
+        try {
+            const newId = (result && (result.id || (result.data && result.data.id))) ? (result.id || result.data.id) : null;
+            if (newId) sessionStorage.setItem('lastActiveVisitId', String(newId));
+        } catch(e) {}
         // After successful save, reload and restore containers
         location.reload();
     } catch (error) {
@@ -697,12 +791,47 @@ window.showDeletePregnancyHistoryModal = async function(btn) {
     deleteModal.show();
 }
 
+window.showDeletePregnancyXModal = async function(btn) {
+    const form = btn.closest('form');
+    const pregnancyId = form.querySelector('input[name="id"]').value;
+    console.log('pregnancyId to delete:', pregnancyId);
+    document.getElementById('deletePregnancyXId').value = pregnancyId;
+    const deleteModal = new bootstrap.Modal(document.getElementById('deletePregnancyXModal'));
+    deleteModal.show();
+}
+
 async function confirmDeletePregnancy(btn) {
     const form = btn.closest('form');
     const pregnancyId = form.querySelector('input[name="id"]').value;
     console.log('pregnancyId to delete:', pregnancyId)
     try {
         const response = await fetch(`/api/pregnancy/${pregnancyId}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (!response.ok) throw new Error('Delete failed');
+
+        const result = await response.json();
+        if (result.success) {
+            // Remember the active pill before reload so we can restore it
+            try { sessionStorage.setItem('lastActiveTab', '#pills-history_obstetrics'); } catch (e) {}
+            location.reload();
+        } else {
+            throw new Error(result.error || 'Unknown error');
+        }
+    } catch (error) {
+        console.error('Delete error:', error);
+        alert('Αποτυχία διαγραφής καρτέλας κύησης: ' + error.message);
+    }
+}
+
+async function confirmDeletePregnancyX(btn) {
+    const form = btn.closest('form');
+    const pregnancyXId = form.querySelector('input[name="id"]').value;
+    console.log('pregnancyId to delete:', pregnancyXId)
+    try {
+        const response = await fetch(`/api/pregnancy-x/${pregnancyXId}`, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' }
         });
@@ -747,6 +876,23 @@ function expandFirstVisibleVisit(){
     }
 }
 
+// Try to expand a specific visit by its id; returns true if successful
+function expandVisitById(visitId){
+    if (!visitId) return false;
+    const item = document.querySelector(`#pregnancyVisitsAccordion .accordion-item[data-visit-id="${visitId}"]`);
+    if (!item || item.style.display === 'none') return false;
+    const btn = item.querySelector('.accordion-button');
+    const col = item.querySelector('.accordion-collapse');
+    if (btn && col){
+        btn.classList.remove('collapsed');
+        btn.setAttribute('aria-expanded','true');
+        col.classList.add('show');
+        try { item.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch(e) {}
+        return true;
+    }
+    return false;
+}
+
 // Modify existing filter to invoke expansion
 function filterPregnancyAccordion(pregnancyId){
     const items = document.querySelectorAll('#pregnancyVisitsAccordion .accordion-item');
@@ -757,7 +903,10 @@ function filterPregnancyAccordion(pregnancyId){
     });
     // After filtering, ensure only a valid visible one is open
     resetAllVisitAccordions();
-    expandFirstVisibleVisit();
+    const lastVisitId = sessionStorage.getItem('lastActiveVisitId');
+    if (!(lastVisitId && expandVisitById(lastVisitId))) {
+        expandFirstVisibleVisit();
+    }
 }
 
 // Ensure first visible is open on initial load too
@@ -770,6 +919,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const pid = window.getActivePregnancyId && window.getActivePregnancyId();
     if (pid) {
         filterPregnancyAccordion(pid);
+    }
+    // Clear the stored visit id once used on initial load to prevent stale restores across patients
+    try { sessionStorage.removeItem('lastActiveVisitId'); } catch(e) {}
+});
+
+// Persist last opened visit when user expands an accordion item (preserves state across reloads even without saving)
+document.addEventListener('show.bs.collapse', (ev) => {
+    const collapseEl = ev.target;
+    if (!collapseEl) return;
+    const item = collapseEl.closest('.accordion-item');
+    if (!item) return;
+    const acc = item.closest('#pregnancyVisitsAccordion');
+    if (!acc) return; // only handle pregnancy visits accordion
+    const vid = item.getAttribute('data-visit-id');
+    if (vid) {
+        try { sessionStorage.setItem('lastActiveVisitId', vid); } catch(e) {}
     }
 });
 </script>
