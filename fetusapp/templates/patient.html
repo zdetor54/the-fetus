@@ -352,7 +352,7 @@
                             <button class="nav-link" style="border-radius: 5rem;" id="pills-pregnancies-tab" data-tab-key="pregnancies" data-bs-toggle="pill" data-bs-target="#pills-pregnancies" type="button" role="tab" aria-controls="pills-pregnancies" aria-selected="false">Κυήσεις</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" style="border-radius: 5rem;" id="pills-gynhistory-tab" data-tab-key="gyn-history" data-bs-toggle="pill" data-bs-target="#pills-disabled" type="button" role="tab" aria-controls="pills-disabled" aria-selected="false" >Γυναικολογικό Ιστορικό</button>
+                            <button class="nav-link" style="border-radius: 5rem;" id="pills-gynhistory-tab" data-tab-key="gyn-history" data-bs-toggle="pill" data-bs-target="#pills-gynhistory" type="button" role="tab" aria-controls="pills-gynhistory" aria-selected="false" >Γυναικολογικό Ιστορικό</button>
                         </li>
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" style="border-radius: 5rem;" id="pills-files-tab" data-tab-key="files" data-bs-toggle="pill" data-bs-target="#pills-disabled" type="button" role="tab" aria-controls="pills-disabled" aria-selected="false">Αρχεία</button>
@@ -381,6 +381,18 @@
                 tabindex="0"
                 data-lazy-url="/patient/{{ patient.id }}/tab/pregnancies">
                 <h5 class="visually-hidden">Κυήσεις</h5>
+                <div class="lazy-placeholder p-3 text-center text-muted small">
+                    <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+                    Φόρτωση όταν ανοίξει η καρτέλα...
+                </div>
+            </div>
+            <div class="tab-pane fade rounded-4 m-2"
+                id="pills-gynhistory"
+                role="tabpanel"
+                aria-labelledby="pills-gynhistory-tab"
+                tabindex="0"
+                data-lazy-url="/patient/{{ patient.id }}/tab/gynhistory">
+                <h5 class="visually-hidden">Γυναικολογικό Ιστορικό</h5>
                 <div class="lazy-placeholder p-3 text-center text-muted small">
                     <div class="spinner-border spinner-border-sm me-2" role="status"></div>
                     Φόρτωση όταν ανοίξει η καρτέλα...
@@ -634,10 +646,12 @@
         })
         .then(html => {
             // IMPORTANT: execute scripts in the partial
-            if (typeof window.injectPregnancyHTML === 'function') {
+            if (pane.id === 'pills-pregnancies' && typeof window.injectPregnancyHTML === 'function') {
                 injectPregnancyHTML(pane, html);
+            } else if (pane.id === 'pills-gynhistory' && typeof window.injectGynHistoryHTML === 'function') {
+                injectGynHistoryHTML(pane, html);
             } else {
-                // Fallback
+                // Fallback injection + execute inline scripts
                 const tmp = document.createElement('div');
                 tmp.innerHTML = html;
                 const scripts = [...tmp.querySelectorAll('script')];
@@ -651,9 +665,11 @@
                 });
             }
             loaded.add(pane.id);
-            // Dispatch custom event when pregnancies tab content ready
+            // Dispatch custom events when specific lazy tab content is ready
             if (pane.id === 'pills-pregnancies') {
                 document.dispatchEvent(new CustomEvent('pregnancies:ready'));
+            } else if (pane.id === 'pills-gynhistory') {
+                document.dispatchEvent(new CustomEvent('gynhistory:ready'));
             }
         })
         .catch(err => {
