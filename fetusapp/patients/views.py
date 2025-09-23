@@ -222,8 +222,8 @@ def search_patients_service(search_query: str) -> pd.DataFrame:
 @patients.route("/patients", methods=["GET", "POST"])
 def no_patient() -> Response:
     if not current_user.is_authenticated:
-        flash("You need to be logged in to view the patient page.")
-        return redirect(url_for("core.index"))
+        flash("Συνδεθείτε για να δείτε τη σελίδα ασθενών.")
+        return redirect(url_for("core.index", next=request.url))
 
     search_query = request.args.get("search_query")
 
@@ -261,6 +261,10 @@ def no_patient() -> Response:
 
 @patients.route("/patient", methods=["GET", "POST"])
 def patient() -> Response:
+    if not current_user.is_authenticated:
+        flash("Συνδεθείτε για να δείτε τη σελίδα ασθενή.")
+        return redirect(url_for("core.index", next=request.url))
+
     patient_id = request.args.get("id")
 
     contact_fields = {
