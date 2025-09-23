@@ -20,6 +20,7 @@ from flask_login import current_user, login_required
 
 from fetusapp import app, csrf, db  # type: ignore[has-type]
 from fetusapp.models import (
+    GynHistory,
     HistoryMedical,
     HistoryObstetrics,
     HistoryObstetrics_x,
@@ -433,6 +434,23 @@ def patient_tab_pregnancies(patient_id: int) -> Response:
         history_pregnancy_form=history_pregnancy_form,
         history_pregnancyX_form=history_pregnancyX_form,
         patient=patient,
+    )
+
+
+@patients.route("/patient/<int:patient_id>/tab/gynhistory")
+def patient_tab_gynhistory(patient_id: int) -> Response:
+    """Lazy-loaded Gynaecological history tab content."""
+    patient = Patient.query.get(patient_id)
+    # Optional: when ready, load actual records
+    gyn_entries = (
+        GynHistory.query.filter_by(patient_id=patient_id, is_active=True)
+        .order_by(GynHistory.date_of_visit.desc())
+        .all()
+    )
+    return render_template(
+        "patient_tabs/history_gyn.html",
+        patient=patient,
+        gyn_entries=[e.to_dict() for e in gyn_entries] if gyn_entries else [],
     )
 
 

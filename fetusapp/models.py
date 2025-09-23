@@ -627,3 +627,103 @@ class PregnancyHistory_x(BaseModel):
         self.sumphysial_fundal_height_sfh = sumphysial_fundal_height_sfh
         self.comments = comments
         self.is_active = is_active
+
+
+class GynHistory(BaseModel):
+    __tablename__ = "gyn_history"
+
+    id = db.Column(db.Integer, primary_key=True)
+    patient_id = db.Column(db.Integer, db.ForeignKey("patients.id"), nullable=False)
+    created_by = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    last_updated_by = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    created_on = db.Column(db.DateTime, server_default=db.func.now())
+    last_updated_on = db.Column(
+        db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now()
+    )
+
+    # Visit and clinical fields (mapped from tblgynhistory)
+    date_of_visit = db.Column(db.Date, nullable=False)
+    cause_of_visit = db.Column(db.Text, nullable=True)
+    ter = db.Column(db.Date, nullable=True)  # LMP mapped as 'ter' for consistency
+    current_disease = db.Column(db.Text, nullable=True)
+    past_medical_history = db.Column(db.Text, nullable=True)
+    temperature = db.Column(db.Numeric(10, 2), nullable=True)
+    arterial_pressure = db.Column(db.Numeric(10, 2), nullable=True)
+    heart_rate = db.Column(db.Numeric(10, 2), nullable=True)
+    view = db.Column(db.Text, nullable=True)
+    nutrition = db.Column(db.Text, nullable=True)
+    height = db.Column(db.Numeric(10, 2), nullable=True)
+    weight = db.Column(db.Numeric(10, 2), nullable=True)
+    breasts = db.Column(db.Text, nullable=True)
+    lymph_nodes = db.Column(db.Text, nullable=True)
+    abdomen = db.Column(db.Text, nullable=True)
+    perineum_vulva = db.Column(db.Text, nullable=True)
+    vagina_cervix_corpus_uteri = db.Column(db.Text, nullable=True)
+    ovaries_parametrium = db.Column(db.Text, nullable=True)
+    other_systems = db.Column(db.Text, nullable=True)
+    progress_of_disease = db.Column(db.Text, nullable=True)
+    comments = db.Column(db.Text, nullable=True)
+    is_active = db.Column(db.Boolean, default=True)
+
+    # Relationships
+    patient = db.relationship("Patient", backref=db.backref("gyn_history", lazy=True))
+    creator = db.relationship(
+        "User", foreign_keys=[created_by], backref="created_gyn_histories"
+    )
+    updater = db.relationship(
+        "User", foreign_keys=[last_updated_by], backref="updated_gyn_histories"
+    )
+
+    def __init__(
+        self,
+        patient_id,
+        created_by,
+        last_updated_by,
+        date_of_visit,
+        cause_of_visit=None,
+        ter=None,
+        current_disease=None,
+        past_medical_history=None,
+        temperature=None,
+        arterial_pressure=None,
+        heart_rate=None,
+        view=None,
+        nutrition=None,
+        height=None,
+        weight=None,
+        breasts=None,
+        lymph_nodes=None,
+        abdomen=None,
+        perineum_vulva=None,
+        vagina_cervix_corpus_uteri=None,
+        ovaries_parametrium=None,
+        other_systems=None,
+        progress_of_disease=None,
+        comments=None,
+        is_active=True,
+    ):
+        self.patient_id = patient_id
+        self.created_by = created_by
+        self.last_updated_by = last_updated_by
+        self.date_of_visit = date_of_visit
+        self.cause_of_visit = cause_of_visit
+        self.ter = ter
+        self.current_disease = current_disease
+        self.past_medical_history = past_medical_history
+        self.temperature = temperature
+        self.arterial_pressure = arterial_pressure
+        self.heart_rate = heart_rate
+        self.view = view
+        self.nutrition = nutrition
+        self.height = height
+        self.weight = weight
+        self.breasts = breasts
+        self.lymph_nodes = lymph_nodes
+        self.abdomen = abdomen
+        self.perineum_vulva = perineum_vulva
+        self.vagina_cervix_corpus_uteri = vagina_cervix_corpus_uteri
+        self.ovaries_parametrium = ovaries_parametrium
+        self.other_systems = other_systems
+        self.progress_of_disease = progress_of_disease
+        self.comments = comments
+        self.is_active = is_active
