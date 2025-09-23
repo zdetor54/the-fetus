@@ -12,6 +12,17 @@ pregnancy = Blueprint("pregnancy", __name__)
 pregnancy_x = Blueprint("pregnancy_x", __name__)
 
 
+def calculate_pregnancy_age(ter: datetime, date_of_visit: datetime) -> str | None:
+    if ter and date_of_visit:
+        delta_days = (date_of_visit - ter).days
+        weeks, days = divmod(delta_days, 7)
+        if days > 0:
+            return f"{weeks}+{days}(wbd)"
+        else:
+            return f"{weeks}w"
+    return None
+
+
 @pregnancy.route("/api/pregnancy/<int:id>", methods=["PUT"])
 @login_required
 @csrf.exempt
@@ -39,7 +50,7 @@ def update_pregnancy(id: int) -> tuple[dict, int]:
             history.last_updated_by = current_user.id
             history.last_updated_on = datetime.utcnow()
 
-            print(f"Updated pregnancy history: {history.to_dict()}")
+            # print(f"Updated pregnancy history: {history.to_dict()}")
 
             db.session.commit()
             return jsonify({"success": True}), 200
@@ -134,6 +145,12 @@ def update_pregnancy_x(id: int) -> tuple[dict, int]:
     try:
         # Get existing record
         history = PregnancyHistory_x.query.get_or_404(id)
+        pregnancy = PregnancyHistory.query.get(history.pregnancy_id)
+        ter = None
+        if not pregnancy:
+            return jsonify({"success": False, "error": "Missing pregnancy"}), 400
+        else:
+            ter = pregnancy.ter
 
         # Read and normalize JSON payload so WTForms validators accept booleans
         payload = request.get_json(silent=True) or {}
@@ -150,11 +167,11 @@ def update_pregnancy_x(id: int) -> tuple[dict, int]:
                             setattr(history, field, value)
                         else:
                             setattr(history, field, None)
-
+            history.pregnancy_age = calculate_pregnancy_age(ter, history.date_of_visit)
             history.last_updated_by = current_user.id
             history.last_updated_on = datetime.utcnow()
 
-            print(f"Updated pregnancy history: {history.to_dict()}")
+            # print(f"Updated pregnancy history: {history.to_dict()}")
 
             db.session.commit()
             return jsonify({"success": True}), 200
@@ -172,8 +189,11 @@ def create_pregnancy_history_x(pregnancy_id: int) -> tuple[dict, int]:
     try:
         payload = request.get_json(silent=True) or {}
         pregnancy = PregnancyHistory.query.get(pregnancy_id)
+        ter = None
         if not pregnancy:
             return jsonify({"success": False, "error": "Missing pregnancy"}), 400
+        else:
+            ter = pregnancy.ter
 
         form = PregnancyHistoryXEntryForm(data=payload)
 
@@ -203,6 +223,9 @@ def create_pregnancy_history_x(pregnancy_id: int) -> tuple[dict, int]:
                 ]:
                     if field in payload:
                         setattr(new_history, field, form._fields[field].data)
+            new_history.pregnancy_age = calculate_pregnancy_age(
+                ter, new_history.date_of_visit
+            )
 
             new_history.created_by = current_user.id
             new_history.created_on = datetime.utcnow()

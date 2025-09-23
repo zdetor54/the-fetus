@@ -167,12 +167,17 @@ block content %}
         <div>
           {{ form.password(class="form-control", id="password", type="password", aria_describedby="passwordHelp", type="password", placeholder="Password") }}
           {% if error_message %}
-          <small class="form-text text-muted mt-2 px-1">{{ error_message }}</small>
+          <div class="text-center text-muted">
+            <small>{{ error_message }}</small>
+          </div>
+
           {% endif %}
             {% if messages %}
+              <div class="text-center text-danger">
                 {% for message in messages %}
-                  <small class="form-text text-danger mt-2 px-1">{{ message }}</small>
+                  <small>{{ message }}</small>
                 {% endfor %}
+              </div>
             {% endif %}
         </div>
 

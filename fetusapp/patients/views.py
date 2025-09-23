@@ -262,7 +262,7 @@ def no_patient() -> Response:
 @patients.route("/patient", methods=["GET", "POST"])
 def patient() -> Response:
     if not current_user.is_authenticated:
-        flash("Συνδεθείτε για να δείτε τη σελίδα ασθενή.")
+        flash("Συνδεθείτε για να δείτε τη σελίδα του ασθενή.")
         return redirect(url_for("core.index", next=request.url))
 
     patient_id = request.args.get("id")
