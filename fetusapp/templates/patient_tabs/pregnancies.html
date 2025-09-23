@@ -468,7 +468,7 @@
                             <div class="d-flex flex-column p-3 text-shadow-1">
                                 <div class="wrapper">
                                     <div class="form-wrapper patient-lite px-2">
-                                        <form method="POST" id="obstetricsHistoryForm{{ prefix }}" data-history-id="{{ obstetrics_history_form.id.data if obstetrics_history_form else '' }}">
+                                        <form method="POST" id="pregnancyXHistoryForm{{ prefix }}" data-history-id="{{ entry_form.id.data if entry_form else '' }}">
                                             {{ history_pregnancyX_form.hidden_tag() }}
                                             <input type="hidden" name="id" value="{{ entry_form.form.id.data }}">
                                             <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
@@ -501,7 +501,7 @@
                                                     {% for name, field in entry_form.form._fields.items() %}
                                                         {% if field.type != 'HiddenField' and name not in exclude %}
                                                             <div class="col-12 col-xl-6 gy-0">
-                                                                {{ macros.input_group(element, {'type': field.type, 'label': field.label.text}, field.data) }}
+                                                                {{ macros.input_group(name, {'type': field.type, 'label': field.label.text}, field.data) }}
                                                             </div>
                                                         {% endif %}
                                                     {% endfor %}
