@@ -225,3 +225,53 @@ class PregnancyHistoryXForm(FlaskForm):
     """Container for multiple antenatal visit entries"""
 
     entries = FieldList(FormField(PregnancyHistoryXEntryForm), min_entries=0)
+
+
+class GynHistoryEntryForm(FlaskForm):
+    """Single gynecological history / clinical examination entry."""
+
+    id = IntegerField("ID", validators=[Optional()])
+    # Removed pregnancy_id (not part of generic gyn history); add back if you link to pregnancy.
+    date_of_visit = DateField("Ημερομηνία Επίσκεψης:", validators=[Optional()])
+    cause_of_visit = StringField("Αιτία Επίσκεψης:", validators=[Optional()])
+    last_menstrual_period = DateField(
+        "Τελευταία Έμμηνος Ρύση:", validators=[Optional()]
+    )
+
+    present_illness = StringField("Παρούσα Νόσος:", validators=[Optional()])
+    past_med_history = StringField("Ατομικό Αναμνηστικό:", validators=[Optional()])
+
+    temperature = FloatField("Θερμοκρασία:", validators=[Optional()])
+    blood_pressure = StringField("Αρτηριακή Πίεση:", validators=[Optional()])
+    pulse = IntegerField("Σφίξεις:", validators=[Optional()])
+
+    appearance = StringField("Όψη:", validators=[Optional()])
+    nutrition = StringField("Θρέψη:", validators=[Optional()])
+
+    height = FloatField("Ύψος:", validators=[Optional()])
+    weight = FloatField("Βάρος:", validators=[Optional()])
+
+    breasts = StringField("Μαστοί:", validators=[Optional()])
+    lymph_nodes = StringField("Λεμφαδένες:", validators=[Optional()])
+    abdomen = StringField("Κοιλιά:", validators=[Optional()])
+    perineum_vulva = StringField("Περίνεο - Αιδίο:", validators=[Optional()])
+    vagina_cervix_uterus = StringField(
+        "Κόλπος - Τράχηλος - Σώμα Μήτρας:", validators=[Optional()]
+    )
+    adnexa_parametria = StringField("Εξαρτήματα - Παραμήτρια:", validators=[Optional()])
+    other_systems = StringField("Λοιπά Συστήματα:", validators=[Optional()])
+
+    disease_course = StringField("Πορεία Νόσου:", validators=[Optional()])
+    notes = TextAreaField(
+        "Σημειώσεις:",
+        validators=[Optional()],
+        render_kw={"class": "expanding-textarea"},
+    )
+
+
+class GynHistoryForm(FlaskForm):
+    """Container for multiple gynecological history entries (list of visits/exams)."""
+
+    entries = FieldList(FormField(GynHistoryEntryForm), min_entries=0)
+
+    submit = SubmitField("Αποθήκευση", validators=[Optional()])
