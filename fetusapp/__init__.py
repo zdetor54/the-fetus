@@ -59,6 +59,7 @@ login_manager.login_view = "core.index"
 from fetusapp.chatai.views import chatai  # noqa: E402
 from fetusapp.core.views import core  # noqa: E402
 from fetusapp.error_pages.handlers import error_pages  # noqa: E402
+from fetusapp.patients.history_gyn import gyn_history
 from fetusapp.patients.history_medical_views import medical_history  # noqa: E402
 from fetusapp.patients.history_obstetrics_views import (  # noqa: E402
     obstetrics_history,
@@ -79,4 +80,5 @@ app.register_blueprint(obstetrics_history)  # type: ignore[has-type]
 app.register_blueprint(obstetrics_history_x)  # type: ignore[has-type]
 app.register_blueprint(pregnancy)  # type: ignore[has-type]
 app.register_blueprint(pregnancy_x)  # type: ignore[has-type]
+app.register_blueprint(gyn_history)  # type: ignore[has-type]
 app.register_blueprint(chatai)

@@ -30,6 +30,7 @@ from fetusapp.models import (
 )
 
 from .forms import (
+    GynHistoryForm,
     HistoryMedicalForm,
     HistoryObstetricsForm,
     HistoryObstetricsXForm,
@@ -439,9 +440,25 @@ def patient_tab_pregnancies(patient_id: int) -> Response:
 
 @patients.route("/patient/<int:patient_id>/tab/gynhistory")
 def patient_tab_gynhistory(patient_id: int) -> Response:
-    """Lazy-loaded Gynaecological history tab content."""
-    patient = Patient.query.get(patient_id)
-    # Optional: when ready, load actual records
+    history_gyn_form = GynHistoryForm()
+
+    gyn_history = (
+        GynHistory.query.filter_by(patient_id=patient_id, is_active=True)
+        .order_by(GynHistory.date_of_visit.desc())
+        .all()
+    )
+    gyn_history_dicts = [entry.to_dict() for entry in gyn_history]
+
+    if gyn_history_dicts:
+        for row in gyn_history_dicts:
+            history_gyn_form.entries.append_entry(row)
+    else:
+        # ensure at least one empty form so template can render fields
+        history_gyn_form.entries.append_entry()
+        gyn_history_dicts = (
+            history_gyn_form.entries.data if history_gyn_form.entries.data else [{}]
+        )
+
     gyn_entries = (
         GynHistory.query.filter_by(patient_id=patient_id, is_active=True)
         .order_by(GynHistory.date_of_visit.desc())
@@ -449,7 +466,8 @@ def patient_tab_gynhistory(patient_id: int) -> Response:
     )
     return render_template(
         "patient_tabs/history_gyn.html",
-        patient=patient,
+        history_gyn_form=history_gyn_form,
+        patient_id=patient_id,
         gyn_entries=[e.to_dict() for e in gyn_entries] if gyn_entries else [],
     )
 
