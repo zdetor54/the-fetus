@@ -196,5 +196,17 @@
     {"source": "LastUpdated",	"target":"last_updated_on","type":"datetime"},
     {"source": "LastUpdatedBy",	"target":"last_updated_by","type":"int","default":1},
     {"source": "IsActive",	"target":"is_active","type":"bool"}
+  ],
+  "tblmedexam": [
+    {"source": "MedExamID", "target": "id", "type": "int"},
+    {"source": "s_org_extID", "target": "patient_id", "type": "int"},
+    {"source": "DateOfExam", "target": "date_of_exam", "type": "date"},
+    {"source": "MedExamTypeID", "target": "exam_type", "type": "str"},
+    {"source": "Value", "target": "value", "type": "str"},
+    {"source": "Created", "target": "created_on", "type": "datetime"},
+    {"source": "CreatedBy", "target": "created_by", "type": "int", "default": 1},
+    {"source": "LastUpdated", "target": "last_updated_on", "type": "datetime"},
+    {"source": "LastUpdatedBy", "target": "last_updated_by", "type": "int", "default": 1},
+    {"source": "IsActive", "target": "is_active", "type": "bool"}
   ]
 }

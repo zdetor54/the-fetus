@@ -1,5 +1,6 @@
 from datetime import datetime
 from decimal import Decimal
+from enum import Enum
 
 from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -727,3 +728,153 @@ class GynHistory(BaseModel):
         self.progress_of_disease = progress_of_disease
         self.comments = comments
         self.is_active = is_active
+
+
+class MedicalExamType(Enum):
+    HEMATOCRIT = (1, "Αιματοκρίτης", 35, 45)
+    HEMOGLOBIN = (2, "Αιμοσφαιρίνη", 12, 16)
+    PLATELETS = (3, "Αιμοπετάλια", 150000, 450000)
+    WBC = (4, "Λευκά", 5000, 10000)
+    GLUCOSE = (6, "Σάκχαρο", -1000, 95)  # NOTE: min -1000 seems placeholder/anomaly
+    WBC_NEUTROPHILS = (7, "Τύπος Λευκών (Π)", 0.45, 0.85)
+    WBC_LYMPHOCYTES = (8, "Τύπος Λευκών (Λ)", 0.2, 0.45)
+    WBC_MONOCYTES = (9, "Τύπος Λευκών (Μ)", 0.03, 0.07)
+    WBC_EOSINOPHILS = (10, "Τύπος Λευκών (Η)", 0.02, 0.06)
+    UREA = (11, "Ουρία", 10, 50)
+    CREATININE = (12, "Κρεατινίνη", 0.6, 0.11)  # NOTE: max < min anomaly
+    PSEUDOCHOLINESTERASE = (13, "Ψευδοχολινεστεράση", 5000, 14000)
+    SODIUM = (14, "Na", 135, 153)
+    POTASSIUM = (15, "K", 3.5, 5.3)
+    CALCIUM = (16, "Ca", 8.5, 10.5)
+    PHOSPHORUS = (17, "P", 2.7, 4.5)
+    BILIRUBIN_TOTAL = (18, "Χολερυθρίνη Ολική", 0.2, 1)
+    BILIRUBIN_DIRECT = (19, "Χολερυθρίνη Άμεση", -1000, 0.2)  # Negative min anomaly
+    SGOT_AST = (20, "SGOT(AST)", 10, 40)
+    SGPT_ALT = (21, "SGPT(AST)", 10, 40)
+    GGT = (22, "γGT", 8, 40)
+    AMYLASE = (23, "Αμυλάση", 60, 180)
+    CPK = (24, "CPK", 0, 195)
+    CK_MB = (25, "CK-MB", 0, 18)
+    LDH = (27, "LDH", 230, 460)
+    ALKALINE_PHOSPHATASE = (28, "Αλκαλική Φωσφατάση", 30, 120)
+    CHOLESTEROL_TOTAL = (29, "Χοληστερόλη Ολική", 0, 200)
+    TRIGLYCERIDES = (30, "Τριγλυκερίδια", 0, 150)
+    HDL = (31, "HDL", 40, 1000)
+    LDL = (32, "LDL", 0, 130)
+    URIC_ACID = (33, "Ουρικό", 3, 7)
+    CEA = (34, "CEA", 0, 5)
+    CA_19_9 = (35, "CA 19-9", 0, 37)
+    CA_125 = (36, "CA 125", 0, 35)
+    CA_15_3 = (37, "CA 15-3", 0, 30)
+    AFP = (38, "αFP", 0, 10)
+    URINALYSIS = (39, "Γενική Ούρων", 0, 0)
+    FERRITIN = (40, "Φερριτίνη", 20, 200)
+    B12 = (41, "B12", 240, 1000)
+    FOLIC_ACID = (42, "Φυλλικό", 3, 16)
+    IRON = (43, "Σίδηρος", 50, 170)
+    TOTAL_PROTEINS = (44, "Ολικές Πρωτεΐνες", 6.4, 8.3)
+    ALBUMIN = (45, "Αλβουμίνη", 3.5, 5)
+    GLOBULINS = (46, "Σφαιρίνες", 2.3, 3.5)
+    T3 = (49, "T3", 0.3, 2.2)
+    T4 = (50, "T4", 4.5, 12)
+    TSH = (51, "TSH", 0.3, 5.1)
+    PT_INR = (52, "PT/INR", 9, 13)
+    APTT = (53, "aPTT", 25, 35)
+    FIBRINOGEN = (54, "Ινωδογόνο", 200, 400)
+    CRP = (55, "CRP", 0, 5)
+
+    def __init__(self, code: int, description: str, min_value: float, max_value: float):
+        self.code = code
+        self.description = description
+        self.min_value = min_value
+        self.max_value = max_value
+
+    @classmethod
+    def from_code(cls, code: int):
+        for member in cls:
+            if member.code == code:
+                return member
+        raise ValueError(f"Unknown MedicalExamType code: {code}")
+
+    @classmethod
+    def choices(cls):
+        return [(m.name, m.description) for m in cls]
+
+    def to_dict(self):
+        return dict(
+            name=self.name,
+            code=self.code,
+            description=self.description,
+            min_value=self.min_value,
+            max_value=self.max_value,
+        )
+
+
+class MedicalExam(BaseModel):
+    __tablename__ = "medical_exams"
+
+    id = db.Column(db.Integer, primary_key=True)
+    patient_id = db.Column(db.Integer, db.ForeignKey("patients.id"), nullable=False)
+    created_by = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    last_updated_by = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    created_on = db.Column(db.DateTime, server_default=db.func.now())
+    last_updated_on = db.Column(
+        db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now()
+    )
+
+    date_of_exam = db.Column(db.Date, nullable=False)
+    exam_type = db.Column(db.Enum(MedicalExamType), nullable=False, index=True)
+    value = db.Column(
+        db.String(128), nullable=True
+    )  # Keep as string; can hold numeric or textual results
+    is_active = db.Column(db.Boolean, default=True)
+
+    # Relationships
+    patient = db.relationship("Patient", backref=db.backref("medical_exams", lazy=True))
+    creator = db.relationship(
+        "User", foreign_keys=[created_by], backref="created_medical_exams"
+    )
+    updater = db.relationship(
+        "User", foreign_keys=[last_updated_by], backref="updated_medical_exams"
+    )
+
+    def __init__(
+        self,
+        patient_id: int,
+        created_by: int,
+        last_updated_by: int,
+        date_of_exam,
+        exam_type: MedicalExamType,
+        value: str | None = None,
+        is_active: bool = True,
+    ):
+        self.patient_id = patient_id
+        self.created_by = created_by
+        self.last_updated_by = last_updated_by
+        self.date_of_exam = date_of_exam
+        self.exam_type = exam_type
+        self.value = value
+        self.is_active = is_active
+
+    def numeric_value(self):
+        try:
+            if self.value is None:
+                return None
+            return float(self.value)
+        except ValueError:
+            return None
+
+    def is_out_of_range(self):
+        nv = self.numeric_value()
+        if nv is None:
+            return False
+        return nv < self.exam_type.min_value or nv > self.exam_type.max_value
+
+    def range_tuple(self):
+        return (self.exam_type.min_value, self.exam_type.max_value)
+
+    def to_dict(self):  # extend base
+        base = super().to_dict()
+        base["exam_type"] = self.exam_type.to_dict()
+        base["is_out_of_range"] = self.is_out_of_range()
+        return base
