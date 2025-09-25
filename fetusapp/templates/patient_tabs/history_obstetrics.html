@@ -205,7 +205,7 @@
                             {% for element in new_fields %}
                                 {% set field = getattr(entry_form, element) %}
                                 {% if field.type != 'HiddenField' %}
-                                    {{ macros.input_group(element, {'type': field.type, 'label': field.label.text}, field.data) }}
+                                    {{ macros.input_group(element, {'type': field.type, 'label': field.label.text}, '') }}
                                 {% endif %}
                             {% endfor %}
                           </div>
