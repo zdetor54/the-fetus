@@ -71,8 +71,6 @@ def create_gyn_history() -> tuple[dict, int]:
         payload["created_by"] = current_user.id
         payload["last_updated_by"] = current_user.id
 
-        print("Form data:", form.data)
-
         if form.validate():
             new_history = GynHistory(
                 patient_id=patient_id,
@@ -96,6 +94,8 @@ def create_gyn_history() -> tuple[dict, int]:
             new_history.created_on = datetime.utcnow()
             new_history.last_updated_by = current_user.id
             new_history.last_updated_on = datetime.utcnow()
+
+            print("Creating new gynaecological history:", new_history.to_dict())
 
             db.session.add(new_history)
             db.session.commit()
