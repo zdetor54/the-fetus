@@ -12,17 +12,17 @@
                         <div class="col-12 col-lg-3 col-xl-2">
                             <div class="py-3 ms-3 me-3 me-lg-0">
                                 {% if history_gyn_form.entries[0].data.id %}
-                                <ul class="nav nav-pills flex-column secondary-nav-container bg-dark w-100 gyn-visit-list" id="pregnancies-inner-tab" role="tablist">
+                                <ul class="nav nav-pills flex-column secondary-nav-container bg-dark w-100 gyn-visit-list" id="gyn-histories-inner-tab" role="tablist">
                                     {% for entry_form in history_gyn_form.entries %}
                                         {% set prefix = 'HistoryGyn_' ~ loop.index %}
                                         <li class="nav-item  w-90" role="presentation">
                                             <button class="nav-link w-100 {% if loop.first %}active{% endif %}"
                                             style="border-radius: 5rem;"
                                             data-bs-toggle="pill"
-                                            data-bs-target="#pills-pregnancies-{{ loop.index }}"
+                                            data-bs-target="#pills-gyn-histories-{{ loop.index }}"
                                             type="button"
                                             role="tab"
-                                            aria-controls="pills-pregnancies-{{ loop.index }}"
+                                            aria-controls="pills-gyn-histories-{{ loop.index }}"
                                             aria-selected="false">
                                             {{ entry_form.form.date_of_visit.data }}
                                             </button>
@@ -41,6 +41,199 @@
                                 </div>
                             </div>
                         </div>
+
+
+
+                        <div id="GynHistoryNewContainer" class="col-12 col-lg-9 col-xl-10" style="display: none;">
+                            <div class="tab-content p-3" id="gyn-histories-inner-tabContent">
+                                <div class="editable card card-cover rounded-4 shadow-lg" id="editableContent_New" style="display: none;">
+                                    <div class="d-flex flex-column p-3 text-shadow-1">
+                                        <div class="wrapper">
+                                            <div class="form-wrapper patient-lite px-2">
+                                                <form method="POST" id="gynHistoryForm_New">
+                                                    {{ history_gyn_form.hidden_tag() }}
+                                                    <input type="hidden" name="id" value="">
+                                                    <div class="col-12">
+                                                        <div class="row py-2">
+                                                            <div class="compact-form">
+                                                                    <div class="row gx-3 gy-0">
+                                                                        <div class="col-12 col-sm-6 col-lg-4">
+                                                                            <div class="input-group">
+                                                                                <input type="date" id="terInput" name="date_of_visit" value="" required>
+                                                                                <label for="terInput" style="top: 0%;">To Change:</label>
+                                                                            </div>
+                                                                        </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+                                                        <button type="button" class="btn login-btn px-4" onclick="saveChangesGynHistory(this)">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-floppy" viewBox="0 1 16 16">
+                                                                <path d="M11 2H9v3h2z"/>
+                                                                <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
+                                                            </svg>
+                                                            Αποθήκευση
+                                                        </button>
+                                                        <button type="button" class="btn btn-outline-secondary px-4" onclick="cancelGynHistoryEdit()">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-x-square" viewBox="0 1 16 16">
+                                                                <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                                                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                                                            </svg>
+                                                            Ακύρωση
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="GynHistoryExistingContainer" class="col-12 col-lg-9 col-xl-10">
+                            <div class="tab-content p-3" id="gyn-histories-inner-tabContent">
+                                {% if history_gyn_form.entries[0].data.id %}
+                                {% for entry_form in history_gyn_form.entries %}
+                                    {% set prefix = 'HistoryGyn_' ~ loop.index %}
+                                    <div class="tab-pane fade {% if loop.first %}show active{% endif %}"
+                                        id="pills-gyn-histories-{{ loop.index }}"
+                                        role="tabpanel"
+                                        aria-labelledby="pills-gyn-histories-{{ loop.index }}-tab"
+                                        tabindex="0">
+                                        <div class="col-12 gyn-history-entry" id="entryWrapper{{ prefix }}" >
+                                            <div class="card card-cover inherit-text-color bg-transparent rounded-4 shadow-lg" id="card{{ prefix }}" style="border: none;">
+                                                <div class="d-flex flex-column h-100 text-shadow-1">
+                                                    <div class="container px-0 ">
+                                                        <div class="form-container" style="position: relative; transition: max-height 0.2s ease-in-out;" id="formContainer{{ prefix }}">
+                                                            <input type="hidden" name="id" value="{{ entry_form.form.id.data }}" style="display: none;">
+                                                            <!-- Read Only View -->
+                                                            <div class="read-only read-only-labels p-4" id="readOnlyContent{{ prefix }}">
+                                                                <div class="row py-2">
+                                                                    <div class="col-12">
+                                                                        <div class="text-center">
+                                                                            <div class="fs-1 fw-semibold">
+                                                                                <button type="button" class="btn btn-outline-secondary me-3 px-4" onclick="navigateGynHistory(-1, this)" data-nav-btn="prev">
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-left" viewBox="0 0 16 16">
+                                                                                    <path fill-rule="evenodd" d="M9.224 1.553a.5.5 0 0 1 .223.67L6.56 8l2.888 5.776a.5.5 0 1 1-.894.448l-3-6a.5.5 0 0 1 0-.448l3-6a.5.5 0 0 1 .67-.223"></path>
+                                                                                    </svg>
+                                                                                    <span class="visually-hidden">Previous</span>
+                                                                                </button>
+                                                                                <h2 style="display: inline;">{{ entry_form.form.date_of_visit.data }}</h2>
+                                                                                <button type="button" class="btn btn-outline-secondary ms-3 px-4" onclick="navigateGynHistory(1, this)" data-nav-btn="next">
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-right" viewBox="0 0 16 16">
+                                                                                    <path fill-rule="evenodd" d="M6.776 1.553a.5.5 0 0 1 .671.223l3 6a.5.5 0 0 1 0 .448l-3 6a.5.5 0 1 1-.894-.448L9.44 8 6.553 2.224a.5.5 0 0 1 .223-.671"></path>
+                                                                                    </svg>
+                                                                                    <span class="visually-hidden">Next</span>
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row zd pt-4">
+                                                                            <div class="col-12">
+                                                                                {% set field = getattr(entry_form.form, 'comments', None) %}
+                                                                                {% if field and field.data %}
+                                                                                    {{ macros.render_field(field.label, field.data, field.type) }}
+                                                                                {% endif %}
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row g-3">
+                                                                            {% set exclude = ['csrf_token', 'id', 'date_of_visit', 'comments'] %}
+                                                                            {% for name, field in entry_form.form._fields.items() %}
+                                                                                {% if field.type != 'HiddenField' and name not in exclude and field.data %}
+                                                                                    <div class="col-12 col-xl-6 gy-0">
+                                                                                        {{ macros.render_field(field.label, field.data, field.type) }}
+                                                                                    </div>
+                                                                                {% endif %}
+                                                                            {% endfor %}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="d-flex flex-wrap justify-content-end gap-2 mt-3">
+                                                                    <form action="">
+                                                                        <input type="hidden" name="id" value="{{ entry_form.form.id.data }}">
+                                                                        <button type="button" class="btn btn-outline-secondary px-4" data-edit-button="true" onclick="toggleEditMode('{{ prefix }}')">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="1 0 16 16"><path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/><path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/></svg>
+                                                                            Επεξεργασία
+                                                                        </button>
+                                                                        <button type="button" class="btn btn-outline-danger px-4" onclick="showDeleteGynHistoryModal(this)">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-trash3" viewBox="1 0 16 16"><path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/></svg>
+                                                                        </button>
+                                                                    </form>
+
+                                                                </div>
+                                                            </div>
+                                                            <!-- Editable View -->
+                                                            <div class="editable card card-cover rounded-4 shadow-lg" id="editableContent{{ prefix }}" style="display: none;">
+                                                                <div class="d-flex flex-column p-3 text-shadow-1">
+                                                                    <div class="wrapper">
+                                                                        <div class="form-wrapper patient-lite px-2">
+                                                                            <form method="POST" id="pregnancyHistoryForm{{ prefix }}" data-history-id="{{ pregnancy_history_form.id.data if pregnancy_history_form else '' }}">
+                                                                                {{ history_gyn_form.hidden_tag() }}
+                                                                                <input type="hidden" name="id" value="{{ entry_form.form.id.data }}">
+                                                                                <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+                                                                                    <button type="button" class="btn login-btn px-4" onclick="saveChangesGynHistory(this)">
+                                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-floppy" viewBox="0 1 16 16">
+                                                                                            <path d="M11 2H9v3h2z"/>
+                                                                                            <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
+                                                                                        </svg>
+                                                                                        Αποθήκευση
+                                                                                    </button>
+                                                                                    <button type="button" class="btn btn-outline-secondary px-4" onclick="cancelGynHistoryEdit()">
+                                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-x-square" viewBox="0 1 16 16">
+                                                                                            <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                                                                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                                                                                        </svg>
+                                                                                        Ακύρωση
+                                                                                    </button>
+                                                                                </div>
+                                                                                <!-- {{ entry_form.form.id.data }} -->
+                                                                                <div class="col-12">
+                                                                                    <div class="row py-2">
+                                                                                        <div class="compact-form">
+                                                                                            <div class="row gx-3 gy-0">
+                                                                                                <div class="col-12">
+                                                                                                    {% set field = getattr(entry_form.form, 'comments', None) %}
+                                                                                                    {% if field and field.data %}
+                                                                                                        {{ macros.input_group('comments', {'type': field.type, 'label': field.label.text}, field.data) }}
+                                                                                                    {% endif %}
+                                                                                                </div>
+
+                                                                                            </div>
+                                                                                            <div class="row gx-3 gy-0">
+                                                                                                {% set exclude = ['csrf_token','id', 'comments'] %}
+                                                                                                {% for name, field in entry_form.form._fields.items() %}
+                                                                                                    {% if field.type != 'HiddenField' and name not in exclude %}
+                                                                                                        <div class="col-12 col-xl-6 gy-0">
+                                                                                                            {{ macros.input_group(name, {'type': field.type, 'label': field.label.text}, field.data) }}
+                                                                                                        </div>
+                                                                                                    {% endif %}
+                                                                                                {% endfor %}
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+
+
+
+
+
+
+
                     </div>
                 </div>
 
@@ -51,3 +244,113 @@
         <p class="p-4">Δεν βρέθηκαν καταχωρήσεις γυναικολογικού ιστορικού.</p>
     {% endif %}
 </div>
+
+<script>
+// Gyn history: navigation, persistence and restore (mirrors pregnancies.js behavior)
+
+// Navigate between gyn history entries using prev/next buttons inside header
+window.navigateGynHistory = function(direction, btn){
+    try {
+        const allButtons = Array.from(document.querySelectorAll('#gyn-histories-inner-tab button.nav-link'));
+        if (!allButtons.length) return;
+        const activeIndex = allButtons.findIndex(b => b.classList.contains('active'));
+        if (activeIndex === -1) return;
+        let targetIndex = activeIndex + direction;
+        if (targetIndex < 0 || targetIndex >= allButtons.length) return; // Do nothing at bounds
+        const targetBtn = allButtons[targetIndex];
+        if (targetBtn) {
+            // Persist state before switching
+            try { sessionStorage.setItem('lastActiveTabKey', 'gyn_histories'); } catch(e) {}
+            const targetPaneId = targetBtn.getAttribute('data-bs-target').replace('#','');
+            try { sessionStorage.setItem('lastActiveGynPaneId', targetPaneId); } catch(e) {}
+            // Activate via Bootstrap API if available
+            if (window.bootstrap && bootstrap.Tab) {
+                new bootstrap.Tab(targetBtn).show();
+            } else {
+                // Fallback manual class manipulation
+                allButtons.forEach(b=>b.classList.remove('active'));
+                targetBtn.classList.add('active');
+                document.querySelectorAll('#gyn-histories-inner-tabContent .tab-pane').forEach(p=>p.classList.remove('show','active'));
+                const pane = document.getElementById(targetPaneId);
+                if (pane) pane.classList.add('show','active');
+            }
+            // Update disabled state on prev/next buttons in current header context
+            updateGynNavButtonStates();
+        }
+    } catch (e) { console.warn('navigateGynHistory error', e); }
+};
+
+function updateGynNavButtonStates(){
+    const allButtons = Array.from(document.querySelectorAll('#gyn-histories-inner-tab button.nav-link'));
+    const activeIndex = allButtons.findIndex(b => b.classList.contains('active'));
+    // For every visible header (each tab pane has its own header block)
+    document.querySelectorAll('#gyn-histories-inner-tabContent .tab-pane .fs-1').forEach(header => {
+        const prev = header.querySelector('button[data-nav-btn="prev"]');
+        const next = header.querySelector('button[data-nav-btn="next"]');
+        if (prev) prev.disabled = (activeIndex <= 0);
+        if (next) next.disabled = (activeIndex === allButtons.length - 1 || activeIndex === -1);
+    });
+}
+
+// Attempt immediate inner tab restore when partial is injected
+(function restoreStoredGynInnerTab(){
+    const paneId = sessionStorage.getItem('lastActiveGynPaneId');
+    if (!paneId) return;
+    const btn = document.querySelector(`#gyn-histories-inner-tab button[data-bs-target="#${paneId}"]`);
+    if (btn && window.bootstrap && bootstrap.Tab) {
+        try { new bootstrap.Tab(btn).show(); } catch(e) { console.warn('Gyn inner restore failed', e); }
+    }
+})();
+
+// Helper: determine active gyn history id from active pill (nav button)
+function computeActiveGynId(){
+    const activeBtn = document.querySelector('#gyn-histories-inner-tab button.nav-link.active');
+    return activeBtn ? activeBtn.getAttribute('data-pregnancy-id') || activeBtn.getAttribute('data-gyn-id') || activeBtn.textContent.trim() : null;
+}
+
+// Public accessor
+window.getActiveGynId = function(){
+    return computeActiveGynId();
+};
+
+// Broadcast when tab changes so other scripts can react (if needed)
+document.addEventListener('shown.bs.tab', (ev) => {
+    if (ev.target && ev.target.closest('#gyn-histories-inner-tab')) {
+        const pid = computeActiveGynId();
+        const evt = new CustomEvent('gyn:active-changed', { detail: { gynId: pid }});
+        document.dispatchEvent(evt);
+    }
+});
+
+// Initial broadcast after render (timeout to ensure DOM settled)
+setTimeout(()=>{
+    const pid = computeActiveGynId();
+    if(pid){
+        document.dispatchEvent(new CustomEvent('gyn:active-changed', { detail: { gynId: pid }}));
+    }
+    // update nav buttons after initial broadcast
+    updateGynNavButtonStates();
+}, 0);
+
+// Cancel edit while preserving active gyn inner tab
+window.cancelGynHistoryEdit = function(){
+    try { sessionStorage.setItem('lastActiveTabKey', 'gyn_histories'); } catch(e) {}
+    const activeInnerPane = document.querySelector('#gyn-histories-inner-tabContent .tab-pane.active');
+    if (activeInnerPane) {
+        try { sessionStorage.setItem('lastActiveGynPaneId', activeInnerPane.id); } catch(e) {}
+    }
+    // If user was creating a new entry, toggle containers instead of full reload
+    const newContainer = document.getElementById('GynHistoryNewContainer');
+    const existingContainer = document.getElementById('GynHistoryExistingContainer');
+    if (newContainer && existingContainer && newContainer.style.display !== 'none') {
+        newContainer.style.display = 'none';
+        existingContainer.style.display = '';
+        return; // Skip reload
+    }
+    location.reload();
+};
+
+// Expose a manual update function in case dynamic changes occur
+document.addEventListener('gyn:request-update-nav', () => updateGynNavButtonStates());
+
+</script>
