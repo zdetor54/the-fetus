@@ -54,12 +54,18 @@
                                                     <div class="col-12">
                                                         <div class="row py-2">
                                                             <div class="compact-form">
-                                                                    <div class="row gx-3 gy-0">
-                                                                        <div class="col-12 col-sm-6 col-lg-4">
-                                                                            <div class="input-group">
+                                                                    <div class="row gx-3">
+                                                                        <div class="col-12">
+                                                                            <div class="input-group mb-0" style="border-bottom: none;">
                                                                                 <input type="date" id="terInput" name="date_of_visit" value="" required>
                                                                                 <label for="terInput" style="top: 0%;">To Change:</label>
                                                                             </div>
+                                                                        </div>
+                                                                        <div class="col-12 mt-0">
+                                                                            {% set field = getattr(history_gyn_form.entries[0], 'comments', None) %}
+                                                                            {% if field %}
+                                                                                {{ macros.input_group('comments', {'type': field.type, 'label': field.label.text}, "") }}
+                                                                            {% endif %}
                                                                         </div>
 
                                                                 </div>
@@ -192,7 +198,7 @@
                                                                                             <div class="row gx-3 gy-0">
                                                                                                 <div class="col-12">
                                                                                                     {% set field = getattr(entry_form.form, 'comments', None) %}
-                                                                                                    {% if field and field.data %}
+                                                                                                    {% if field %}
                                                                                                         {{ macros.input_group('comments', {'type': field.type, 'label': field.label.text}, field.data) }}
                                                                                                     {% endif %}
                                                                                                 </div>
