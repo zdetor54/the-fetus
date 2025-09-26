@@ -44,7 +44,7 @@
 
                         <div id="GynHistoryNewContainer" class="col-12 col-lg-9 col-xl-10" style="display: none;">
                             <div class="tab-content p-3" id="gyn-histories-inner-tabContent">
-                                <div class="editable card card-cover rounded-4 shadow-lg" id="editableContent_New" style="display: none;">
+                                <div class="editable card card-cover rounded-4 shadow-lg" id="editableContent_New">
                                     <div class="d-flex flex-column p-3 text-shadow-1">
                                         <div class="wrapper">
                                             <div class="form-wrapper patient-lite px-2">
@@ -246,7 +246,7 @@ window.saveChangesGynHistory = async function(btn) {
         const csrfToken = form.querySelector('input[name="csrf_token"]').value;
 
         // Persist outer pregnancies tab activation
-        try { sessionStorage.setItem('lastActiveTabKey', 'gyn_histories'); } catch(e) {}
+        try { sessionStorage.setItem('lastActiveTabKey', 'gyn-history'); } catch(e) {}
         // Persist currently active inner pane id
         const activeInnerPane = document.querySelector('#gyn-histories-inner-tabContent .tab-pane.active');
         if (activeInnerPane) {
@@ -379,7 +379,7 @@ setTimeout(()=>{
 
 // Cancel edit while preserving active gyn inner tab
 window.cancelGynHistoryEdit = function(){
-    try { sessionStorage.setItem('lastActiveTabKey', 'gyn_histories'); } catch(e) {}
+    try { sessionStorage.setItem('lastActiveTabKey', 'gyn-history'); } catch(e) {}
     const activeInnerPane = document.querySelector('#gyn-histories-inner-tabContent .tab-pane.active');
     if (activeInnerPane) {
         try { sessionStorage.setItem('lastActiveGynPaneId', activeInnerPane.id); } catch(e) {}
@@ -397,5 +397,18 @@ window.cancelGynHistoryEdit = function(){
 
 // Expose a manual update function in case dynamic changes occur
 document.addEventListener('gyn:request-update-nav', () => updateGynNavButtonStates());
+
+// Show the new gynecological history form container and hide existing entries
+function openNewGynHistoryEntry(){
+    const newContainer = document.getElementById('GynHistoryNewContainer');
+    const existingContainer = document.getElementById('GynHistoryExistingContainer');
+    if (newContainer && existingContainer){
+        existingContainer.style.display = 'none';
+        newContainer.style.display = '';
+        // Ensure form becomes editable
+        const editable = document.getElementById('editableContent_New');
+        if (editable) editable.style.display = '';
+    }
+}
 
 </script>
