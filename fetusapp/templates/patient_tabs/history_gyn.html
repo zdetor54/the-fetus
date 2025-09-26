@@ -61,6 +61,7 @@
                                                                                 <label for="terInput" style="top: 0%;">To Change:</label>
                                                                             </div>
                                                                         </div>
+
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -275,6 +276,8 @@ window.saveChangesGynHistory = async function(btn) {
             try { formDataJson.patient_id = '{{ patient_id }}'; } catch(e) {}
             url = '/api/gyn-history';
             method = 'POST';
+            console.log('Creating new Gyn History entry');
+            console.log('Submitting Gyn History form data:', formDataJson);
         }
 
         const response = await fetch(url, {
