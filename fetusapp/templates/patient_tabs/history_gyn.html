@@ -42,8 +42,6 @@
                             </div>
                         </div>
 
-
-
                         <div id="GynHistoryNewContainer" class="col-12 col-lg-9 col-xl-10" style="display: none;">
                             <div class="tab-content p-3" id="gyn-histories-inner-tabContent">
                                 <div class="editable card card-cover rounded-4 shadow-lg" id="editableContent_New" style="display: none;">
@@ -136,7 +134,7 @@
                                                                                 {% endif %}
                                                                             </div>
                                                                         </div>
-                                                                        <div class="row g-3">
+                                                                        <div class="row g-3 pt-4">
                                                                             {% set exclude = ['csrf_token', 'id', 'date_of_visit', 'comments'] %}
                                                                             {% for name, field in entry_form.form._fields.items() %}
                                                                                 {% if field.type != 'HiddenField' and name not in exclude and field.data %}
@@ -227,12 +225,6 @@
                                 {% endif %}
                             </div>
                         </div>
-
-
-
-
-
-
 
                     </div>
                 </div>
