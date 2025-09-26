@@ -44,7 +44,7 @@
 
                         <div id="GynHistoryNewContainer" class="col-12 col-lg-9 col-xl-10" style="display: none;">
                             <div class="tab-content p-3" id="gyn-histories-inner-tabContent">
-                                <div class="editable card card-cover rounded-4 shadow-lg" id="editableContent_New" style="display: none;">
+                                <div class="editable card card-cover rounded-4 shadow-lg" id="editableContent_New">
                                     <div class="d-flex flex-column p-3 text-shadow-1">
                                         <div class="wrapper">
                                             <div class="form-wrapper patient-lite px-2">
@@ -61,6 +61,7 @@
                                                                                 <label for="terInput" style="top: 0%;">To Change:</label>
                                                                             </div>
                                                                         </div>
+
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -238,7 +239,62 @@
 </div>
 
 <script>
-// Gyn history: navigation, persistence and restore (mirrors pregnancies.js behavior)
+window.saveChangesGynHistory = async function(btn) {
+    try {
+        const form = btn.closest('form');
+        if (!form) return;
+        const gynHistoryId = form.querySelector('input[name="id"]').value;
+        const csrfToken = form.querySelector('input[name="csrf_token"]').value;
+
+        // Persist outer pregnancies tab activation
+        try { sessionStorage.setItem('lastActiveTabKey', 'gyn-history'); } catch(e) {}
+        // Persist currently active inner pane id
+        const activeInnerPane = document.querySelector('#gyn-histories-inner-tabContent .tab-pane.active');
+        if (activeInnerPane) {
+            try { sessionStorage.setItem('lastActiveGynPaneId', activeInnerPane.id); } catch(e) {}
+        }
+
+        // Build JSON excluding empty string values
+        const formDataJson = {};
+        const formData = new FormData(form);
+        formData.forEach((value, key) => {
+            formDataJson[key] = value;
+        });
+
+
+
+        let url, method;
+        if (gynHistoryId) {
+            url = `/api/gyn-history/${gynHistoryId}`; method = 'PUT';
+            console.log('Updating existing Gyn History entry:', gynHistoryId);
+            console.log('Submitting Gyn History form data:', formDataJson);
+        }
+
+        else {
+            // Creating a new gyn history entry - POST to collection endpoint
+            // patient_id must be provided by the server template
+            try { formDataJson.patient_id = '{{ patient_id }}'; } catch(e) {}
+            url = '/api/gyn-history';
+            method = 'POST';
+            console.log('Creating new Gyn History entry');
+            console.log('Submitting Gyn History form data:', formDataJson);
+        }
+
+        const response = await fetch(url, {
+            method,
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+            body: JSON.stringify(formDataJson)
+        });
+        if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+        const result = await response.json();
+        if (!result.success) throw new Error(result.error || 'Failed to save changes');
+        // After successful save, reload and restore containers
+        location.reload();
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error saving changes: ' + error.message);
+    }
+};
 
 // Navigate between gyn history entries using prev/next buttons inside header
 window.navigateGynHistory = function(direction, btn){
@@ -326,7 +382,7 @@ setTimeout(()=>{
 
 // Cancel edit while preserving active gyn inner tab
 window.cancelGynHistoryEdit = function(){
-    try { sessionStorage.setItem('lastActiveTabKey', 'gyn_histories'); } catch(e) {}
+    try { sessionStorage.setItem('lastActiveTabKey', 'gyn-history'); } catch(e) {}
     const activeInnerPane = document.querySelector('#gyn-histories-inner-tabContent .tab-pane.active');
     if (activeInnerPane) {
         try { sessionStorage.setItem('lastActiveGynPaneId', activeInnerPane.id); } catch(e) {}
@@ -344,5 +400,18 @@ window.cancelGynHistoryEdit = function(){
 
 // Expose a manual update function in case dynamic changes occur
 document.addEventListener('gyn:request-update-nav', () => updateGynNavButtonStates());
+
+// Show the new gynecological history form container and hide existing entries
+function openNewGynHistoryEntry(){
+    const newContainer = document.getElementById('GynHistoryNewContainer');
+    const existingContainer = document.getElementById('GynHistoryExistingContainer');
+    if (newContainer && existingContainer){
+        existingContainer.style.display = 'none';
+        newContainer.style.display = '';
+        // Ensure form becomes editable
+        const editable = document.getElementById('editableContent_New');
+        if (editable) editable.style.display = '';
+    }
+}
 
 </script>
