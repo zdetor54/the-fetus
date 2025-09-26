@@ -1,6 +1,9 @@
 /* Mobile (<=576px) fallback: assume each item ~ 48px including margins/padding; adjust if needed */
 @media (max-width: 576px) {
-    #pregnancies-inner-tab.gyn-visit-list {
+
+    .gyn-visit-list {
+        display: block;
+        box-sizing: border-box;
         max-height: calc(48px * 3);
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
