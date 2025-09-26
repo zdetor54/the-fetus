@@ -238,7 +238,60 @@
 </div>
 
 <script>
-// Gyn history: navigation, persistence and restore (mirrors pregnancies.js behavior)
+window.saveChangesGynHistory = async function(btn) {
+    try {
+        const form = btn.closest('form');
+        if (!form) return;
+        const gynHistoryId = form.querySelector('input[name="id"]').value;
+        const csrfToken = form.querySelector('input[name="csrf_token"]').value;
+
+        // Persist outer pregnancies tab activation
+        try { sessionStorage.setItem('lastActiveTabKey', 'gyn_histories'); } catch(e) {}
+        // Persist currently active inner pane id
+        const activeInnerPane = document.querySelector('#gyn-histories-inner-tabContent .tab-pane.active');
+        if (activeInnerPane) {
+            try { sessionStorage.setItem('lastActiveGynPaneId', activeInnerPane.id); } catch(e) {}
+        }
+
+        // Build JSON excluding empty string values
+        const formDataJson = {};
+        const formData = new FormData(form);
+        formData.forEach((value, key) => {
+            formDataJson[key] = value;
+        });
+
+
+
+        let url, method;
+        if (gynHistoryId) {
+            url = `/api/gyn-history/${gynHistoryId}`; method = 'PUT';
+            console.log('Updating existing Gyn History entry:', gynHistoryId);
+            console.log('Submitting Gyn History form data:', formDataJson);
+        }
+
+        else {
+            // Creating a new gyn history entry - POST to collection endpoint
+            // patient_id must be provided by the server template
+            try { formDataJson.patient_id = '{{ patient_id }}'; } catch(e) {}
+            url = '/api/gyn-history';
+            method = 'POST';
+        }
+
+        const response = await fetch(url, {
+            method,
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+            body: JSON.stringify(formDataJson)
+        });
+        if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+        const result = await response.json();
+        if (!result.success) throw new Error(result.error || 'Failed to save changes');
+        // After successful save, reload and restore containers
+        location.reload();
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error saving changes: ' + error.message);
+    }
+};
 
 // Navigate between gyn history entries using prev/next buttons inside header
 window.navigateGynHistory = function(direction, btn){
