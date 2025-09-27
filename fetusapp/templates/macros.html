@@ -39,7 +39,7 @@
                 id="{{ field_name }}Input"
                 name="{{ field_name }}"
                 {% if value is not none and value != '' %}value="{{ value }}"{% endif %} required>
-            <label for="{{ field_name }}Input">{{ field_config.label }}</label>
+            <label for="{{ field_name }}Input" style="top: 0%;">{{ field_config.label }}</label>
         {% else %}
             <input type="{{ field_config.type }}"
                 id="{{ field_name }}Input"
