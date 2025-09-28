@@ -464,10 +464,15 @@ def patient_tab_gynhistory(patient_id: int) -> Response:
         .order_by(GynHistory.date_of_visit.desc())
         .all()
     )
+
+    # Get the patient object to be used in the template
+    patient = Patient.query.get(patient_id)
+
     return render_template(
         "patient_tabs/history_gyn.html",
         history_gyn_form=history_gyn_form,
         patient_id=patient_id,
+        patient=patient,
         gyn_entries=[e.to_dict() for e in gyn_entries] if gyn_entries else [],
     )
 
