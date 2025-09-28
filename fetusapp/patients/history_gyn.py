@@ -107,7 +107,7 @@ def create_gyn_history() -> tuple[dict, int]:
         return jsonify({"success": False, "error": str(e)}), 400
 
 
-@gyn_history.route("/api/gyn_history/<int:id>", methods=["DELETE"])
+@gyn_history.route("/api/gyn-history/<int:id>", methods=["DELETE"])
 @login_required
 @csrf.exempt
 def delete_gyn_history(id: int) -> tuple[dict, int]:
