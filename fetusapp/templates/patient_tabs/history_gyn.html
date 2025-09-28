@@ -282,6 +282,32 @@ window.showDeleteGynHistoryModal = async function(btn) {
     deleteModal.show();
 }
 
+async function confirmDeleteGynHistory(btn) {
+    const form = btn.closest('form');
+    const gynHistoryId = form.querySelector('input[name="id"]').value;
+    console.log('gynHistoryId to delete:', gynHistoryId)
+    try {
+        const response = await fetch(`/api/gyn-history/${gynHistoryId}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (!response.ok) throw new Error('Delete failed');
+
+        const result = await response.json();
+        if (result.success) {
+            // Remember the active pill before reload so we can restore it
+            try { sessionStorage.setItem('lastActiveTab', '#pills-gyn-history'); } catch (e) {}
+            location.reload();
+        } else {
+            throw new Error(result.error || 'Unknown error');
+        }
+    } catch (error) {
+        console.error('Delete error:', error);
+        alert('Αποτυχία διαγραφής καρτέλας κύησης: ' + error.message);
+    }
+}
+
 window.saveChangesGynHistory = async function(btn) {
     try {
         const form = btn.closest('form');
