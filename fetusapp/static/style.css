@@ -3,11 +3,9 @@
     /* Define color variables */
     --calming-blue: #297FB9;          /* Primary button color */
     --vibrant-pink: #EF539E;
-    /* --vibrant-pink: #ff4f40;
+    --vibrant-pink: #ff4f40;
     --vibrant-pink: #9FE870;
-    --vibrant-pink: #6c7e95;           */
-    /* --warm-beige: #F3E1D7;            /* Background color */
-    /* Match root background to body to avoid black gutter */
+    --vibrant-pink: #6c7e95;
     background-color: #212529;
 }
 
@@ -579,7 +577,7 @@ input[type="date"]::-webkit-datetime-edit {
         -moz-appearance: none;
         width: 18px;
         height: 18px;
-        border: 1.5px solid #b36;
+        border: 1.5px solid var(--vibrant-pink);
         border-radius: 3px;
         background: #fff;
         outline: none;
@@ -594,8 +592,8 @@ input[type="date"]::-webkit-datetime-edit {
     }
     .patient-lite .input-group input.unstyled-checkbox:checked,
     .unstyled-checkbox:checked {
-        background: #b36;
-        border-color: #b36;
+        background: var(--vibrant-pink);
+        border-color: var(--vibrant-pink);
     }
     .patient-lite .input-group input.unstyled-checkbox:checked:after,
     .unstyled-checkbox:checked:after{
