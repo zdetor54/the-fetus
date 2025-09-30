@@ -477,6 +477,15 @@ def patient_tab_gynhistory(patient_id: int) -> Response:
     )
 
 
+@patients.route("/patient/<int:patient_id>/tab/files")
+def patient_tab_files(patient_id: int) -> Response:
+    patient = Patient.query.get(patient_id)
+    return render_template(
+        "patient_tabs/files.html",
+        patient=patient,
+    )
+
+
 @patients.route("/api/patients", methods=["POST"])
 @login_required
 @csrf.exempt
