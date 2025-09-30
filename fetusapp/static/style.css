@@ -2,10 +2,10 @@
 :root {
     /* Define color variables */
     --calming-blue: #297FB9;          /* Primary button color */
-    --vibrant-pink: #EF539E;          /* Active state color for nav link */
-    --vibrant-pink: #ff4f40;          /* monzo*/
-    --vibrant-pink: #9FE870;          /* wise*/
-    --vibrant-pink: #6c7e95;          /* monzo*/
+    --vibrant-pink: #EF539E;
+    /* --vibrant-pink: #ff4f40;
+    --vibrant-pink: #9FE870;
+    --vibrant-pink: #6c7e95;           */
     /* --warm-beige: #F3E1D7;            /* Background color */
     /* Match root background to body to avoid black gutter */
     background-color: #212529;
