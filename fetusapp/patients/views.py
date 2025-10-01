@@ -25,6 +25,7 @@ from fetusapp.models import (
     HistoryObstetrics,
     HistoryObstetrics_x,
     Patient,
+    PatientDocument,
     PregnancyHistory,
     PregnancyHistory_x,
 )
@@ -486,12 +487,23 @@ def patient_tab_gynhistory(patient_id: int) -> Response:
     )
 
 
-@patients.route("/patient/<int:patient_id>/tab/files")
-def patient_tab_files(patient_id: int) -> Response:
+@patients.route("/patient/<int:patient_id>/tab/documents")
+def patient_tab_documents(patient_id: int) -> Response:
     patient = Patient.query.get(patient_id)
+
+    docs = (
+        PatientDocument.query.filter_by(patient_id=patient_id)
+        .filter(PatientDocument.status != "deleted")
+        .order_by(PatientDocument.created_on.desc())
+        .all()
+    )
+
+    documents_list = [d.to_dict() for d in docs]
+
     return render_template(
-        "patient_tabs/files.html",
+        "patient_tabs/documents.html",
         patient=patient,
+        documents=documents_list,
     )
 
 
