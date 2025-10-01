@@ -878,3 +878,52 @@ class MedicalExam(BaseModel):
         base["exam_type"] = self.exam_type.to_dict()
         base["is_out_of_range"] = self.is_out_of_range()
         return base
+
+
+class PatientDocument(BaseModel):
+    __tablename__ = "patient_documents"
+
+    id = db.Column(db.Integer, primary_key=True)
+    patient_id = db.Column(db.Integer, db.ForeignKey("patients.id"), nullable=False)
+    created_by = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    created_on = db.Column(db.DateTime, server_default=db.func.now())
+
+    # File info
+    blob_path = db.Column(db.String(512), nullable=False)  # Azure blob path
+    original_filename = db.Column(db.String(255), nullable=False)
+    content_type = db.Column(db.String(100), nullable=False)
+    size_bytes = db.Column(db.Integer, nullable=True)
+    doc_type = db.Column(db.String(50), nullable=True)  # e.g. consent, scan
+    status = db.Column(db.String(20), default="clean")  # clean|deleted|quarantined
+
+    deleted_at = db.Column(db.DateTime, nullable=True)
+    deleted_by = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True)
+
+    # Relationships
+    patient = db.relationship("Patient", backref=db.backref("documents", lazy=True))
+    creator = db.relationship("User", foreign_keys=[created_by])
+    deleter = db.relationship("User", foreign_keys=[deleted_by])
+
+    def __init__(
+        self,
+        patient_id: int,
+        created_by: int,
+        blob_path: str,
+        original_filename: str,
+        content_type: str,
+        size_bytes: int | None = None,
+        doc_type: str | None = None,
+        status: str = "clean",
+        deleted_at: datetime | None = None,
+        deleted_by: int | None = None,
+    ):
+        self.patient_id = patient_id
+        self.created_by = created_by
+        self.blob_path = blob_path
+        self.original_filename = original_filename
+        self.content_type = content_type
+        self.size_bytes = size_bytes
+        self.doc_type = doc_type
+        self.status = status
+        self.deleted_at = deleted_at
+        self.deleted_by = deleted_by
