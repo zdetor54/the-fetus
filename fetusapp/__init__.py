@@ -58,9 +58,9 @@ login_manager.login_view = "core.index"
 
 from fetusapp.chatai.views import chatai  # noqa: E402
 from fetusapp.core.views import core  # noqa: E402
-from fetusapp.documents.views import documents  # noqa: E402
 from fetusapp.error_pages.handlers import error_pages  # noqa: E402
-from fetusapp.patients.history_gyn import gyn_history  # noqa: E402
+from fetusapp.patients.document_views import documents  # noqa: E402
+from fetusapp.patients.history_gyn_views import gyn_history  # noqa: E402
 from fetusapp.patients.history_medical_views import medical_history  # noqa: E402
 from fetusapp.patients.history_obstetrics_views import (  # noqa: E402
     obstetrics_history,

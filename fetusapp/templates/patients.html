@@ -139,7 +139,7 @@
 {% block javascript %}
 <script>
     function goToPatient(patient_id) {
-      window.location.href = `/patient?id=${patient_id}`;
+            window.location.href = `/patient/${patient_id}`;
     }
 
     function performMainSearch() {
@@ -167,7 +167,7 @@
             const data = await response.json();
 
             if (data.success) {
-                window.location.href = `/patient?id=${data.patient_id}`;
+                window.location.href = `/patient/${data.patient_id}`;
             } else {
                 alert('Error creating patient: ' + data.error);
             }

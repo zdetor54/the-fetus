@@ -152,11 +152,11 @@
           const data = await response.json();
 
           if (data.success) {
-              if (data.count === 1) {
-                  window.location.href = `/patient?id=${data.data[0].id}`;
-              } else {
-                  window.location.href = `/patients/search?query=${encodeURIComponent(query)}`;
-              }
+        if (data.count === 1) {
+          window.location.href = `/patient/${data.data[0].id}`;
+        } else {
+          window.location.href = `/patients/search?query=${encodeURIComponent(query)}`;
+        }
           }
       } catch (error) {
           console.error('Search failed:', error);

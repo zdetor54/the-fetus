@@ -25,6 +25,7 @@ from fetusapp.models import (
     HistoryObstetrics,
     HistoryObstetrics_x,
     Patient,
+    PatientDocument,
     PregnancyHistory,
     PregnancyHistory_x,
 )
@@ -262,12 +263,21 @@ def no_patient() -> Response:
 
 
 @patients.route("/patient", methods=["GET", "POST"])
-def patient() -> Response:
+@patients.route("/patient/<int:patient_id>", methods=["GET", "POST"])
+def patient(patient_id: int | None = None) -> Response:
     if not current_user.is_authenticated:
         flash("Συνδεθείτε για να δείτε τη σελίδα του ασθενή.")
         return redirect(url_for("core.index", next=request.url))
 
-    patient_id = request.args.get("id")
+    # Support both path parameter (/patient/3) and legacy query string (?id=3)
+    if not patient_id:
+        patient_id = request.args.get("id")
+
+    # Normalize patient_id to int when possible
+    try:
+        patient_id = int(patient_id) if patient_id is not None else None
+    except (ValueError, TypeError):
+        patient_id = None
 
     contact_fields = {
         "street_name": {"label": "Οδός", "type": "text"},
@@ -477,12 +487,23 @@ def patient_tab_gynhistory(patient_id: int) -> Response:
     )
 
 
-@patients.route("/patient/<int:patient_id>/tab/files")
-def patient_tab_files(patient_id: int) -> Response:
+@patients.route("/patient/<int:patient_id>/tab/documents")
+def patient_tab_documents(patient_id: int) -> Response:
     patient = Patient.query.get(patient_id)
+
+    docs = (
+        PatientDocument.query.filter_by(patient_id=patient_id)
+        .filter(PatientDocument.status != "deleted")
+        .order_by(PatientDocument.created_on.desc())
+        .all()
+    )
+
+    documents_list = [d.to_dict() for d in docs]
+
     return render_template(
-        "patient_tabs/files.html",
+        "patient_tabs/documents.html",
         patient=patient,
+        documents=documents_list,
     )
 
 
@@ -636,7 +657,11 @@ def search_patients_view() -> Response:
         )
     elif len(response) == 1:
         return redirect(
-            url_for("patients.patient", active_page="patient", id=response.iloc[0].id)
+            url_for(
+                "patients.patient",
+                active_page="patient",
+                patient_id=response.iloc[0].id,
+            )
         )
     else:
         return render_template(
