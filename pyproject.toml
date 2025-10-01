@@ -19,6 +19,9 @@ openai = "*"
 pandas = "*"
 unicodedata2 = "*"
 # Add other dependencies from your requirements.txt here
+azure-identity = "^1.25.0"
+azure-storage-blob = "^12.26.0"
+azure-identity-broker = "^1.3.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "*"
