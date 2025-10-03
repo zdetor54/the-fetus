@@ -122,7 +122,7 @@ def upload_blob(
         # Check if blob already exists
         if check_duplicate and check_blob_exists(blob_path):
             filename = blob_path.split("/")[-1]
-            raise FileExistsError(f"A file with this name already exists: {filename}")
+            raise FileExistsError(f"Υπάρχει ήδη αρχείο με το όνομα: {filename}")
 
         # Get blob client
         blob_client = _blob().get_blob_client(container=CONTAINER, blob=blob_path)
