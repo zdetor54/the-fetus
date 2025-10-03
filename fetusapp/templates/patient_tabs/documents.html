@@ -35,12 +35,12 @@
                                     <td class="d-none d-md-table-cell">{{ (doc.size_bytes / 1048576) | round(2) if doc.size_bytes else '-' }} MB</td>
                                     <td>
                                         {% if doc.blob_path %}
-                                            <button type="button" class="btn btn-outline-secondary px-4" onclick="window.open('/documents/{{ doc.id }}', '_blank')">
+                                            <button type="button" class="btn btn-outline-secondary px-4" onclick="window.open('/documents/{{ doc.id }}', '_blank')" title="Προβολή εγγράφου">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-folder2-open" viewBox="0 0 16 16">
                                                     <path d="M1 3.5A1.5 1.5 0 0 1 2.5 2h2.764c.958 0 1.76.56 2.311 1.184C7.985 3.648 8.48 4 9 4h4.5A1.5 1.5 0 0 1 15 5.5v.64c.57.265.94.876.856 1.546l-.64 5.124A2.5 2.5 0 0 1 12.733 15H3.266a2.5 2.5 0 0 1-2.481-2.19l-.64-5.124A1.5 1.5 0 0 1 1 6.14zM2 6h12v-.5a.5.5 0 0 0-.5-.5H9c-.964 0-1.71-.629-2.174-1.154C6.374 3.334 5.82 3 5.264 3H2.5a.5.5 0 0 0-.5.5zm-.367 1a.5.5 0 0 0-.496.562l.64 5.124A1.5 1.5 0 0 0 3.266 14h9.468a1.5 1.5 0 0 0 1.489-1.314l.64-5.124A.5.5 0 0 0 14.367 7z"/>
                                                 </svg>
                                             </button>
-                                            <button type="button" class="btn btn-outline-danger px-4 d-none d-lg-table-cell" onclick="showDeletePregnancyXModal(this)">
+                                            <button type="button" class="btn btn-outline-danger px-4" onclick="confirmDeleteDocument({{ doc.id }}, '{{ doc.original_filename }}')" title="Διαγραφή εγγράφου">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-trash3" viewBox="1 0 16 16"><path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/></svg>
                                             </button>
                                         {% else %}
@@ -68,8 +68,9 @@
                         <h3 class="text-center mb-4 d-none">Ανέβασμα Εγγράφων</h3>
 
                         <!-- Drop Zone -->
-                        <div class="border border-2 p-5 text-center upload-drop-zone">
-
+                        <div class="border border-2 p-5 text-center upload-drop-zone" id="dropZone">
+                            <!-- Hidden file input -->
+                            <input type="file" id="fileInput" multiple accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png" style="display: none;">
 
                             <div class="mb-3 bootstrap-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" style="width: 64px; height: 64px;" fill="currentColor" class="bi bi-cloud-arrow-up" viewBox="0 0 16 16">
@@ -81,7 +82,7 @@
                             <p class="text-muted mb-3">ή</p>
 
                             <!-- Browse Button -->
-                            <button type="button" class="btn btn-outline-secondary px-4 mb-2">
+                            <button type="button" class="btn btn-outline-secondary px-4 mb-2" id="browseBtn">
                                 Επιλογή Αρχείων
                             </button>
 
@@ -92,12 +93,22 @@
                         </div>
 
                         <!-- Selected Files List -->
-                        <div class="mt-4">
-                            <h6 class="mb-3">Επιλεγμένα Αρχεία (0)</h6>
-                            <div class="border-top pt-3">
+                        <div class="mt-4" id="selectedFilesSection">
+                            <h6 class="mb-3" id="fileCountLabel">Επιλεγμένα Αρχεία (0)</h6>
+                            <div class="border-top pt-3" id="filesList">
                                 <p class="text-muted small mb-0">Δεν έχουν επιλεγεί αρχεία</p>
                             </div>
                         </div>
+
+                        <!-- Upload Button -->
+                        <div class="mt-3 text-center" id="uploadBtnContainer" style="display: none;">
+                            <button type="button" class="btn btn-primary px-5" id="uploadBtn">
+                                Ανέβασμα Αρχείων
+                            </button>
+                        </div>
+
+                        <!-- Progress/Results -->
+                        <div class="mt-3" id="uploadResults"></div>
                     </div>
 
 
@@ -109,3 +120,427 @@
         </div>
     </div>
 </div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteDocumentModal" tabindex="-1" aria-labelledby="deleteDocumentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-light">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title" id="deleteDocumentModalLabel">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-triangle me-2" viewBox="0 0 16 16">
+                        <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z"/>
+                        <path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+                    </svg>
+                    Επιβεβαίωση Διαγραφής
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Είστε σίγουροι ότι θέλετε να διαγράψετε το έγγραφο:</p>
+                <p class="fw-bold text-warning" id="deleteDocumentFilename"></p>
+                <p class="text-muted small mb-0">
+                    Το έγγραφο θα σημειωθεί ως διαγραμμένο και δεν θα εμφανίζεται στη λίστα.
+                </p>
+            </div>
+            <div class="modal-footer border-secondary">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ακύρωση</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3 me-1" viewBox="0 0 16 16">
+                        <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                    </svg>
+                    Διαγραφή
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .upload-drop-zone {
+        border-style: dashed !important;
+        border-color: #6c757d !important;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .upload-drop-zone:hover,
+    .upload-drop-zone.drag-over {
+        border-color: #0d6efd !important;
+        background-color: rgba(13, 110, 253, 0.05);
+    }
+
+    .file-item {
+        padding: 0.75rem;
+        margin-bottom: 0.5rem;
+        border: 1px solid #dee2e6;
+        border-radius: 0.375rem;
+        background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .file-item:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .progress {
+        height: 1.5rem;
+    }
+</style>
+
+<script>
+(function() {
+    'use strict';
+
+    // Get DOM elements
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const browseBtn = document.getElementById('browseBtn');
+    const filesList = document.getElementById('filesList');
+    const fileCountLabel = document.getElementById('fileCountLabel');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const uploadBtnContainer = document.getElementById('uploadBtnContainer');
+    const uploadResults = document.getElementById('uploadResults');
+
+    // Store selected files
+    let selectedFiles = [];
+
+    // Get patient ID from the page context
+    const patientId = {{ patient.id }};
+
+    // Allowed file extensions
+    const ALLOWED_EXTENSIONS = ['pdf', 'doc', 'docx', 'txt', 'jpg', 'jpeg', 'png'];
+    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+
+    // File icon mapping
+    const FILE_ICONS = {
+        'pdf': 'file-earmark-pdf',
+        'doc': 'file-earmark-word',
+        'docx': 'file-earmark-word',
+        'txt': 'file-earmark-text',
+        'jpg': 'file-earmark-image',
+        'jpeg': 'file-earmark-image',
+        'png': 'file-earmark-image',
+    };
+
+    // Prevent default drag behaviors
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, preventDefaults, false);
+        document.body.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    // Highlight drop zone when item is dragged over it
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, () => {
+            dropZone.classList.add('drag-over');
+        }, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, () => {
+            dropZone.classList.remove('drag-over');
+        }, false);
+    });
+
+    // Handle dropped files
+    dropZone.addEventListener('drop', handleDrop, false);
+
+    // Handle browse button click
+    browseBtn.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    // Handle file input change
+    fileInput.addEventListener('change', (e) => {
+        handleFiles(e.target.files);
+    });
+
+    // Handle drop
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        handleFiles(files);
+    }
+
+    // Handle file selection/addition
+    function handleFiles(files) {
+        const filesArray = Array.from(files);
+
+        filesArray.forEach(file => {
+            // Validate file
+            const validation = validateFile(file);
+            if (validation.valid) {
+                // Check for duplicates
+                if (!selectedFiles.find(f => f.name === file.name)) {
+                    selectedFiles.push(file);
+                }
+            } else {
+                showError(validation.error);
+            }
+        });
+
+        updateFilesList();
+        fileInput.value = ''; // Reset input
+    }
+
+    // Validate individual file
+    function validateFile(file) {
+        const ext = file.name.split('.').pop().toLowerCase();
+
+        if (!ALLOWED_EXTENSIONS.includes(ext)) {
+            return {
+                valid: false,
+                error: `Το αρχείο "${file.name}" δεν έχει υποστηριζόμενη μορφή.`
+            };
+        }
+
+        if (file.size > MAX_FILE_SIZE) {
+            return {
+                valid: false,
+                error: `Το αρχείο "${file.name}" υπερβαίνει το μέγιστο επιτρεπτό μέγεθος (10MB).`
+            };
+        }
+
+        return { valid: true };
+    }
+
+    // Update files list display
+    function updateFilesList() {
+        if (selectedFiles.length === 0) {
+            filesList.innerHTML = '<p class="text-muted small mb-0">Δεν έχουν επιλεγεί αρχεία</p>';
+            fileCountLabel.textContent = 'Επιλεγμένα Αρχεία (0)';
+            uploadBtnContainer.style.display = 'none';
+            return;
+        }
+
+        fileCountLabel.textContent = `Επιλεγμένα Αρχεία (${selectedFiles.length})`;
+        uploadBtnContainer.style.display = 'block';
+
+        let html = '';
+        selectedFiles.forEach((file, index) => {
+            const ext = file.name.split('.').pop().toLowerCase();
+            const icon = FILE_ICONS[ext] || 'file-earmark';
+            const sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
+
+            html += `
+                <div class="file-item d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-${icon} me-3" viewBox="0 0 16 16">
+                            <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5z"/>
+                        </svg>
+                        <div>
+                            <div><strong>${file.name}</strong></div>
+                            <small class="text-muted">${sizeInMB} MB</small>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeFile(${index})">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                        </svg>
+                    </button>
+                </div>
+            `;
+        });
+
+        filesList.innerHTML = html;
+    }
+
+    // Remove file from selection
+    window.removeFile = function(index) {
+        selectedFiles.splice(index, 1);
+        updateFilesList();
+    };
+
+    // Handle upload button click
+    uploadBtn.addEventListener('click', uploadFiles);
+
+    // Upload files
+    async function uploadFiles() {
+        if (selectedFiles.length === 0) return;
+
+        // Disable upload button
+        uploadBtn.disabled = true;
+        uploadBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Ανέβασμα...';
+
+        // Create FormData
+        const formData = new FormData();
+        selectedFiles.forEach(file => {
+            formData.append('files[]', file);
+        });
+
+        try {
+            const response = await fetch(`/documents/upload/${patientId}`, {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+
+            // Display results
+            displayUploadResults(result);
+
+            // If successful, refresh page after a delay
+            if (result.success && result.uploaded.length > 0) {
+                setTimeout(() => {
+                    location.reload();
+                }, 2000);
+            }
+
+        } catch (error) {
+            showError('Σφάλμα κατά το ανέβασμα: ' + error.message);
+            uploadBtn.disabled = false;
+            uploadBtn.textContent = 'Ανέβασμα Αρχείων';
+        }
+    }
+
+    // Display upload results
+    function displayUploadResults(result) {
+        let html = '';
+
+        if (result.uploaded && result.uploaded.length > 0) {
+            html += `
+                <div class="alert alert-success">
+                    <strong>Επιτυχία!</strong> Ανέβηκαν ${result.uploaded.length} από ${result.summary.total} αρχεία.
+                    <ul class="mb-0 mt-2">
+                        ${result.uploaded.map(f => `<li>${f.filename}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+
+        if (result.errors && result.errors.length > 0) {
+            html += `
+                <div class="alert alert-danger">
+                    <strong>Σφάλματα:</strong>
+                    <ul class="mb-0 mt-2">
+                        ${result.errors.map(e => `<li><strong>${e.filename}:</strong> ${e.error}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+
+        uploadResults.innerHTML = html;
+
+        // Clear selected files if all uploaded successfully
+        if (result.success && result.errors.length === 0) {
+            selectedFiles = [];
+            updateFilesList();
+        }
+    }
+
+    // Show error message
+    function showError(message) {
+        uploadResults.innerHTML = `
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        `;
+    }
+
+})();
+
+// Delete functionality
+(function() {
+    'use strict';
+
+    let deleteDocId = null;
+    const deleteModal = new bootstrap.Modal(document.getElementById('deleteDocumentModal'));
+    const deleteFilenameEl = document.getElementById('deleteDocumentFilename');
+    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+
+    // Show delete confirmation modal
+    window.confirmDeleteDocument = function(docId, filename) {
+        deleteDocId = docId;
+        deleteFilenameEl.textContent = filename;
+        deleteModal.show();
+    };
+
+    // Handle delete confirmation
+    confirmDeleteBtn.addEventListener('click', async function() {
+        if (!deleteDocId) return;
+
+        // Disable button and show loading
+        confirmDeleteBtn.disabled = true;
+        confirmDeleteBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Διαγραφή...';
+
+        try {
+            const response = await fetch(`/documents/${deleteDocId}`, {
+                method: 'DELETE'
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                // Show success message
+                showDeleteSuccess(result.message);
+
+                // Close modal
+                deleteModal.hide();
+
+                // Reload page after short delay
+                setTimeout(() => {
+                    location.reload();
+                }, 1500);
+            } else {
+                showDeleteError(result.error || 'Σφάλμα κατά τη διαγραφή');
+                confirmDeleteBtn.disabled = false;
+                confirmDeleteBtn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3 me-1" viewBox="0 0 16 16">
+                        <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                    </svg>
+                    Διαγραφή
+                `;
+            }
+
+        } catch (error) {
+            showDeleteError('Σφάλμα δικτύου: ' + error.message);
+            confirmDeleteBtn.disabled = false;
+            confirmDeleteBtn.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3 me-1" viewBox="0 0 16 16">
+                    <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                </svg>
+                Διαγραφή
+            `;
+        }
+    });
+
+    // Reset modal when closed
+    document.getElementById('deleteDocumentModal').addEventListener('hidden.bs.modal', function() {
+        deleteDocId = null;
+        confirmDeleteBtn.disabled = false;
+        confirmDeleteBtn.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3 me-1" viewBox="0 0 16 16">
+                <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+            </svg>
+            Διαγραφή
+        `;
+    });
+
+    function showDeleteSuccess(message) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3';
+        alertDiv.style.zIndex = '9999';
+        alertDiv.innerHTML = `
+            <strong>Επιτυχία!</strong> ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        document.body.appendChild(alertDiv);
+    }
+
+    function showDeleteError(message) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-danger alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3';
+        alertDiv.style.zIndex = '9999';
+        alertDiv.innerHTML = `
+            <strong>Σφάλμα!</strong> ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        document.body.appendChild(alertDiv);
+    }
+
+})();
+</script>
