@@ -298,7 +298,8 @@ footer a:hover{
     background-color: var(--vibrant-pink);
 }
 
-.btn-outline-secondary {
+.btn-outline-secondary,
+#uploadSection .bootstrap-icon {
     color: var(--vibrant-pink);
     border-color: var(--vibrant-pink);
 }
@@ -691,4 +692,12 @@ input[type="date"]::-webkit-datetime-edit {
     textarea {
         font-size: 16px;
     }
+}
+
+
+.upload-drop-zone{
+    border-style: dashed !important;
+    border-color: var(--vibrant-pink) !important;
+    background-color: oklch(from var(--vibrant-pink) l c h / 0.1);
+    border-radius: 1rem !important;
 }
