@@ -33,7 +33,7 @@
                                         {% endif %}
                                     </td>
                                     <td class="d-none d-md-table-cell">{{ (doc.size_bytes / 1048576) | round(2) if doc.size_bytes else '-' }} MB</td>
-                                    <td>
+                                    <td class="text-end">
                                         {% if doc.blob_path %}
                                             <button type="button" class="btn btn-outline-secondary px-4" onclick="window.open('/documents/{{ doc.id }}', '_blank')" title="Προβολή εγγράφου">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-folder2-open" viewBox="0 0 16 16">
@@ -94,15 +94,15 @@
 
                         <!-- Selected Files List -->
                         <div class="mt-4" id="selectedFilesSection">
-                            <h6 class="mb-3" id="fileCountLabel">Επιλεγμένα Αρχεία (0)</h6>
-                            <div class="border-top pt-3" id="filesList">
-                                <p class="text-muted small mb-0">Δεν έχουν επιλεγεί αρχεία</p>
+                            <h5  id="fileCountLabel">Επιλεγμένα Αρχεία (0)</h5>
+                            <div class="zd" id="filesList">
+                                <p class="text-muted small mb-0 pt-4">Δεν έχουν επιλεγεί αρχεία</p>
                             </div>
                         </div>
 
                         <!-- Upload Button -->
                         <div class="mt-3 text-center" id="uploadBtnContainer" style="display: none;">
-                            <button type="button" class="btn btn-primary px-5" id="uploadBtn">
+                            <button type="button" class="btn btn-outline-secondary px-4 mb-2" id="uploadBtn">
                                 Ανέβασμα Αρχείων
                             </button>
                         </div>
@@ -122,30 +122,25 @@
 </div>
 
 <!-- Delete Confirmation Modal -->
-<div class="modal fade" id="deleteDocumentModal" tabindex="-1" aria-labelledby="deleteDocumentModalLabel" aria-hidden="true">
+<div class="modal fade" id="deleteDocumentModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content bg-dark text-light">
-            <div class="modal-header border-secondary">
-                <h5 class="modal-title" id="deleteDocumentModalLabel">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-triangle me-2" viewBox="0 0 16 16">
-                        <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z"/>
-                        <path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
-                    </svg>
-                    Επιβεβαίωση Διαγραφής
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h5 class="modal-title text-center">Επιβεβαίωση Διαγραφής</h5>
             </div>
             <div class="modal-body">
-                <p>Είστε σίγουροι ότι θέλετε να διαγράψετε το έγγραφο:</p>
-                <p class="fw-bold text-warning" id="deleteDocumentFilename"></p>
-                <p class="text-muted small mb-0">
-                    Το έγγραφο θα σημειωθεί ως διαγραμμένο και δεν θα εμφανίζεται στη λίστα.
-                </p>
+                <p class="text-center" id="deleteDocumentFilename"></p>
             </div>
-            <div class="modal-footer border-secondary">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ακύρωση</button>
-                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3 me-1" viewBox="0 0 16 16">
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-outline-light px-4" data-bs-dismiss="modal">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-x-square" viewBox="0 1 16 16">
+                        <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                    </svg>
+                    Ακύρωση
+                </button>
+                <button type="button" class="btn btn-danger px-4" id="confirmDeleteBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-trash3" viewBox="0 1 16 16">
                         <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
                     </svg>
                     Διαγραφή
@@ -155,36 +150,6 @@
     </div>
 </div>
 
-<style>
-    .upload-drop-zone {
-        border-style: dashed !important;
-        border-color: #6c757d !important;
-        transition: all 0.3s ease;
-        cursor: pointer;
-    }
-
-    .upload-drop-zone:hover,
-    .upload-drop-zone.drag-over {
-        border-color: #0d6efd !important;
-        background-color: rgba(13, 110, 253, 0.05);
-    }
-
-    .file-item {
-        padding: 0.75rem;
-        margin-bottom: 0.5rem;
-        border: 1px solid #dee2e6;
-        border-radius: 0.375rem;
-        background-color: rgba(255, 255, 255, 0.05);
-    }
-
-    .file-item:hover {
-        background-color: rgba(255, 255, 255, 0.1);
-    }
-
-    .progress {
-        height: 1.5rem;
-    }
-</style>
 
 <script>
 (function() {
@@ -310,7 +275,7 @@
     // Update files list display
     function updateFilesList() {
         if (selectedFiles.length === 0) {
-            filesList.innerHTML = '<p class="text-muted small mb-0">Δεν έχουν επιλεγεί αρχεία</p>';
+            filesList.innerHTML = '<p class="text-muted small mb-0 pt-4">Δεν έχουν επιλεγεί αρχεία</p>';
             fileCountLabel.textContent = 'Επιλεγμένα Αρχεία (0)';
             uploadBtnContainer.style.display = 'none';
             return;
@@ -319,31 +284,43 @@
         fileCountLabel.textContent = `Επιλεγμένα Αρχεία (${selectedFiles.length})`;
         uploadBtnContainer.style.display = 'block';
 
-        let html = '';
+        let html = `
+            <div class="table-responsive zd">
+                <table class="table table-dark table-striped table-hover zd">
+                    <thead>
+                        <tr>
+                            <th>Ονομα αρχείου</th>
+                            <th class="d-none d-md-table-cell">Μέγεθος</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        `;
+
         selectedFiles.forEach((file, index) => {
             const ext = file.name.split('.').pop().toLowerCase();
-            const icon = FILE_ICONS[ext] || 'file-earmark';
             const sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
 
             html += `
-                <div class="file-item d-flex justify-content-between align-items-center">
-                    <div class="d-flex align-items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-${icon} me-3" viewBox="0 0 16 16">
-                            <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5z"/>
-                        </svg>
-                        <div>
-                            <div><strong>${file.name}</strong></div>
-                            <small class="text-muted">${sizeInMB} MB</small>
-                        </div>
-                    </div>
-                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeFile(${index})">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
-                            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
-                        </svg>
-                    </button>
-                </div>
+                <tr>
+                    <td>${file.name}</td>
+                    <td class="d-none d-md-table-cell">${sizeInMB} MB</td>
+                    <td class="text-end">
+                        <button type="button" class="btn btn-outline-danger px-4" onclick="removeFile(${index})" title="Αφαίρεση">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3 me-1" viewBox="0 0 16 16">
+                                <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                            </svg>
+                        </button>
+                    </td>
+                </tr>
             `;
         });
+
+        html += `
+                    </tbody>
+                </table>
+            </div>
+        `;
 
         filesList.innerHTML = html;
     }
@@ -379,15 +356,16 @@
 
             const result = await response.json();
 
-            // Display results
-            displayUploadResults(result);
-
-            // If successful, refresh page after a delay
-            if (result.success && result.uploaded.length > 0) {
-                setTimeout(() => {
-                    location.reload();
-                }, 2000);
+            // If all successful, reload page immediately
+            if (result.success && result.errors.length === 0) {
+                location.reload();
+                return;
             }
+
+            // If there were errors, display them and re-enable button
+            displayUploadResults(result);
+            uploadBtn.disabled = false;
+            uploadBtn.textContent = 'Ανέβασμα Αρχείων';
 
         } catch (error) {
             showError('Σφάλμα κατά το ανέβασμα: ' + error.message);
@@ -413,10 +391,9 @@
 
         if (result.errors && result.errors.length > 0) {
             html += `
-                <div class="alert alert-danger">
-                    <strong>Σφάλματα:</strong>
+                <div class="text-danger">
                     <ul class="mb-0 mt-2">
-                        ${result.errors.map(e => `<li><strong>${e.filename}:</strong> ${e.error}</li>`).join('')}
+                        ${result.errors.map(e => `<li></strong> ${e.error}</li>`).join('')}
                     </ul>
                 </div>
             `;
@@ -429,6 +406,7 @@
             selectedFiles = [];
             updateFilesList();
         }
+        // If there were errors, keep the files in the list so user can remove problematic ones
     }
 
     // Show error message
@@ -455,7 +433,7 @@
     // Show delete confirmation modal
     window.confirmDeleteDocument = function(docId, filename) {
         deleteDocId = docId;
-        deleteFilenameEl.textContent = filename;
+        deleteFilenameEl.textContent = `Είστε σίγουροι ότι θέλετε να διαγράψετε το έγγραφο: ${filename}`;
         deleteModal.show();
     };
 

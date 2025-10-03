@@ -694,10 +694,22 @@ input[type="date"]::-webkit-datetime-edit {
     }
 }
 
-
-.upload-drop-zone{
-    border-style: dashed !important;
-    border-color: var(--vibrant-pink) !important;
-    background-color: oklch(from var(--vibrant-pink) l c h / 0.1);
+.upload-drop-zone {
+    border: 1px dashed var(--vibrant-pink) !important;
+    background-color: oklch(from var(--vibrant-pink) l c h / 0.03);
     border-radius: 1rem !important;
+}
+
+
+.upload-drop-zone:hover,
+.upload-drop-zone.drag-over {
+    background-color: oklch(from var(--vibrant-pink) l c h / 0.1) !important;
+}
+
+#uploadSection .alert {
+    position: relative;
+    padding: 1rem 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: 1rem;
 }
