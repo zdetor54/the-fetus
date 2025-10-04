@@ -380,8 +380,10 @@
 
         if (result.uploaded && result.uploaded.length > 0) {
             html += `
-                <div class="alert alert-success">
-                    <strong>Επιτυχία!</strong> Ανέβηκαν ${result.uploaded.length} από ${result.summary.total} αρχεία.
+                <div>
+                    <p>Ανέβηκαν ${result.uploaded.length} από ${result.summary.total} αρχεία.</p>
+                </div>
+                <div class="text-success">
                     <ul class="mb-0 mt-2">
                         ${result.uploaded.map(f => `<li>${f.filename}</li>`).join('')}
                     </ul>
