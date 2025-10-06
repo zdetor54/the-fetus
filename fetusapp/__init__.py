@@ -84,3 +84,23 @@ app.register_blueprint(pregnancy_x)  # type: ignore[has-type]
 app.register_blueprint(gyn_history)  # type: ignore[has-type]
 app.register_blueprint(documents)  # type: ignore[has-type]
 app.register_blueprint(chatai)
+
+
+#####################
+# PWA SUPPORT #######
+#####################
+from flask import send_from_directory
+
+
+@app.route("/manifest.json")
+def manifest():
+    """Serve the PWA manifest file with correct MIME type."""
+    return send_from_directory(
+        "static", "manifest.json", mimetype="application/manifest+json"
+    )
+
+
+@app.route("/sw.js")
+def service_worker():
+    """Serve the service worker file with correct MIME type."""
+    return send_from_directory("static", "sw.js", mimetype="application/javascript")

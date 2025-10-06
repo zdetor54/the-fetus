@@ -9,6 +9,46 @@
     background-color: #212529;
 }
 
+/* PWA Window Controls Overlay - for minimal title bar */
+@media (display-mode: window-controls-overlay) {
+    body {
+        /* Add padding to avoid content being hidden behind window controls */
+        padding-top: env(titlebar-area-height, 40px);
+    }
+
+    .navbar.fixed-top {
+        /* Make navbar aware of window controls overlay */
+        top: 0;
+        left: env(titlebar-area-x, 0);
+        width: env(titlebar-area-width, 100%);
+        padding-left: 10px;
+    }
+
+    /* Make navbar background draggable (for moving window) */
+    .navbar {
+        -webkit-app-region: drag;
+    }
+
+    /* But keep interactive elements clickable */
+    .navbar a,
+    .navbar button,
+    .navbar input,
+    .navbar .navbar-toggler {
+        -webkit-app-region: no-drag;
+    }
+}
+
+/* Ensure app works in all display modes */
+@media (display-mode: standalone),
+       (display-mode: fullscreen),
+       (display-mode: minimal-ui) {
+    /* Remove any browser-specific spacing when installed */
+    body {
+        margin: 0;
+        padding: 0;
+    }
+}
+
 /* Prevent layout shift when vertical scrollbar appears/disappears */
 html { scrollbar-gutter: stable; }
 @supports not (scrollbar-gutter: stable) {
