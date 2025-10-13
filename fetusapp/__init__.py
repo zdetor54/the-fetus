@@ -83,7 +83,7 @@ app.register_blueprint(pregnancy)  # type: ignore[has-type]
 app.register_blueprint(pregnancy_x)  # type: ignore[has-type]
 app.register_blueprint(gyn_history)  # type: ignore[has-type]
 app.register_blueprint(documents)  # type: ignore[has-type]
-app.register_blueprint(chatai)
+app.register_blueprint(chatai)  # type: ignore[has-type]
 
 
 #####################

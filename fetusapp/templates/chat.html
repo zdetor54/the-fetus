@@ -1,14 +1,161 @@
-{% extends "base.html" %} {% block page_title %} Διαχείριση χρήστη {% endblock
-%} {% block content %}
+{% extends "base.html" %}
 
-<main class="flex-shrink-0 m-auto flex-grow-1 bg-dark">
-  <div class="container zd text-light py-5" style="text-align: center;">
-    <p>Placeholder for chat</p>
+{% block page_title %} Chat με Βοηθό {% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='chat.css') }}">
+
+  <div class="container text-light py-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <h2 class="mb-4 text-center">Ρωτήστε για ασθενείς</h2>
+
+        <!-- Chat messages container -->
+        <div id="chat-messages" class="p-3 mb-3">
+          <!-- <div class="text-muted text-center">
+            Ρωτήστε κάτι, π.χ. "Ποιοι ασθενείς είναι γιατροί;"
+          </div> -->
+        </div>
+
+        <!-- Input form -->
+        <div class="input-group">
+          <input
+            type="text"
+            id="user-input"
+            class="form-control"
+            style="border-start-start-radius: 5rem ; border-end-start-radius: 5rem ;"
+            placeholder="Γράψτε την ερώτησή σας..."
+            autocomplete="off"
+          >
+          <button class="btn btn-outline-secondary" id="send-btn" type="button">
+            Αποστολή
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 
 
-</main>
 {% endblock %}
-{% block javascript %}
 
+{% block javascript %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const userInput = document.getElementById('user-input');
+  const sendBtn = document.getElementById('send-btn');
+  const chatMessages = document.getElementById('chat-messages');
+
+  // Function to adjust chat height based on content
+  function adjustChatHeight() {
+    const contentHeight = chatMessages.scrollHeight;
+    const maxHeight = window.innerHeight - 250; // Leave space for header, input, footer
+
+    if (contentHeight > chatMessages.clientHeight && chatMessages.clientHeight < maxHeight) {
+      const newHeight = Math.min(contentHeight + 20, maxHeight);
+      chatMessages.style.height = newHeight + 'px';
+    }
+  }
+
+  // Send message on button click
+  sendBtn.addEventListener('click', sendMessage);
+
+  // Send message on Enter key
+  userInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      sendMessage();
+    }
+  });
+
+  async function sendMessage() {
+    const question = userInput.value.trim();
+
+    if (!question) {
+      return;
+    }
+
+    // Add user message to chat
+    addMessage('user', question);
+
+    // Clear input
+    userInput.value = '';
+
+    // Add typing indicator to chat
+    const typingIndicator = addTypingIndicator();
+    sendBtn.disabled = true;
+
+    try {
+      // Call the API
+      const response = await fetch('/chat/api', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ question: question })
+      });
+
+      const data = await response.json();
+
+      // Remove typing indicator
+      typingIndicator.remove();
+      sendBtn.disabled = false;
+
+      if (response.ok) {
+        // Add bot response
+        addMessage('agent', data.answer);
+      } else {
+        // Show error
+        addMessage('agent', 'Σφάλμα: ' + (data.error || 'Κάτι πήγε στραβά'));
+      }
+
+    } catch (error) {
+      typingIndicator.remove();
+      sendBtn.disabled = false;
+      addMessage('agent', 'Σφάλμα σύνδεσης: ' + error.message);
+    }
+  }
+
+  function addTypingIndicator() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'message-wrapper agent';
+    wrapper.id = 'typing-indicator';
+
+    const bubble = document.createElement('div');
+    bubble.className = 'message-bubble bg-agent';
+
+    const indicator = document.createElement('span');
+    indicator.className = 'typing-indicator';
+    indicator.innerHTML = '<span></span><span></span><span></span>';
+
+    bubble.appendChild(indicator);
+    wrapper.appendChild(bubble);
+    chatMessages.appendChild(wrapper);
+
+    // Scroll to bottom
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    return wrapper;
+  }
+
+  function addMessage(type, text) {
+    // Create wrapper for alignment
+    const wrapper = document.createElement('div');
+    wrapper.className = 'message-wrapper ' + type;
+
+    // Create message bubble
+    const bubble = document.createElement('div');
+    bubble.className = 'message-bubble ' + (type === 'user' ? 'bg-user' : 'bg-agent');
+    bubble.style.whiteSpace = 'pre-wrap';
+    bubble.textContent = text;
+
+    wrapper.appendChild(bubble);
+    chatMessages.appendChild(wrapper);
+
+    // Adjust height to fit content
+    setTimeout(() => {
+      adjustChatHeight();
+      // Scroll to bottom
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }, 50);
+  }
+});
+</script>
 {% endblock %}
