@@ -96,7 +96,7 @@
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background-color: #888;
+    background-color: var(--vibrant-pink);
     animation: typing-bounce 1.4s infinite ease-in-out;
 }
 
@@ -111,6 +111,16 @@
 .typing-indicator span:nth-child(3) {
     animation-delay: 0.4s;
 }
+
+.message-bubble a{
+    color: var(--vibrant-pink);
+    text-decoration: none;
+}
+.message-bubble a:hover{
+    text-decoration: underline;
+    color: var(--vibrant-pink);
+}
+
 
 @keyframes typing-bounce {
     0%, 60%, 100% {

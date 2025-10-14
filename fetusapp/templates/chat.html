@@ -154,20 +154,21 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function addMessage(type, text) {
-    // Create wrapper for alignment
     const wrapper = document.createElement('div');
     wrapper.className = 'message-wrapper ' + type;
 
-    // Create message bubble
     const bubble = document.createElement('div');
     bubble.className = 'message-bubble ' + (type === 'user' ? 'bg-user' : 'bg-agent');
     bubble.style.whiteSpace = 'pre-wrap';
-    bubble.textContent = text;
+
+    // Simple Markdown link parsing: [text](<url>) or [text](url)
+    const html = text.replace(/\[([^\]]+)\]\(<([^>]+)>\)/g, '<a href="$2" target="_blank">$1</a>')
+                    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+    bubble.innerHTML = html;
 
     wrapper.appendChild(bubble);
     chatMessages.appendChild(wrapper);
 
-    // Scroll to bottom of page
     setTimeout(() => {
       window.scrollTo({
         top: document.body.scrollHeight,
