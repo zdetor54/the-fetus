@@ -38,26 +38,35 @@ document.addEventListener('DOMContentLoaded', function() {
   const chatInputSection = document.getElementById('chat-input-section');
 
   // Check if chat is empty and position input accordingly
-  function updateInputPosition() {
+  function updateInputPosition(animate = false) {
+    const chatTitle = document.querySelector('.chat-title');
+
+    if (animate && chatMessages.children.length === 1) {
+      // Only animate on the first message
+      chatInputSection.classList.add('animating');
+    }
+
     if (chatMessages.children.length === 0) {
-      chatInputSection.style.position = 'absolute';
+      chatInputSection.style.position = 'fixed';
       chatInputSection.style.top = '50%';
       chatInputSection.style.left = '50%';
       chatInputSection.style.transform = 'translate(-50%, -50%)';
-      chatInputSection.style.maxWidth = '600px';
+      chatInputSection.style.maxWidth = '700px';
       chatInputSection.style.width = '90%';
+      if (chatTitle) chatTitle.style.display = 'block';
     } else {
-      chatInputSection.style.position = 'relative';
-      chatInputSection.style.top = '0';
-      chatInputSection.style.left = '0';
-      chatInputSection.style.transform = 'translateX(0)';
+      chatInputSection.style.position = 'static';
+      chatInputSection.style.top = 'auto';
+      chatInputSection.style.left = 'auto';
+      chatInputSection.style.transform = 'none';
       chatInputSection.style.maxWidth = 'none';
       chatInputSection.style.width = '100%';
+      if (chatTitle) chatTitle.style.display = 'none';
     }
   }
 
-  // Initialize position
-  updateInputPosition();
+  // Initialize position (no animation on load)
+  updateInputPosition(false);
 
   // Send message on Enter key
   userInput.addEventListener('keypress', function(e) {
@@ -79,8 +88,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Clear input
     userInput.value = '';
 
-    // Update input position (move to bottom if first message)
-    updateInputPosition();
+    // Update input position (move to bottom if first message, with animation)
+    updateInputPosition(true);
 
     // Add typing indicator to chat
     const typingIndicator = addTypingIndicator();
@@ -133,8 +142,13 @@ document.addEventListener('DOMContentLoaded', function() {
     wrapper.appendChild(bubble);
     chatMessages.appendChild(wrapper);
 
-    // Scroll to bottom
-    chatMessages.scrollTop = chatMessages.scrollHeight;
+    // Scroll to bottom of page
+    setTimeout(() => {
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: 'smooth'
+      });
+    }, 50);
 
     return wrapper;
   }
@@ -153,9 +167,12 @@ document.addEventListener('DOMContentLoaded', function() {
     wrapper.appendChild(bubble);
     chatMessages.appendChild(wrapper);
 
-    // Scroll to bottom
+    // Scroll to bottom of page
     setTimeout(() => {
-      chatMessages.scrollTop = chatMessages.scrollHeight;
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: 'smooth'
+      });
     }, 50);
   }
 });
