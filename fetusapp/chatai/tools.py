@@ -62,7 +62,7 @@ def query_by_occupation(occupation: str) -> str:
     output = f"Βρέθηκαν {len(results)} ασθενής/ασθενείς με επάγγελμα '{occupation}':\n"
     for patient in results:
         id, first_name, last_name, prof = patient
-        url = f"http://127.0.0.1:8080/patient/{id}"
+        url = f"/patient/{id}"
         output += f"- [{first_name} {last_name}](<{url}>) (Επάγγελμα: {prof})\n"
 
     return output
@@ -87,8 +87,8 @@ def query_by_future_labour(
     """
 
     # go back 40 weeks
-    from_date = from_date - timedelta(weeks=weeks)
-    to_date = to_date - timedelta(weeks=weeks)
+    from_date_ter = from_date - timedelta(weeks=weeks)
+    to_date_ter = to_date - timedelta(weeks=weeks)
 
     # Get raw connection from SQLAlchemy
     conn = db.engine.raw_connection()
@@ -106,7 +106,7 @@ def query_by_future_labour(
         WHERE h.ter BETWEEN ? AND ?
         ORDER BY h.ter ASC
     """,
-        (from_date, to_date),
+        (from_date_ter, to_date_ter),
     )
 
     results = cursor.fetchall()
@@ -119,7 +119,7 @@ def query_by_future_labour(
     output = f"Βρέθηκαν {len(results)} ασθενής/ασθενείς με πιθανές ημερομηνίες τοκετού απο {from_date} μέχρι {to_date}:\n"
     for patient in results:
         id, first_name, last_name, ter = patient
-        url = f"http://127.0.0.1:8080/patient/{id}"
+        url = f"/patient/{id}"
         labour_date = datetime.strptime(ter, "%Y-%m-%d").date() + timedelta(weeks=weeks)
         output += (
             f"- [{first_name} {last_name}](<{url}>) (Πιθανή Ημ/νία: {labour_date})\n"

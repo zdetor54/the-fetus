@@ -70,7 +70,11 @@ def run_agent(question: str) -> str:
 
 
 if __name__ == "__main__":
-    from fetusapp import app
+    from flask import Flask
+
+    from fetusapp import app  # type: ignore
+
+    app: Flask = app  # type: ignore
 
     with app.app_context():
         print("Testing:")
