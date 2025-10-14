@@ -1,18 +1,58 @@
-#chat-messages {
-    /* background-color: oklch(from var(--vibrant-pink) calc(l + 0.9) calc(c - 0.17) h ) !important; */
-    background-color: none;
-    border-radius: 1rem;
-    padding: 1rem;
-    overflow-y: auto;
-    height: 50vh;
-    max-height: calc(100vh - 250px);
-    transition: height 0.3s ease;
+#chat-container {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 2rem 3rem;
+    padding-bottom: 3rem;
 }
 
-/* Message wrapper for alignment */
+#chat-messages {
+    min-height: 70vh;
+    width: 100%;
+}
+
+/* Input section */
+#chat-input-section {
+    padding-top: 2rem;
+}
+
+/* Smooth transition only when first message appears */
+#chat-input-section.animating {
+    transition: all 0.3s ease;
+}
+
+/* Center input when no messages */
+#chat-messages:empty ~ #chat-input-section {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 85%;
+    max-width: 800px;
+}
+
+.chat-title {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+#chat-input textarea {
+    border-radius: 5rem;
+    font-size: 16px;
+    resize: none;
+    overflow-y: hidden;
+    padding: 0.75rem 2rem;
+    line-height: 2rem;
+    field-sizing: content;
+    max-height: 200px;
+    width: 100%;
+}
+
+/* Message layout */
 .message-wrapper {
     display: flex;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .message-wrapper.user {
@@ -23,13 +63,13 @@
     justify-content: flex-start;
 }
 
-/* Message bubbles */
+/* Message bubbles - wider for better readability */
 .message-bubble {
-    max-width: 70%;
-    min-width: 100px;
-    padding: 0.75rem 1rem;
-    border-radius: 1rem;
+    max-width: 85%;
+    padding: 1rem 1.5rem;
+    border-radius: 1.25rem;
     word-wrap: break-word;
+    line-height: 1.6;
 }
 
 .bg-user {
