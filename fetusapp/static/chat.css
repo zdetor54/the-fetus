@@ -1,5 +1,6 @@
 #chat-messages {
-    background-color: oklch(from var(--vibrant-pink) calc(l + 0.9) calc(c - 0.17) h ) !important;
+    /* background-color: oklch(from var(--vibrant-pink) calc(l + 0.9) calc(c - 0.17) h ) !important; */
+    background-color: none;
     border-radius: 1rem;
     padding: 1rem;
     overflow-y: auto;
@@ -38,8 +39,8 @@
 }
 
 .bg-agent {
-    background-color: #212529;
-    color: white;
+    background-color: oklch(from var(--vibrant-pink) calc(l + 0.9) calc(c - 0.17) h ) !important;
+    color: black;
     border-bottom-left-radius: 0.25rem;
 }
 
