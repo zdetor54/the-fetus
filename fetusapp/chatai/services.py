@@ -64,7 +64,7 @@ def run_agent(question: str) -> str:
     """
     try:
         response = agent_executor.invoke({"input": question})
-        return response["output"]
+        return str(response["output"])
     except Exception as e:
         return f"Συγγνώμη, προέκυψε ένα σφάλμα: {str(e)}"
 

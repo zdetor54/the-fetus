@@ -1,7 +1,7 @@
 import os
 
 from dotenv import load_dotenv
-from flask import Flask
+from flask import Flask, Response, send_from_directory
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
@@ -89,11 +89,10 @@ app.register_blueprint(chatai)  # type: ignore[has-type]
 #####################
 # PWA SUPPORT #######
 #####################
-from flask import send_from_directory
 
 
 @app.route("/manifest.json")
-def manifest():
+def manifest() -> Response:
     """Serve the PWA manifest file with correct MIME type."""
     return send_from_directory(
         "static", "manifest.json", mimetype="application/manifest+json"
@@ -101,6 +100,6 @@ def manifest():
 
 
 @app.route("/sw.js")
-def service_worker():
+def service_worker() -> Response:
     """Serve the service worker file with correct MIME type."""
     return send_from_directory("static", "sw.js", mimetype="application/javascript")

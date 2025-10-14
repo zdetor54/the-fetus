@@ -62,17 +62,18 @@ def query_by_occupation(occupation: str) -> str:
     output = f"Βρέθηκαν {len(results)} ασθενής/ασθενείς με επάγγελμα '{occupation}':\n"
     for patient in results:
         id, first_name, last_name, prof = patient
-        output += f"- {first_name} {last_name} (Επάγγελμα: {prof})\n"
+        url = f"http://127.0.0.1:8080/patient/{id}"
+        output += f"- [{first_name} {last_name}](<{url}>) (Επάγγελμα: {prof})\n"
 
     return output
 
 
 @tool
 def query_by_future_labour(
-        from_date: date,
-        to_date: date,
-        weeks: int = 40,
-        ) -> str:
+    from_date: date,
+    to_date: date,
+    weeks: int = 40,
+) -> str:
     """
     Searches for patients who have a pregnancy labour date within a specified range.
     Use this when the user asks about patients who are about to have labour within a date range in the future.
@@ -118,18 +119,28 @@ def query_by_future_labour(
     output = f"Βρέθηκαν {len(results)} ασθενής/ασθενείς με πιθανές ημερομηνίες τοκετού απο {from_date} μέχρι {to_date}:\n"
     for patient in results:
         id, first_name, last_name, ter = patient
-        output += f"- {first_name} {last_name} (Πιθανή Ημ/νία: {\
-            datetime.strptime(ter, "%Y-%m-%d").date()+timedelta(weeks=weeks)\
-            })\n"
+        url = f"http://127.0.0.1:8080/patient/{id}"
+        labour_date = datetime.strptime(ter, "%Y-%m-%d").date() + timedelta(weeks=weeks)
+        output += (
+            f"- [{first_name} {last_name}](<{url}>) (Πιθανή Ημ/νία: {labour_date})\n"
+        )
 
     return output
 
 
 # Test only if running directly (not when imported)
 if __name__ == "__main__":
-    from fetusapp import app
+    from flask import Flask
+
+    from fetusapp import app  # type: ignore
+
+    app: Flask = app  # type: ignore
 
     with app.app_context():
         print("Testing:")
         print(query_by_occupation.invoke({"occupation": "ΔΙΚΗΓΟΡΟΣ"}))
-        print(query_by_future_labour.invoke({"from_date": "2024-07-01", "to_date": "2024-07-31"}))
+        print(
+            query_by_future_labour.invoke(
+                {"from_date": "2024-07-01", "to_date": "2024-07-31"}
+            )
+        )
