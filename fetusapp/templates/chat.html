@@ -4,31 +4,24 @@
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='chat.css') }}">
 
-  <div class="container text-light py-5">
-    <div class="row justify-content-center">
-      <div class="col-lg-8">
-        <h2 class="mb-4 text-center">Ρωτήστε για ασθενείς</h2>
+  <div id="chat-container" class="text-light">
+    <div id="chat-wrapper">
+      <!-- Chat messages container -->
+      <div id="chat-messages" class="p-3">
 
-        <!-- Chat messages container -->
-        <div id="chat-messages" class="p-3 mb-3">
-          <!-- <div class="text-muted text-center">
-            Ρωτήστε κάτι, π.χ. "Ποιοι ασθενείς είναι γιατροί;"
-          </div> -->
-        </div>
+      </div>
 
-        <!-- Input form -->
-        <div class="input-group">
-          <input
-            type="text"
+      <!-- Input section -->
+      <div id="chat-input-section">
+        <h2 class="chat-title">Ρωτήστε για ασθενείς</h2>
+        <div id="chat-input">
+          <textarea
             id="user-input"
             class="form-control"
-            style="border-start-start-radius: 5rem ; border-end-start-radius: 5rem ; font-size: 16px;"
             placeholder="Γράψτε την ερώτησή σας..."
             autocomplete="off"
-          >
-          <button class="btn btn-outline-secondary" id="send-btn" type="button" style="font-size: 16px;">
-            Αποστολή
-          </button>
+            rows="2"
+          ></textarea>
         </div>
       </div>
     </div>
@@ -41,22 +34,30 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const userInput = document.getElementById('user-input');
-  const sendBtn = document.getElementById('send-btn');
   const chatMessages = document.getElementById('chat-messages');
+  const chatInputSection = document.getElementById('chat-input-section');
 
-  // Function to adjust chat height based on content
-  function adjustChatHeight() {
-    const contentHeight = chatMessages.scrollHeight;
-    const maxHeight = window.innerHeight - 250; // Leave space for header, input, footer
-
-    if (contentHeight > chatMessages.clientHeight && chatMessages.clientHeight < maxHeight) {
-      const newHeight = Math.min(contentHeight + 20, maxHeight);
-      chatMessages.style.height = newHeight + 'px';
+  // Check if chat is empty and position input accordingly
+  function updateInputPosition() {
+    if (chatMessages.children.length === 0) {
+      chatInputSection.style.position = 'absolute';
+      chatInputSection.style.top = '50%';
+      chatInputSection.style.left = '50%';
+      chatInputSection.style.transform = 'translate(-50%, -50%)';
+      chatInputSection.style.maxWidth = '600px';
+      chatInputSection.style.width = '90%';
+    } else {
+      chatInputSection.style.position = 'relative';
+      chatInputSection.style.top = '0';
+      chatInputSection.style.left = '0';
+      chatInputSection.style.transform = 'translateX(0)';
+      chatInputSection.style.maxWidth = 'none';
+      chatInputSection.style.width = '100%';
     }
   }
 
-  // Send message on button click
-  sendBtn.addEventListener('click', sendMessage);
+  // Initialize position
+  updateInputPosition();
 
   // Send message on Enter key
   userInput.addEventListener('keypress', function(e) {
@@ -78,9 +79,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Clear input
     userInput.value = '';
 
+    // Update input position (move to bottom if first message)
+    updateInputPosition();
+
     // Add typing indicator to chat
     const typingIndicator = addTypingIndicator();
-    sendBtn.disabled = true;
+    userInput.disabled = true;
 
     try {
       // Call the API
@@ -96,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       // Remove typing indicator
       typingIndicator.remove();
-      sendBtn.disabled = false;
+      userInput.disabled = false;
 
       if (response.ok) {
         // Add bot response
@@ -108,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     } catch (error) {
       typingIndicator.remove();
-      sendBtn.disabled = false;
+      userInput.disabled = false;
       addMessage('agent', 'Σφάλμα σύνδεσης: ' + error.message);
     }
   }
@@ -149,10 +153,8 @@ document.addEventListener('DOMContentLoaded', function() {
     wrapper.appendChild(bubble);
     chatMessages.appendChild(wrapper);
 
-    // Adjust height to fit content
+    // Scroll to bottom
     setTimeout(() => {
-      adjustChatHeight();
-      // Scroll to bottom
       chatMessages.scrollTop = chatMessages.scrollHeight;
     }, 50);
   }
