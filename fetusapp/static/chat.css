@@ -1,5 +1,6 @@
 #chat-container {
-    max-width: 1400px;
+    max-width: 1200px;
+    width: 100%;
     margin: 0 auto;
     padding: 2rem 3rem;
     padding-bottom: 3rem;
@@ -7,6 +8,7 @@
 
 #chat-messages {
     min-height: 70vh;
+    width: 100%;
 }
 
 /* Input section */
