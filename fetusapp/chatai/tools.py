@@ -1,4 +1,5 @@
 import unicodedata
+from datetime import date, datetime, timedelta
 
 from langchain.tools import tool
 
@@ -66,6 +67,64 @@ def query_by_occupation(occupation: str) -> str:
     return output
 
 
+@tool
+def query_by_future_labour(
+        from_date: date,
+        to_date: date,
+        weeks: int = 40,
+        ) -> str:
+    """
+    Searches for patients who have a pregnancy labour date within a specified range.
+    Use this when the user asks about patients who are about to have labour within a date range in the future.
+
+    Args:
+        from_date: The start date of the range (inclusive)
+        to_date: The end date of the range (inclusive)
+
+    Returns:
+        A formatted string with the list of patients who have labour within the date range
+    """
+
+    # go back 40 weeks
+    from_date = from_date - timedelta(weeks=weeks)
+    to_date = to_date - timedelta(weeks=weeks)
+
+    # Get raw connection from SQLAlchemy
+    conn = db.engine.raw_connection()
+    cursor = conn.cursor()
+
+    # Query with custom collation and filters
+    cursor.execute(
+        """
+        SELECT p.id, first_name, last_name, h.ter
+        FROM patients p
+        INNER JOIN pregnancy_history h
+            ON h.patient_id = p.id
+            AND p.is_active = 1
+            AND h.is_active = 1
+        WHERE h.ter BETWEEN ? AND ?
+        ORDER BY h.ter ASC
+    """,
+        (from_date, to_date),
+    )
+
+    results = cursor.fetchall()
+    conn.close()
+
+    # Format results
+    if not results:
+        return f"Δεν βρέθηκαν ασθενείς πιθανές ημερομηνίες τοκετού απο {from_date} μέχρι {to_date}"
+
+    output = f"Βρέθηκαν {len(results)} ασθενής/ασθενείς με πιθανές ημερομηνίες τοκετού απο {from_date} μέχρι {to_date}:\n"
+    for patient in results:
+        id, first_name, last_name, ter = patient
+        output += f"- {first_name} {last_name} (Πιθανή Ημ/νία: {\
+            datetime.strptime(ter, "%Y-%m-%d").date()+timedelta(weeks=weeks)\
+            })\n"
+
+    return output
+
+
 # Test only if running directly (not when imported)
 if __name__ == "__main__":
     from fetusapp import app
@@ -73,3 +132,4 @@ if __name__ == "__main__":
     with app.app_context():
         print("Testing:")
         print(query_by_occupation.invoke({"occupation": "ΔΙΚΗΓΟΡΟΣ"}))
+        print(query_by_future_labour.invoke({"from_date": "2024-07-01", "to_date": "2024-07-31"}))
