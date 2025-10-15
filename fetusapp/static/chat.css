@@ -45,13 +45,20 @@ textarea:-webkit-autofill { background: #222 !important; color: oklch(from var(-
     border-radius: 2rem;
     font-size: 1.2em;
     resize: none;
-    overflow-y: auto; /* Changed from hidden to allow scrolling */
-    padding: 1rem 4rem 1rem 2rem; /* More right padding for larger button */
+    overflow-y: hidden;
+    padding: 1rem 4rem 1rem 2rem;
     line-height: 1.6rem;
     field-sizing: content;
-    max-height: 200px;
+    /* max-height: 200px; */
+    min-height: 3.2rem; /* Adjusted minimum height */
     width: 100%;
     box-sizing: border-box;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+#chat-input textarea::-webkit-scrollbar {
+    display: none;
 }
 
 /* Message layout */
@@ -132,6 +139,7 @@ textarea:-webkit-autofill { background: #222 !important; color: oklch(from var(-
   align-items: flex-end; /* Align button to bottom */
 }
 
+
 .form-control {
   width: 100%;
   padding-right: 50px; /* Make room for the button */
@@ -139,24 +147,22 @@ textarea:-webkit-autofill { background: #222 !important; color: oklch(from var(-
 }
 
 .send-btn {
-  position: absolute;
-  right: 0.75rem;
-  top: 50%; /* Center vertically */
-  transform: translateY(-50%); /* Offset by half its height */
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--vibrant-pink);
-  flex-shrink: 0;
+    position: absolute;
+    right: 0.5rem;
+    bottom: 0.4rem; /* Adjusted to visually center on single line */
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--vibrant-pink);
 }
 
 .send-btn svg {
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 3rem;  /* Slightly smaller for better proportion */
+  height: 3rem;
   display: block;
 }
 
@@ -165,7 +171,7 @@ textarea:-webkit-autofill { background: #222 !important; color: oklch(from var(-
 }
 
 .send-btn:active {
-  transform: translateY(-50%) scale(0.95);
+  transform: scale(0.95);
 }
 
 @keyframes typing-bounce {
