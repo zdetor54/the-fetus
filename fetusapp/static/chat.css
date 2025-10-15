@@ -2,7 +2,7 @@
     max-width: 1200px;
     width: 100%;
     margin: 0 auto;
-    padding: 2rem 3rem;
+    padding: 0rem 1.5rem;
     padding-bottom: 3rem;
 }
 
@@ -27,7 +27,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 85%;
+    width: 95%;
     max-width: 800px;
 }
 
@@ -43,7 +43,7 @@
     resize: none;
     overflow-y: hidden;
     padding: 1rem 2rem;
-    line-height: 1rem;
+    line-height: 1.6rem;
     field-sizing: content;
     max-height: 200px;
     width: 100%;
