@@ -53,8 +53,6 @@ textarea:-webkit-autofill { background: #222 !important; color: oklch(from var(-
     min-height: 3.2rem; /* Adjusted minimum height */
     width: 100%;
     box-sizing: border-box;
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
 }
 
 #chat-input textarea::-webkit-scrollbar {
