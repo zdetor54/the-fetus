@@ -1,3 +1,7 @@
+
+textarea::-webkit-input-placeholder { color: oklch(from var(--vibrant-pink) calc(l + 0.9) calc(c - 0.17) h );}
+textarea:-webkit-autofill { background: #222 !important; color: oklch(from var(--vibrant-pink) calc(l + 0.9) calc(c - 0.17) h ) !important; }
+
 #chat-container {
     max-width: 1200px;
     width: 100%;
@@ -38,15 +42,16 @@
 }
 
 #chat-input textarea {
-    border-radius: 5rem;
-    font-size: 16px;
+    border-radius: 2rem;
+    font-size: 1.2em;
     resize: none;
-    overflow-y: hidden;
-    padding: 1rem 2rem;
+    overflow-y: auto; /* Changed from hidden to allow scrolling */
+    padding: 1rem 4rem 1rem 2rem; /* More right padding for larger button */
     line-height: 1.6rem;
     field-sizing: content;
     max-height: 200px;
     width: 100%;
+    box-sizing: border-box;
 }
 
 /* Message layout */
@@ -120,7 +125,47 @@
     text-decoration: underline;
     color: var(--vibrant-pink);
 }
+.textarea-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: flex-end; /* Align button to bottom */
+}
 
+.form-control {
+  width: 100%;
+  padding-right: 50px; /* Make room for the button */
+  box-sizing: border-box;
+}
+
+.send-btn {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.75rem; /* Consistent spacing from bottom */
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--vibrant-pink);
+  flex-shrink: 0; /* Prevent button from shrinking */
+}
+
+.send-btn svg {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: block;
+}
+
+.send-btn:hover {
+  opacity: 0.8;
+}
+
+.send-btn:active {
+  transform: scale(0.95);
+}
 
 @keyframes typing-bounce {
     0%, 60%, 100% {
