@@ -11,6 +11,27 @@ from .forms import GynHistoryEntryForm
 gyn_history = Blueprint("gyn_history", __name__)
 
 
+def maybe_analyze_doctor_note(
+    payload: dict, patient_id: str, current_appointment_date: str
+) -> dict | None:
+    """
+    Analyzes the doctor's note for appointment suggestions and updates the patient's record if needed.
+    This is a call to the AI service in note_to_app_service.py agent.
+    """
+    agentic_updates = payload.get("agentic_updates", "off")
+    if agentic_updates == "on":
+        doctor_note = payload.get("comments")
+        if doctor_note:
+            from fetusapp.chatai.note_to_app_service import analyze_doctor_note
+
+            result = analyze_doctor_note(
+                doctor_note, patient_id, current_appointment_date
+            )
+            print(result)
+            return result
+    return None
+
+
 @gyn_history.route("/api/gyn-history/<int:id>", methods=["PUT"])
 @login_required
 @csrf.exempt
@@ -41,6 +62,18 @@ def update_gyn_history(id: int) -> tuple[dict, int]:
             # print(f"Updated pregnancy history: {history.to_dict()}")
 
             db.session.commit()
+
+            # Try to analyze doctor's note, but don't fail if it errors
+            try:
+                maybe_analyze_doctor_note(
+                    payload, history.patient_id, history.date_of_visit
+                )
+            except Exception as analysis_error:
+                # Log the error but continue
+                print(f"Warning: Doctor note analysis failed: {analysis_error}")
+                # Or use proper logging:
+                # logger.warning(f"Doctor note analysis failed for patient {history.patient_id}: {analysis_error}")
+
             return jsonify({"success": True}), 200
         else:
             return jsonify({"success": False, "errors": form.errors}), 400
@@ -99,6 +132,17 @@ def create_gyn_history() -> tuple[dict, int]:
 
             db.session.add(new_history)
             db.session.commit()
+            # Try to analyze doctor's note, but don't fail if it errors
+            try:
+                maybe_analyze_doctor_note(
+                    payload, new_history.patient_id, new_history.date_of_visit
+                )
+            except Exception as analysis_error:
+                # Log the error but continue
+                print(f"Warning: Doctor note analysis failed: {analysis_error}")
+                # Or use proper logging:
+                # logger.warning(f"Doctor note analysis failed for patient {history.patient_id}: {analysis_error}")
+
             return jsonify({"success": True, "id": new_history.id}), 201
         else:
             return jsonify({"success": False, "errors": form.errors}), 400

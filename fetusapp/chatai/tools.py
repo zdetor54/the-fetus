@@ -1,9 +1,11 @@
 import unicodedata
 from datetime import date, datetime, timedelta
 
+from dateutil.relativedelta import relativedelta
 from langchain.tools import tool
 
 from fetusapp import db  # type: ignore[has-type]
+from fetusapp.models import Patient
 
 
 def remove_accents(text: str) -> str:
@@ -247,6 +249,47 @@ def query_by_future_labour(
     return output
 
 
+@tool
+def fetch_next_suggested_app_date(patient_id: str) -> date | None:
+    """
+    This function fetches a patient's record from the database.
+    args:
+        patient_id: The unique identifier of the patient
+    returns:
+        The next appointment date or None if not found
+    """
+    patient = Patient.query.get(patient_id)
+    return patient.next_suggested_appointment if patient else None
+
+
+@tool
+def update_next_suggested_app_date(patient_id: str, new_date: str) -> str:
+    """
+    This function updates the patient's next suggested appointment date.
+
+    Args:
+        patient_id: Patient's unique identifier
+        new_date: New appointment date in 'YYYY-MM-DD' format
+
+    Returns:
+        Success message or error message
+    """
+    try:
+        patient = Patient.query.get(patient_id)
+        if not patient:
+            return f"Error: Patient {patient_id} not found"
+
+        patient.next_suggested_appointment = datetime.strptime(
+            new_date, "%Y-%m-%d"
+        ).date()
+        db.session.commit()
+
+        return f"Appointment updated to {new_date}"
+    except Exception as e:
+        db.session.rollback()
+        return f"Error: {str(e)}"
+
+
 # Test only if running directly (not when imported)
 if __name__ == "__main__":
     from flask import Flask
@@ -263,3 +306,34 @@ if __name__ == "__main__":
                 {"from_date": "2024-07-01", "to_date": "2024-07-31"}
             )
         )
+
+
+@tool
+def calculate_appointment_date(reference_date: str, timeframe: str) -> str:
+    """
+    Calculate future appointment date from a reference date and timeframe.
+
+    Args:
+        reference_date: Date in 'YYYY-MM-DD' format
+        timeframe: Like '3 months', '6 weeks', '1 year', '2 days'
+
+    Returns:
+        New date in 'YYYY-MM-DD' format
+    """
+    start = datetime.strptime(reference_date, "%Y-%m-%d")
+
+    # Parse timeframe (e.g., "3 months" -> amount=3, unit="months")
+    parts = timeframe.lower().strip().split()
+    amount = int(parts[0])
+    unit = parts[1].rstrip("s")  # Handle plural
+
+    # Map unit to relativedelta
+    delta_map = {
+        "day": relativedelta(days=amount),
+        "week": relativedelta(weeks=amount),
+        "month": relativedelta(months=amount),
+        "year": relativedelta(years=amount),
+    }
+
+    result = start + delta_map[unit]
+    return str(result.strftime("%Y-%m-%d"))
