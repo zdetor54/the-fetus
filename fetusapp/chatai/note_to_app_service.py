@@ -30,12 +30,18 @@ prompt = ChatPromptTemplate.from_messages(
             These are TWO DIFFERENT dates!
 
             Your job is to:
-            1. Analyze the doctor's note to identify if there's a suggestion for a new ΠΑΠ test timeframe (e.g., "in 6 months", "in 1 year")
-            2. If there is a suggestion:
-               a. Extract the timeframe from the note (e.g., "6 months", "1 year")
-               b. Use calculate_appointment_date tool with current_appointment_date and timeframe to calculate the suggested_date
-               c. Example: current_appointment_date = 2024-04-15, timeframe = "6 months" → suggested_date = 2024-10-15
+            1. Analyze the doctor's note to identify if there's a suggestion for a new ΠΑΠ test. It can be either:
+               a. A timeframe: "in 6 months", "in 1 year", "σε 3 μήνες", "σε 6 μήνες"
+               b. A specific date: "on 2025-06-15", "στις 15/06/2025", "15 Ιουνίου 2025"
+            
+            2. Calculate suggested_date based on what you found:
+               - If timeframe: Use calculate_appointment_date tool with current_appointment_date and timeframe to calculate the suggested_date
+                 Example: current_appointment_date = 2024-04-15, timeframe = "6 months" → suggested_date = 2024-10-15
+               - If specific date: Extract the date directly and convert to YYYY-MM-DD format if needed
+                 Example: "στις 15/06/2025" → suggested_date = 2025-06-15
+            
             3. Use fetch_patient_record to get the patient's next_appointment_date (their currently scheduled future appointment)
+            
             4. DECISION LOGIC - Apply these rules IN ORDER:
 
                RULE 1: If next_appointment_date is None (no appointment scheduled)
@@ -63,7 +69,7 @@ prompt = ChatPromptTemplate.from_messages(
             - Always show your comparison clearly: "suggested_date (XXXX-XX-XX) vs next_appointment_date (XXXX-XX-XX)"
 
             Available tools:
-            - calculate_appointment_date(reference_date, timeframe): Calculate future date from timeframe. Use current_appointment_date as reference_date.
+            - calculate_appointment_date(reference_date, timeframe): Calculate future date from timeframe. Use current_appointment_date as reference_date. ONLY use for timeframes like "6 months", NOT for specific dates.
             - fetch_patient_record(patient_id): Get patient's next_appointment_date (future scheduled appointment)
             - update_appointment_date(patient_id, new_date, reason): Update the patient's next appointment""",
         ),
@@ -74,9 +80,9 @@ prompt = ChatPromptTemplate.from_messages(
                 Patient ID: {patient_id}
                 Today's Visit Date: {current_appointment_date}
 
-                Analyze the note and process any appointment suggestions.
+                Analyze the note and process any appointment suggestions (timeframe OR specific date).
                 Remember: We want the EARLIEST possible appointment date. If the patient already has an earlier appointment than suggested, keep the existing one.
-            """,
+            """
         ),
         ("placeholder", "{agent_scratchpad}"),
     ]
