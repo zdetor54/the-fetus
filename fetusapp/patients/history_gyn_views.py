@@ -4,6 +4,7 @@ from flask import Blueprint, jsonify, request
 from flask_login import current_user, login_required
 
 from fetusapp import csrf, db  # type: ignore[has-type]
+from fetusapp.chatai.note_to_app_service import analyze_doctor_note
 from fetusapp.models import GynHistory
 
 from .forms import GynHistoryEntryForm
@@ -22,8 +23,6 @@ def maybe_analyze_doctor_note(
     if agentic_updates == "on":
         doctor_note = payload.get("comments")
         if doctor_note:
-            from fetusapp.chatai.note_to_app_service import analyze_doctor_note
-
             result = analyze_doctor_note(
                 doctor_note, patient_id, current_appointment_date
             )
