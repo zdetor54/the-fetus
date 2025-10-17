@@ -53,3 +53,4 @@ azure-identity-broker
 langchain
 langchain-openai
 langchain-anthropic
+loguru
