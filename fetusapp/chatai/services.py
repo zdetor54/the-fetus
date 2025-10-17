@@ -47,6 +47,7 @@ agent_executor = AgentExecutor(
     tools=tools,
     verbose=True,  # Shows the thinking process!
     handle_parsing_errors=True,
+    max_iterations=5,  # Limit iterations to prevent infinite loops
 )
 
 # print("✓ Agent created successfully!")

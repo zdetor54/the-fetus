@@ -107,6 +107,7 @@ class Patient(BaseModel):
     spouse_name = db.Column(db.String(64))
     spouse_date_of_birth = db.Column(db.Date)
     spouse_occupation = db.Column(db.String(64))
+    next_suggested_appointment = db.Column(db.Date, nullable=True)
     is_active = db.Column(db.Boolean, default=True)
 
     def __init__(
@@ -133,6 +134,7 @@ class Patient(BaseModel):
         spouse_name=None,
         spouse_date_of_birth=None,
         spouse_occupation=None,
+        next_suggested_appointment=None,
         created_by=None,
         last_updated_by=None,
     ):
@@ -158,6 +160,7 @@ class Patient(BaseModel):
         self.spouse_name = spouse_name
         self.spouse_date_of_birth = spouse_date_of_birth
         self.spouse_occupation = spouse_occupation
+        self.next_suggested_appointment = next_suggested_appointment
         self.created_by = created_by
         self.last_updated_by = last_updated_by
 

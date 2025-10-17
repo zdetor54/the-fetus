@@ -70,8 +70,6 @@ def update_medical_history(id: int) -> tuple[dict, int]:
             history.last_updated_by = current_user.id
             history.last_updated_on = datetime.utcnow()
 
-            # preserve the original created_by and created_on fields as well as the patient_id
-
             db.session.commit()
             return jsonify({"success": True}), 200
         else:
