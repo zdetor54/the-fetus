@@ -162,7 +162,9 @@
                                                                                     <span class="visually-hidden">Next</span>
                                                                                 </button>
                                                                             </div>
+                                                                            {% if patient.next_suggested_appointment %}
                                                                             <p class="text-muted pt-1">Επανεξέταση: {{ patient.next_suggested_appointment }}</p>
+                                                                            {% endif %}
                                                                         </div>
 
                                                                         <div class="row zd pt-4">
