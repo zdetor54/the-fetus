@@ -54,3 +54,4 @@ langchain
 langchain-openai
 langchain-anthropic
 loguru
+plotly>=5.0.0

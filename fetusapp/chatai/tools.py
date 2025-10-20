@@ -250,6 +250,57 @@ def query_by_future_labour(
 
 
 @tool
+def query_by_next_suggested_appointment(
+    from_date: date,
+    to_date: date,
+) -> str:
+    """
+    Searches for patients who have a next suggested appointment date within a specified range.
+    Use this when the user asks about patients who should be called back for a new appointment
+    (e.g. "Ασθενείς με επαναληπτική επίσκεψη μέσα στον επόμενο μήνα / χρόνο").
+
+    Args:
+        from_date: The start date of the range (inclusive)
+        to_date: The end date of the range (inclusive)
+
+    Returns:
+        A formatted string with the list of patients who have next suggested appointment within the date range
+    """
+
+    # Get raw connection from SQLAlchemy
+    conn = db.engine.raw_connection()
+    cursor = conn.cursor()
+
+    # Query with custom collation and filters
+    cursor.execute(
+        """
+        SELECT id, first_name, last_name, next_suggested_appointment
+        FROM patients p
+        WHERE  is_active = 1
+        AND next_suggested_appointment BETWEEN ? AND ?
+        ORDER BY next_suggested_appointment ASC
+    """,
+        (from_date, to_date),
+    )
+
+    results = cursor.fetchall()
+    conn.close()
+
+    # Format results
+    if not results:
+        return f"Δεν βρέθηκαν ασθενείς με προτεινόμενα ραντεβού απο {from_date} μέχρι {to_date}"
+
+    output = f"Βρέθηκαν {len(results)} ασθενής/ασθενείς με προτεινόμενα ραντεβού απο {from_date} μέχρι {to_date}:\n"
+    for patient in results:
+        id, first_name, last_name, next_suggested_appointment = patient
+        url = f"/patient/{id}"
+        app_date = datetime.strptime(next_suggested_appointment, "%Y-%m-%d").date()
+        output += f"- [{first_name} {last_name}](<{url}>) (Πιθανή Ημ/νία: {app_date})\n"
+
+    return output
+
+
+@tool
 def fetch_next_suggested_app_date(patient_id: str) -> date | None:
     """
     This function fetches a patient's record from the database.
@@ -290,24 +341,6 @@ def update_next_suggested_app_date(patient_id: str, new_date: str) -> str:
         return f"Error: {str(e)}"
 
 
-# Test only if running directly (not when imported)
-if __name__ == "__main__":
-    from flask import Flask
-
-    from fetusapp import app  # type: ignore
-
-    app: Flask = app  # type: ignore
-
-    with app.app_context():
-        print("Testing:")
-        print(query_by_occupation.invoke({"occupation": "ΔΙΚΗΓΟΡΟΣ"}))
-        print(
-            query_by_future_labour.invoke(
-                {"from_date": "2024-07-01", "to_date": "2024-07-31"}
-            )
-        )
-
-
 @tool
 def calculate_appointment_date(reference_date: str, timeframe: str) -> str:
     """
@@ -337,3 +370,26 @@ def calculate_appointment_date(reference_date: str, timeframe: str) -> str:
 
     result = start + delta_map[unit]
     return str(result.strftime("%Y-%m-%d"))
+
+
+# Test only if running directly (not when imported)
+if __name__ == "__main__":
+    from flask import Flask
+
+    from fetusapp import app  # type: ignore
+
+    app: Flask = app  # type: ignore
+
+    with app.app_context():
+        print("Testing:")
+        # print(query_by_occupation.invoke({"occupation": "ΔΙΚΗΓΟΡΟΣ"}))
+        # print(
+        #     query_by_future_labour.invoke(
+        #         {"from_date": "2024-07-01", "to_date": "2024-07-31"}
+        #     )
+        # )
+        print(
+            query_by_next_suggested_appointment.invoke(
+                {"from_date": "2025-04-01", "to_date": "2025-04-30"}
+            )
+        )
