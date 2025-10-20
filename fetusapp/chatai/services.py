@@ -4,7 +4,11 @@ from langchain.agents import AgentExecutor, create_tool_calling_agent
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 
-from fetusapp.chatai.tools import query_by_future_labour, query_by_occupation
+from fetusapp.chatai.tools import (
+    query_by_future_labour,
+    query_by_next_suggested_appointment,
+    query_by_occupation,
+)
 
 llm = ChatOpenAI(
     model=os.getenv("MODEL_NAME", "gpt-4o-mini"),
@@ -21,8 +25,11 @@ prompt = ChatPromptTemplate.from_messages(
                 You can only help with:
                 - Finding patients by their profession/occupation (e.g., "doctors", "nurses", "teachers")
                 - Finding patients by their expected delivery date (TER) which is the dates prompted by the user minus 40 weeks:
-                  * Patients who will give birth within X weeks/months from today
-                  * Patients who have delivery dates within a specific date range
+                    * Patients who will give birth within X weeks/months from today
+                    * Patients who have delivery dates within a specific date range
+                - Finding patients by the next suggested appointment date on their patient record:
+                    * Patients who need to repeat the test this month/year
+                    * Patients who need to repeat the test within a specific date range
 
                 If the user asks about anything else, politely say you cannot help with that.
 
@@ -38,7 +45,11 @@ prompt = ChatPromptTemplate.from_messages(
     ]
 )
 
-tools = [query_by_occupation, query_by_future_labour]
+tools = [
+    query_by_occupation,
+    query_by_future_labour,
+    query_by_next_suggested_appointment,
+]
 
 agent = create_tool_calling_agent(llm=llm, tools=tools, prompt=prompt)
 
@@ -79,4 +90,7 @@ if __name__ == "__main__":
 
     with app.app_context():
         print("Testing:")
-        run_agent("Δείξε μου όλους τους δικηγόρους")
+        # run_agent("Δείξε μου όλους τους δικηγόρους")
+        run_agent(
+            "Δείξε μου όλους τους ασθενείς που έχουν επαναληπτική εξέταση τον Απρίλιο του 25"
+        )
