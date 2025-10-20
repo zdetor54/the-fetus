@@ -57,31 +57,38 @@ prompt = ChatPromptTemplate.from_messages(
             These are TWO DIFFERENT dates!
 
             Your job is to:
-            1. Analyze the doctor's note to identify if there's a suggestion for a new ΠΑΠ test. It can be either:
+            1. Analyze the doctor's note to identify if there's a suggestion for a new test or surgery. It can be either:
                a. A timeframe: "in 6 months", "in 1 year", "σε 3 μήνες", "σε 6 μήνες"
                b. A specific date: "on 2025-06-15", "στις 15/06/2025", "15 Ιουνίου 2025"
+               
+            2. If multiple suggestions exist, pick the EARLIEST one.
 
-            2. Calculate suggested_date based on what you found:
+            3. Calculate suggested_date based on what you found:
                - If timeframe: Use calculate_appointment_date tool with current_appointment_date and timeframe to calculate the suggested_date
                  Example: current_appointment_date = 2024-04-15, timeframe = "6 months" → suggested_date = 2024-10-15
                - If specific date: Extract the date directly and convert to YYYY-MM-DD format if needed
                  Example: "στις 15/06/2025" → suggested_date = 2025-06-15
 
-            3. Use fetch_patient_record to get the patient's next_appointment_date (their currently scheduled future appointment)
+            4. Use fetch_patient_record to get the patient's next_appointment_date (their currently scheduled future appointment)
 
-            4. DECISION LOGIC - Apply these rules IN ORDER:
+            5. DECISION LOGIC - Apply these rules IN ORDER:
 
-               RULE 1: If next_appointment_date is None (no appointment scheduled)
+               RULE 1: If next_appointment_date is None (no appointment scheduled) or is in the PAST compared to current_appointment_date
                → ACTION: UPDATE to suggested_date
-               → REASON: Patient has no appointment, so schedule one
+               → REASON: Patient has no appointment, so schedule one. Or existing appointment is past, so needs new one.
 
-               RULE 2: If next_appointment_date exists AND suggested_date < next_appointment_date (suggested is EARLIER)
+               RULE 2: If next_appointment_date exists AND is in the PAST compared to current_appointment_date
+               → ACTION: UPDATE to suggested_date
+               → REASON: Existing suggested appointment is past, so needs new one.
+
+
+               RULE 3: If next_appointment_date exists AND suggested_date < next_appointment_date (suggested is EARLIER)
                → ACTION: UPDATE to suggested_date
                → REASON: Doctor wants patient seen sooner than currently scheduled
                → EXAMPLE: next_appointment = 2024-12-15, suggested = 2024-10-15
                          2024-10-15 < 2024-12-15, so UPDATE to 2024-10-15
 
-               RULE 3: If next_appointment_date exists AND suggested_date >= next_appointment_date (suggested is LATER or SAME)
+               RULE 4: If next_appointment_date exists AND suggested_date >= next_appointment_date (suggested is LATER or SAME)
                → ACTION: DO NOT UPDATE
                → REASON: Patient already has an earlier/same appointment, keep it
                → EXAMPLE: next_appointment = 2024-10-15, suggested = 2024-12-15
@@ -385,10 +392,10 @@ if __name__ == "__main__":
     with app.app_context():
         logger.info("Testing:")
         test_note = """
-        1) της είπα να επαναλάβει το τεστ Παπ σε 6 μήνες, λόγω του ότι είχε ένα θέμα με το προηγούμενο. Το τελευταίο πάντως είναι κφ
-        2) την είδα στον υπέρηχο διακολπικά: ένας ενδομήτριος σάκος κύησης, AUA 7+3 weeks. Της έδωσα Losec γιατί έχει εμέτους.
-        Της έγραψα και τις εξετάσεις που πρέπει να κάνει, αν αποφασίσει να κρατήσει το παιδί
-        3) αν αποφασίσει να κάνει ΤΕ, της είπα να με ενημερώσει, ώστε να προγραμματίσω στο ΛΗΤΩ.
+        -της πήρα τεστ Παπ και το πήγα στον Λαΐνη: αρνητικό για κακοήθεια. Επανάληψη σε ένα έτος.
+        -υπέρηχος εγο: ΠΚΚ, οπίσθιο ενδοτοιχωματικό ινομύωμα 4,7 εκατοστά. Της είπα για λαπαροσκοπική εξαίρεση σε 2 μήνες. Θα της ζητήσω ειδική τιμή 1500 ευρώ
+        -να κάνει μαστογραφία αναφοράς και υπέρηχο μαστών:
+        -μου πλήρωσε 50 ευρώ για το τεστ Παπ
         """
         result = analyze_doctor_note(
             doctor_note=test_note, patient_id="3", current_appointment_date="2024-02-15"
