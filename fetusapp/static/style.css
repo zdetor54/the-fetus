@@ -201,12 +201,12 @@ footer small{
     color: grey
 }
 
-footer a{
+a{
     text-decoration: none;
     color: var(--vibrant-pink);
 }
 
-footer a:hover{
+a:hover{
     color: white;
 }
 

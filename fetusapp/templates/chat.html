@@ -4,7 +4,10 @@
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='chat.css') }}">
 
+
+
   <div id="chat-container" class="text-light">
+
     <div id="chat-wrapper">
       <!-- Chat messages container -->
       <div id="chat-messages">
@@ -31,10 +34,14 @@
           </div>
         </div>
       </div>
+
+      <!-- <div id="chart-container" style="margin-top: 40px;">
+        {{ fig_html|safe }}
+      </div> -->
+      <p class="text-muted text-center">Χρεώσεις <a href="https://platform.openai.com/settings/organization/billing/overview" target="_blank">OpenAI</a> API από {{ start_date }}: ${{ '%.3f' % total_cost }} </p>
+
     </div>
   </div>
-
-
 {% endblock %}
 
 {% block javascript %}

@@ -25,7 +25,11 @@ def signup() -> Response:
     delete_form = DeleteUserForm()
     update_form = UpdateUserForm()
 
-    users = User.query.filter(User.is_active is True, User.username != "admin").all()
+    users = (
+        User.query.filter(User.is_active.is_(True), User.username != "admin")
+        .order_by(User.username)
+        .all()
+    )
 
     messages = get_flashed_messages()
 
