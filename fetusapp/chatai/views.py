@@ -1,5 +1,6 @@
 # chatai/views.py
 from datetime import datetime, timedelta
+from turtle import pd
 
 from flask import Blueprint, Response, jsonify, render_template, request
 from flask_login import login_required
@@ -17,10 +18,15 @@ def chat() -> Response:
     today = datetime.now().date()
     start_date = (today - timedelta(days=5)).strftime("%Y-%m-%d")
     df = get_llm_cost(delta=5)
+
+    if isinstance(df, pd.DataFrame) and not df.empty:
+        total_cost = df["cost_usd"].sum()
+    else:
+        total_cost = 0.0
     return render_template(
         "chat.html",
         start_date=start_date,
-        total_cost=df["cost_usd"].sum(),
+        total_cost=total_cost,
     )
 
 
