@@ -112,7 +112,8 @@ def get_llm_cost(
         return df
     else:
         print("No usage records found")
-        return 0.0
+        # Return an empty DataFrame with the expected structure
+        return pd.DataFrame(columns=["date", "cost_usd"])
 
 
 if __name__ == "__main__":
