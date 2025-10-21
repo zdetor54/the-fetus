@@ -60,7 +60,7 @@ prompt = ChatPromptTemplate.from_messages(
             1. Analyze the doctor's note to identify if there's a suggestion for a new test or surgery. It can be either:
                a. A timeframe: "in 6 months", "in 1 year", "σε 3 μήνες", "σε 6 μήνες"
                b. A specific date: "on 2025-06-15", "στις 15/06/2025", "15 Ιουνίου 2025"
-               
+
             2. If multiple suggestions exist, pick the EARLIEST one.
 
             3. Calculate suggested_date based on what you found:

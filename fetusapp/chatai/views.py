@@ -1,8 +1,11 @@
 # chatai/views.py
+from datetime import datetime, timedelta
+
 from flask import Blueprint, Response, jsonify, render_template, request
 from flask_login import login_required
 
 from fetusapp import csrf  # type: ignore[has-type]
+from fetusapp.chatai.get_balance import get_llm_cost, plot_costs_interactive_px
 from fetusapp.chatai.services import run_agent
 
 chatai = Blueprint("chatai", __name__)
@@ -11,7 +14,17 @@ chatai = Blueprint("chatai", __name__)
 @chatai.route("/chat")
 def chat() -> Response:
     """Render the chat page with chatbot UI"""
-    return render_template("chat.html")
+    today = datetime.now().date()
+    start_date = (today - timedelta(days=5)).strftime("%Y-%m-%d")
+    df = get_llm_cost(delta=5)
+    fig = plot_costs_interactive_px(df)
+    fig_html = fig.to_html(full_html=False, include_plotlyjs="cdn")
+    return render_template(
+        "chat.html",
+        fig_html=fig_html,
+        start_date=start_date,
+        total_cost=df["cost_usd"].sum(),
+    )
 
 
 @chatai.route("/chat/api", methods=["POST"])
