@@ -2,55 +2,8 @@ import os
 from datetime import datetime, timedelta
 
 import pandas as pd
-import plotly.express as px
 import pytz
 import requests
-
-
-def plot_costs_interactive_px(
-    df: pd.DataFrame, title: str = "OpenAI API Daily and Cumulative Costs"
-) -> px.bar:
-    df = df.copy()
-    df["date"] = pd.to_datetime(df["date"])
-    df = df.sort_values("date").reset_index(drop=True)
-    df["cumulative_cost"] = df["cost_usd"].cumsum()
-
-    # Melt the DataFrame to long format for px.bar
-    df_long = df.melt(
-        id_vars="date",
-        value_vars=["cost_usd", "cumulative_cost"],
-        var_name="Type",
-        value_name="Cost",
-    )
-
-    # Rename for nicer legend
-    df_long["Type"] = df_long["Type"].map(
-        {"cost_usd": "Daily Cost", "cumulative_cost": "Cumulative Cost"}
-    )
-
-    fig = px.bar(
-        df_long,
-        x="date",
-        y="Cost",
-        color="Type",
-        barmode="group",
-        title=title,
-        labels={"date": "Date", "Cost": "Cost (USD)", "Type": "Legend"},
-    )
-    fig.update_layout(
-        xaxis=dict(
-            tickmode="array",
-            tickvals=df["date"],
-            ticktext=df["date"].dt.strftime("%Y-%m-%d"),
-            tickangle=45,
-        ),
-        bargap=0.2,
-        bargroupgap=0.1,
-        template="plotly_white",
-        height=600,
-        width=1000,
-    )
-    return fig
 
 
 def get_llm_cost(
