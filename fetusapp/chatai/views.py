@@ -1,6 +1,6 @@
 # chatai/views.py
 from datetime import datetime, timedelta
-from turtle import pd
+import pandas as pd
 
 from flask import Blueprint, Response, jsonify, render_template, request
 from flask_login import login_required
